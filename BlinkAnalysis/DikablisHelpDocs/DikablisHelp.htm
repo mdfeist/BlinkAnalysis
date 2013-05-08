@@ -1,0 +1,59 @@
+<html>
+<head>
+<style>
+p, ul
+{
+    font-family: Segoe UI;
+    font-size: 14px;
+}
+
+p.title
+{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+p.subtitle
+{
+    font-size: 18px;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+<p class="title">Dikablis Help</p>
+<p class="subtitle">Setting Up</p>
+<p>
+To start streaming data from Dikablis Recorder you must first set up the recorder to the point where you are ready to start recording. This means that you must start the program and calibrate the system for the new patient. Depending on how you have your Dikablis Recorder settings setup you don't necessarily need to start recording. The settings can be found in “settings.xml” located in “C:\Programs\Dikablis\Recorder”. If you open the “settings.xml” file into a text editing program like NotePad you can see the following information.
+</p>
+<p>
+&lt;settings&gt; </br>
+… </br>
+&emsp;&emsp;&lt;recorder&gt; </br>
+&emsp;&emsp;… </br>
+&emsp;&emsp;&emsp;&emsp;&lt;remote&gt; </br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;enabled&gt;true&lt;/enabled&gt; </br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;port&gt;2001&lt;/port&gt; </br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;user&gt;user&lt;/user&gt; </br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;pass&gt;pass&lt;/pass&gt; </br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;journal&gt;permanent/recording/never&lt;/journal&gt; </br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&lt;slaveport&gt;2002&lt;/slaveport&gt; </br>
+&emsp;&emsp;&emsp;&emsp;&lt;/remote&gt; </br>
+&emsp;&emsp;… </br>
+&emsp;&emsp;&lt;/recorder&gt; </br>
+… </br>
+&lt;/settings&gt; </br>
+</p>
+<p>
+This program uses the slave port to receive incoming data. By default the port is 2002. You have three different methods for receiving the incoming data.
+</p>
+<ul>
+<li>&lt;journal&gt;permanent&lt;/journal&gt;: journal data is always transmitted</li>
+<li>&lt;journal&gt;recording&lt;/journal&gt;: journal data is only transmitted during recording</li>
+<li>&lt;journal&gt;never&lt;/journal&gt;: journal data is never transmitted</li>
+</ul>
+<p>
+For this program to work we recommend that you make sure that you use the “permanent” option.
+</p>
+</body>
+</html>
