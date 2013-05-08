@@ -11,6 +11,7 @@
 #include "Dikablis.h"
 #include "DikablisHelp.h"
 #include "AppData.h"
+#include "AppViewer.h"
 
 #include "NatNetClientSetup.h"
 
@@ -159,6 +160,18 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 private: System::Windows::Forms::TextBox^  optiTrackLocalIpAddressTextBox;
 private: System::Windows::Forms::Label^  optiTrackLocalIpAddressLabel;
 private: System::Windows::Forms::Label^  optiTrackLocalTitle;
+private: System::Windows::Forms::TabPage^  visualTabPage;
+
+
+private: System::Windows::Forms::SplitContainer^  visualMainSplitContainer;
+private: System::Windows::Forms::SplitContainer^  visualSplitContainer;
+
+
+
+private: System::Windows::Forms::TextBox^  textBox1;
+private: System::Windows::Forms::Label^  label1;
+private: System::Windows::Forms::Label^  visualPropertiesLabel;
+
 
 
 
@@ -297,6 +310,12 @@ private: System::Windows::Forms::Label^  optiTrackLocalTitle;
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->visualTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->visualMainSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
+			this->visualSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->visualPropertiesLabel = (gcnew System::Windows::Forms::Label());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -317,6 +336,14 @@ private: System::Windows::Forms::Label^  optiTrackLocalTitle;
 			this->dikablisSplitContainer->Panel2->SuspendLayout();
 			this->dikablisSplitContainer->SuspendLayout();
 			this->menuStrip->SuspendLayout();
+			this->visualTabPage->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualMainSplitContainer))->BeginInit();
+			this->visualMainSplitContainer->Panel1->SuspendLayout();
+			this->visualMainSplitContainer->Panel2->SuspendLayout();
+			this->visualMainSplitContainer->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->BeginInit();
+			this->visualSplitContainer->Panel2->SuspendLayout();
+			this->visualSplitContainer->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// mainTabControl
@@ -326,6 +353,7 @@ private: System::Windows::Forms::Label^  optiTrackLocalTitle;
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->mainTabControl->Controls->Add(this->OptiTrackPage);
 			this->mainTabControl->Controls->Add(this->DikablisPage);
+			this->mainTabControl->Controls->Add(this->visualTabPage);
 			this->mainTabControl->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->mainTabControl->Location = System::Drawing::Point(0, 28);
@@ -1216,6 +1244,98 @@ private: System::Windows::Forms::Label^  optiTrackLocalTitle;
 			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->saveAsToolStripMenuItem->Text = L"Save As";
 			// 
+			// visualTabPage
+			// 
+			this->visualTabPage->BackColor = System::Drawing::Color::Gainsboro;
+			this->visualTabPage->Controls->Add(this->visualMainSplitContainer);
+			this->visualTabPage->Location = System::Drawing::Point(4, 22);
+			this->visualTabPage->Name = L"visualTabPage";
+			this->visualTabPage->Padding = System::Windows::Forms::Padding(3);
+			this->visualTabPage->Size = System::Drawing::Size(776, 509);
+			this->visualTabPage->TabIndex = 3;
+			this->visualTabPage->Text = L"Visual";
+			// 
+			// visualMainSplitContainer
+			// 
+			this->visualMainSplitContainer->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->visualMainSplitContainer->FixedPanel = System::Windows::Forms::FixedPanel::Panel2;
+			this->visualMainSplitContainer->Location = System::Drawing::Point(3, 3);
+			this->visualMainSplitContainer->Name = L"visualMainSplitContainer";
+			// 
+			// visualMainSplitContainer.Panel1
+			// 
+			this->visualMainSplitContainer->Panel1->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->visualMainSplitContainer->Panel1->Controls->Add(this->visualSplitContainer);
+			// 
+			// visualMainSplitContainer.Panel2
+			// 
+			this->visualMainSplitContainer->Panel2->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualPropertiesLabel);
+			this->visualMainSplitContainer->Panel2MinSize = 100;
+			this->visualMainSplitContainer->Size = System::Drawing::Size(770, 503);
+			this->visualMainSplitContainer->SplitterDistance = 493;
+			this->visualMainSplitContainer->TabIndex = 0;
+			// 
+			// visualSplitContainer
+			// 
+			this->visualSplitContainer->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->visualSplitContainer->FixedPanel = System::Windows::Forms::FixedPanel::Panel2;
+			this->visualSplitContainer->Location = System::Drawing::Point(0, 0);
+			this->visualSplitContainer->Name = L"visualSplitContainer";
+			this->visualSplitContainer->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// visualSplitContainer.Panel1
+			// 
+			this->visualSplitContainer->Panel1->BackColor = System::Drawing::Color::WhiteSmoke;
+			// 
+			// visualSplitContainer.Panel2
+			// 
+			this->visualSplitContainer->Panel2->BackColor = System::Drawing::Color::LightSlateGray;
+			this->visualSplitContainer->Panel2->Controls->Add(this->textBox1);
+			this->visualSplitContainer->Panel2->Controls->Add(this->label1);
+			this->visualSplitContainer->Size = System::Drawing::Size(493, 503);
+			this->visualSplitContainer->SplitterDistance = 376;
+			this->visualSplitContainer->TabIndex = 0;
+			// 
+			// textBox1
+			// 
+			this->textBox1->AcceptsReturn = true;
+			this->textBox1->AcceptsTab = true;
+			this->textBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->textBox1->BackColor = System::Drawing::SystemColors::ControlLightLight;
+			this->textBox1->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->textBox1->Location = System::Drawing::Point(3, 16);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->ReadOnly = true;
+			this->textBox1->ScrollBars = System::Windows::Forms::ScrollBars::Both;
+			this->textBox1->Size = System::Drawing::Size(487, 101);
+			this->textBox1->TabIndex = 1;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->ForeColor = System::Drawing::SystemColors::ControlLightLight;
+			this->label1->Location = System::Drawing::Point(5, 0);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(67, 13);
+			this->label1->TabIndex = 0;
+			this->label1->Text = L"Output Log";
+			// 
+			// visualPropertiesLabel
+			// 
+			this->visualPropertiesLabel->AutoSize = true;
+			this->visualPropertiesLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->visualPropertiesLabel->Location = System::Drawing::Point(3, 9);
+			this->visualPropertiesLabel->Name = L"visualPropertiesLabel";
+			this->visualPropertiesLabel->Size = System::Drawing::Size(71, 17);
+			this->visualPropertiesLabel->TabIndex = 0;
+			this->visualPropertiesLabel->Text = L"Properties";
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1255,6 +1375,16 @@ private: System::Windows::Forms::Label^  optiTrackLocalTitle;
 			this->dikablisSplitContainer->ResumeLayout(false);
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
+			this->visualTabPage->ResumeLayout(false);
+			this->visualMainSplitContainer->Panel1->ResumeLayout(false);
+			this->visualMainSplitContainer->Panel2->ResumeLayout(false);
+			this->visualMainSplitContainer->Panel2->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualMainSplitContainer))->EndInit();
+			this->visualMainSplitContainer->ResumeLayout(false);
+			this->visualSplitContainer->Panel2->ResumeLayout(false);
+			this->visualSplitContainer->Panel2->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->EndInit();
+			this->visualSplitContainer->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -1276,6 +1406,9 @@ private: System::Windows::Forms::Label^  optiTrackLocalTitle;
 				}
 
 				this->optiTrackDataGridView->VirtualMode = true;
+
+				// Visual
+				AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
 			}
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::EventArgs ^ e )
 			{
@@ -1580,6 +1713,9 @@ private: System::Void updateSplitContainer(System::Object^  sender, System::Even
 			   case 1:
 				   this->dikablisMainSplitContainer->SplitterDistance = this->optiTrackMainSplitContainer->SplitterDistance;
 				   this->dikablisSplitContainer->SplitterDistance = this->optiTrackSplitContainer->SplitterDistance;
+				   break;
+			   case 2:
+				  
 				   break;
 			   }
 		 }

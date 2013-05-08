@@ -60,6 +60,9 @@
     <ClCompile Include="AppData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AppViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -99,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

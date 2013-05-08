@@ -114,6 +114,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AppViewer.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlinkAnalysis.cpp" />
     <ClCompile Include="ClientHandler.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="TCPClientListener.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppViewer.h" />
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Dikablis.h" />
