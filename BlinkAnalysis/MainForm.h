@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <exception>
 #include <msclr\marshal_cppstd.h>
 
 #include "Dikablis.h"
@@ -1485,15 +1486,21 @@ _WATCH_MEMORY
 	public: System::Void optiTrackUpdateData() {
 				if (this->mainTabControl->InvokeRequired) {
 					SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
-					this->Invoke(d, nullptr);
+					BeginInvoke(d, nullptr);
 				} else if (this->mainTabControl->SelectedIndex == 0) {
 					if (this->optiTrackDataGridView->InvokeRequired) {
 						SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
-						this->Invoke(d, nullptr);
+						BeginInvoke(d, nullptr);
 					} else {
-						this->optiTrackDataGridView->SuspendLayout();
-						this->optiTrackDataGridView->Refresh();
-						this->optiTrackDataGridView->ResumeLayout();
+						 try {
+							this->optiTrackDataGridView->SuspendLayout();
+							this->optiTrackDataGridView->Invalidate();
+							this->optiTrackDataGridView->ResumeLayout();
+						 }
+						 catch(Exception^) {
+							 Debug::WriteLine("Error: Exception when trying to redraw the OptiTrack DataGridView.");
+						 }
+						
 					}
 				}
 			}
