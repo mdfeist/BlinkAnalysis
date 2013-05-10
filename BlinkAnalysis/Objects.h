@@ -8,9 +8,8 @@
 
 #include <osg/Geode>
 #include <string.h>
-/*
- * Able to create simple objects.
- */
+
+//Able to create simple objects.
 namespace Objects
 {
 	osg::Geode *createPlane();

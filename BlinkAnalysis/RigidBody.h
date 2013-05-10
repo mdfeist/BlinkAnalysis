@@ -10,6 +10,7 @@
 
 #include "NatNetTypes.h"
 
+// Holds the data for an OptiTrack Marker
 class Marker {
 public:
 	int id;
@@ -42,13 +43,12 @@ private:
 	int id;									// RigidBody identifier
 	char name[MAX_NAMELENGTH];				// RigidBody name
 
-	osg::Vec3 position;
-	osg::Quat rotation;
+	osg::Vec3 position;						// RigidBody Position
+	osg::Quat rotation;;					// RigidBody Rotation
 
-	osg::AutoTransform *transform;
+	osg::AutoTransform *transform;			// RigidBody Matrix Transformation
 
-	std::vector<Marker> markers; 
-
+	std::vector<Marker> markers;			// Vector of all the markers
     float MeanError;                        // Mean measure-to-solve deviation
 
 public:
@@ -56,11 +56,11 @@ public:
 	~RigidBody(void);
 
 	// Markers
+	// Delete all markers
 	void clearMarkers() { this->markers.clear(); }
-	void addMarker(Marker marker) {
-		this->markers.push_back(marker);
-	}
-
+	// Add a marker
+	void addMarker(Marker marker) { this->markers.push_back(marker); }
+	// Get all the markers in a vector
 	std::vector<Marker>* getMarkersVector() { return &this->markers; }
 
 	// Getter/Setters for the ID of the Rigid Body.
@@ -71,7 +71,7 @@ public:
 	void setName(char* name) { strncpy_s(this->name, name, strlen(name)); }
 	char* getName() { return this->name; }
 
-	// Set the auto transform of the Rigid Body.
+	// Getter/Setters for the auto transform of the Rigid Body.
 	void setTransform(osg::AutoTransform* transform) { this->transform = transform; }
 	osg::AutoTransform* getTransform() { return this->transform; }
 	osg::Vec3 getPosition() { return this->position; }

@@ -1,3 +1,10 @@
+/**
+ * MainFormController.h
+ * Created By: Michael Feist
+ *
+ * This a controller class to help bridge the model/data
+ * with the GUI in the MainForm.
+ */
 #pragma once
 #include "stdafx.h"
 #include <string>
@@ -15,14 +22,20 @@ public:
 		return m_pInstance;
 	}
 
+	// Prints to the Output window in the Dikablis Tab of the MainForm
 	void dikablisOutputLog(std::string msg);
+	// Send Dikablis Journal information to the Dikablis Tab of the MainForm
 	void dikablisMessage(Dikablis::journal_struct journal);
 
+	// Prints to the Output window in the OptiTrack Tab of the MainForm
 	void optiTrackOutputLog(std::string msg);
-
-	void attachMainForm(BlinkAnalysis::MainForm ^form) { this->mainForm = form; }
+	// Indicate that there was a change to the OptiTrack data
 	void optiTrackUpdateData() { this->mainForm->optiTrackUpdateData(); }
+	// Initiate the OptiTrack view
 	void optiTrackInitDataView() { this->mainForm->optiTrackInitDataView(); }
+
+	// Attach a instance of the MainForm to the controller
+	void attachMainForm(BlinkAnalysis::MainForm ^form) { this->mainForm = form; }
 protected:
 	MainFormController();
 	~MainFormController();

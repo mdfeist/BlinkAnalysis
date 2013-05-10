@@ -1,3 +1,9 @@
+/**
+ * DikablisHelp.h
+ * Created By: Michael Feist
+ *
+ * Manages the GUI for a Dikablis help window.
+ */
 #pragma once
 
 namespace BlinkAnalysis {
