@@ -19,10 +19,20 @@ ClientHandler::ClientHandler(void)
 
 	this->setLocalIpAddress("127.0.0.1");
 	this->setOptiTrackServerIpAddress("127.0.0.1");
+	
+	//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE
+	
+	this->g_hMutex = CreateMutex(
+		NULL,
+		//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE, 
+		FALSE, 
+		NULL);
 }
 
 ClientHandler::~ClientHandler(void)
 {
+	// Free the mutex
+	CloseHandle(g_hMutex);
 }
 
 bool ClientHandler::addRigidBody(int id, RigidBody* rigidBody)

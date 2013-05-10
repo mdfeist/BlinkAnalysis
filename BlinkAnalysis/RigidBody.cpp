@@ -11,19 +11,13 @@ RigidBody::RigidBody(void)
 	this->name[0] = '\0';
 
 	this->transform = 0;
-
-	this->nMarkers = 0;
-	this->Markers = 0;
-    this->MarkerIDs = 0;
-    this->MarkerSizes = 0;
     float MeanError = 0;
 }
 
 
 RigidBody::~RigidBody(void)
 {
-	if (this->Markers)
-		free(this->Markers);
+	
 }
 
 void RigidBody::addFrame(osg::Vec3 position, osg::Vec4 rotation)

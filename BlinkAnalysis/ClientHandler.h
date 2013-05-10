@@ -4,6 +4,8 @@
  */
 #pragma once
 #include "stdafx.h"
+#include <Windows.h>
+#include <process.h>
 
 #include <map>
 
@@ -20,7 +22,9 @@
  */
 class ClientHandler
 {
-private:
+private:	
+	HANDLE g_hMutex;
+
 	NatNetClient* client;
 	bool natNetServerRunning;
 	std::map<int, RigidBody*> _rigidBodies;
@@ -37,6 +41,35 @@ private:
 public:
 	ClientHandler(void);
 	~ClientHandler(void);
+
+	bool lock() { 
+		// Request ownership of mutex
+		DWORD  dwWaitResult;
+		while(true)
+		{
+			dwWaitResult = WaitForSingleObject(g_hMutex, INFINITE);
+			switch (dwWaitResult) 
+			{
+			// The thread got ownership of the mutex
+			case WAIT_OBJECT_0: 
+				return true;
+				break; 
+
+			// The thread got ownership of an abandoned mutex
+			// The database is in an indeterminate state
+			case WAIT_ABANDONED: 
+				return false; 
+				break;
+			}
+		}
+
+		return false;
+	}
+
+	void unlock() {
+		// Release the mutex
+		ReleaseMutex(g_hMutex);
+	}
 
 	void setClient(NatNetClient* client) { this->client = client; }
 	NatNetClient* getClient() { return this->client; }

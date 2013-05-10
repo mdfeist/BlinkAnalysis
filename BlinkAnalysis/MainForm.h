@@ -361,7 +361,6 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			this->mainTabControl->SelectedIndex = 0;
 			this->mainTabControl->Size = System::Drawing::Size(784, 535);
 			this->mainTabControl->TabIndex = 0;
-			this->mainTabControl->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::updateSplitContainer);
 			// 
 			// OptiTrackPage
 			// 
@@ -1390,25 +1389,41 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 
 		}
 #pragma endregion
+	/////////////////
+	// User Defined
+	////////////////
+
+	// Local Variables
 	private: std::vector<RigidBody*>* optiTrackRigidBodyVector;
+	private: SplitContainer^ currentMainSplitContainer;
+	private: SplitContainer^ currentSplitContainer;
+
+	// User Defined Functions
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) {
-				//this->SetStyle(ControlStyles::OptimizedDoubleBuffer, true);
-				//this->SetStyle(ControlStyles::UserPaint, true);
-				//this->SetStyle(ControlStyles::AllPaintingInWmPaint, true); 
-				//this->SetStyle(ControlStyles::DoubleBuffer, true);
+				 // Setup Main Tab
+				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
+				 this->currentSplitContainer = this->optiTrackSplitContainer;
 
-				this->optiTrackDataGridView->CellValueNeeded += gcnew
-          DataGridViewCellValueEventHandler( this, &MainForm::optiTrackDataGridView_CellValueNeeded );
+				 this->mainTabControl->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::updateCurrentSplitContainer);
+				 this->mainTabControl->Selected += gcnew TabControlEventHandler(this, &BlinkAnalysis::MainForm::updateSplitContainer);
 
-				for (int i = 0; i < this->optiTrackDataGridView->ColumnCount; i++)
-				{
-					this->optiTrackDataGridView->Columns[i]->SortMode = DataGridViewColumnSortMode::NotSortable;
-				}
+				 this->SetStyle(ControlStyles::OptimizedDoubleBuffer, true);
+				 //this->SetStyle(ControlStyles::UserPaint, true);
+				 //this->SetStyle(ControlStyles::AllPaintingInWmPaint, true); 
+				 //this->SetStyle(ControlStyles::DoubleBuffer, true);
 
-				this->optiTrackDataGridView->VirtualMode = true;
+				 this->optiTrackDataGridView->CellValueNeeded += gcnew
+					 DataGridViewCellValueEventHandler( this, &MainForm::optiTrackDataGridView_CellValueNeeded );
 
-				// Visual
-				AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
+				 for (int i = 0; i < this->optiTrackDataGridView->ColumnCount; i++)
+				 {
+					 this->optiTrackDataGridView->Columns[i]->SortMode = DataGridViewColumnSortMode::NotSortable;
+				 }
+
+				 this->optiTrackDataGridView->VirtualMode = true;
+
+				 // Visual
+				 AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
 			}
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::EventArgs ^ e )
 			{
@@ -1704,20 +1719,43 @@ _WATCH_MEMORY
 	//////////////////////
 	// Split Container Updates
 	/////////////////////
-private: System::Void updateSplitContainer(System::Object^  sender, System::EventArgs^  e) {
-			   switch(((TabControl^)sender)->SelectedIndex) {
-			   case 0:
-				   this->optiTrackMainSplitContainer->SplitterDistance = this->dikablisMainSplitContainer->SplitterDistance;
-				   this->optiTrackSplitContainer->SplitterDistance = this->dikablisSplitContainer->SplitterDistance;
-				   break;
-			   case 1:
-				   this->dikablisMainSplitContainer->SplitterDistance = this->optiTrackMainSplitContainer->SplitterDistance;
-				   this->dikablisSplitContainer->SplitterDistance = this->optiTrackSplitContainer->SplitterDistance;
-				   break;
-			   case 2:
-				  
-				   break;
-			   }
+	private: System::Void updateSplitContainer(System::Object^  sender, System::Windows::Forms::TabControlEventArgs^  e) {
+			 switch(this->mainTabControl->SelectedIndex) {
+			 case 0: 
+				 this->optiTrackMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
+				 this->optiTrackSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
+
+				 this->optiTrackMainSplitContainer->Invalidate();
+				 break;
+			 case 1:
+				 this->dikablisMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
+				 this->dikablisSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
+
+				 this->dikablisMainSplitContainer->Invalidate();
+				 break;
+			 case 2:
+				 this->visualMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
+				 this->visualSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
+
+				 this->visualMainSplitContainer->Invalidate();
+				 break;
+			 }
+		 }
+	private: System::Void updateCurrentSplitContainer(System::Object^  sender, System::EventArgs^  e) {
+			 switch(this->mainTabControl->SelectedIndex) {
+			 case 0: 
+				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
+				 this->currentSplitContainer = this->optiTrackSplitContainer;
+				 break;
+			 case 1:
+				 this->currentMainSplitContainer = this->dikablisMainSplitContainer;
+				 this->currentSplitContainer = this->dikablisSplitContainer;
+				 break;
+			 case 2:
+				 this->currentMainSplitContainer = this->visualMainSplitContainer;
+				 this->currentSplitContainer = this->visualSplitContainer;
+				 break;
+			 }
 		 }
 	//////////////////////
 	// OptiTrack Buttons

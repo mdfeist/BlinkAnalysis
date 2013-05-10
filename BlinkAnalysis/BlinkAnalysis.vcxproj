@@ -125,6 +125,7 @@
       <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
     </ClCompile>
+    <ClCompile Include="Objects.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="AppData.cpp" />
     <ClCompile Include="Split.cpp" />
@@ -147,6 +148,7 @@
     </ClInclude>
     <ClInclude Include="MainFormController.h" />
     <ClInclude Include="NatNetClientSetup.h" />
+    <ClInclude Include="Objects.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="AppData.h" />

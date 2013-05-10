@@ -303,6 +303,9 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 {
 	ClientHandler* pClient = (ClientHandler*) pUserData;
 
+	if (!pClient->lock())
+		return;
+
 	int i=0;
 
     // same system latency test
@@ -319,6 +322,32 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 		{
 			body->addFrame(osg::Vec3(-data->RigidBodies[i].x, data->RigidBodies[i].z, data->RigidBodies[i].y),
 					osg::Vec4(data->RigidBodies[i].qx, -data->RigidBodies[i].qz, -data->RigidBodies[i].qy, data->RigidBodies[i].qw));
+
+			body->clearMarkers();
+
+			for(int iMarker = 0; iMarker < data->RigidBodies[i].nMarkers; iMarker++)
+			{
+				Marker marker;
+
+				if(data->RigidBodies[i].MarkerIDs)
+					marker.id = data->RigidBodies[i].MarkerIDs[iMarker];
+				if(data->RigidBodies[i].MarkerSizes)
+					marker.size = data->RigidBodies[i].MarkerSizes[iMarker];
+				if(data->RigidBodies[i].Markers)
+				{
+					marker.x = data->RigidBodies[i].Markers[iMarker][0];
+					marker.y = data->RigidBodies[i].Markers[iMarker][1];
+					marker.z = data->RigidBodies[i].Markers[iMarker][2];
+				}
+
+				char buf[4096];
+				sprintf(buf, "Marker ID: %d\n\t{%f, %f, %f}\n", marker.id, marker.x, marker.y, marker.z);
+				OutputDebugStringA(buf);
+
+				body->addMarker(marker);
+			}
+
+			
 		}
 	}
 	
@@ -350,6 +379,8 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 		MainFormController::getInstance()->optiTrackUpdateData();
 		delayCount = 0.f;
 	}
+
+	pClient->unlock();
 }
 
 // MessageHandler receives NatNet error/debug messages
