@@ -43,16 +43,24 @@ int NatNetClientSetup::createClient(ClientHandler** theClient)
 	int iResult;
     int iConnectionType = ConnectionType_Multicast;
 
+	// Get the Connection Type from the ClientHandler
 	iConnectionType = (*theClient)->getOptiTrackServerConnectionType();
 
+	// Get the Command Port from the ClientHandler
 	MyServersCommandPort = (*theClient)->getOptiTrackServerCommandPort();
+	// Get the Data Port from the ClientHandler
 	MyServersDataPort = (*theClient)->getOptiTrackServerDataPort();
 
+	// Get the Local Ip Address from the ClientHandler
 	(*theClient)->getLocalIpAddress(szMyIPAddress);
+	// Get the Server Ip Address from the ClientHandler
 	(*theClient)->getOptiTrackServerIpAddress(szServerIPAddress);
 
+	// A string buffer used to temporally store strings
+	// for the output log.
 	char buf[2048];
 
+	// Print Connection Information to the Output Log
 	sprintf_s(buf, "Connecting to Server...\n");
 	MainFormController::getInstance()->optiTrackOutputLog(buf);
 
@@ -93,8 +101,11 @@ int NatNetClientSetup::createClient(ClientHandler** theClient)
 		MainFormController::getInstance()->optiTrackOutputLog(buf);
     }
 
+	// Get the NatNetClient from the ClientHandler
 	NatNetClient* natnet = (*theClient)->getClient();
 
+	// Check if successful at retrieving the NatNetClient from
+	// the ClientHandler.
 	if (!natnet)
 	{
 		sprintf_s(buf, "Failed to get client from client handler.\n");
@@ -106,6 +117,7 @@ int NatNetClientSetup::createClient(ClientHandler** theClient)
 	sprintf_s(buf, "Sending Test Request\n");
 	MainFormController::getInstance()->optiTrackOutputLog(buf);
 
+	// Test Connection
 	void* response;
 	int nBytes;
 	iResult = natnet->SendMessageAndWait("TestRequest", &response, &nBytes);
@@ -184,19 +196,25 @@ int NatNetClientSetup::createClient(ClientHandler** theClient)
         }      
 	}
 
+	// Set the Flag tell that the NatNetClient is connected
+	// to a server to True.
 	(*theClient)->setNatNetServerRunning(true);
 
 	// Ready to receive marker stream!
 	sprintf_s(buf, "Client is connected to server and listening for data...\n");
 	MainFormController::getInstance()->optiTrackOutputLog(buf);
 
+	// Initialize the OptiTack DataView on the MainForm
 	MainFormController::getInstance()->optiTrackInitDataView();
 
+	// Return Error Code OK
 	return ErrorCode_OK;
 }
 
+// Closes the connection to the NatNetServer
 int NatNetClientSetup::deleteClient(ClientHandler** theClient)
 {
+	// Get the NatNetClient from the ClientHandler
 	NatNetClient* natnet = (*theClient)->getClient();
 
 	char buf[2048];
@@ -206,6 +224,7 @@ int NatNetClientSetup::deleteClient(ClientHandler** theClient)
 		sprintf_s(buf, "Disconnecting from Server...\n");
 		MainFormController::getInstance()->optiTrackOutputLog(buf);
 
+		// Disconnects from the server
 		natnet->Uninitialize();
 
 		sprintf_s(buf, "Client is Disconnected.\n");
@@ -224,7 +243,9 @@ int NatNetClientSetup::deleteClient(ClientHandler** theClient)
 // Establish a NatNet Client connection
 int initClient(ClientHandler** theClient, int iConnectionType)
 {
+	// Get the NatNetClient from the ClientHandler
 	NatNetClient* natnet = (*theClient)->getClient();
+
     // release previous server
     if(natnet != 0)
     {
