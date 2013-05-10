@@ -1665,34 +1665,74 @@ _WATCH_MEMORY
 				}
 			}
 	public: System::Void optiTrackUpdateData() {
-				if (this->mainTabControl->InvokeRequired) {
-					SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
-					BeginInvoke(d, nullptr);
-				} else if (this->mainTabControl->SelectedIndex == 0) {
-					if (this->optiTrackDataGridView->InvokeRequired) {
+				static bool isUpdating = false;
+				
+				if (isUpdating)
+					return;
+
+				isUpdating = true;
+
+				static float fps = (1000.f/30.f);
+				static float dwCurrentTime = 0.f;
+				static float dwElapsedTime = 0.f;
+				static float dwLastUpdateTime = 0.f;
+
+				// Get Current Time
+				SYSTEMTIME time;
+				GetSystemTime(&time);
+				dwCurrentTime = (float)(time.wHour*60.f*60.f*1000.f + time.wMinute*60.f*1000.f + time.wSecond*1000.f + time.wMilliseconds);
+				// Calculate time Elapsed time
+				dwElapsedTime = dwCurrentTime - dwLastUpdateTime;
+				
+				// If the elapsed time is less then the fps
+				if (dwElapsedTime > fps)//142.244.155.215
+				{
+					// Start update
+					// Check if the main tab control needs invoke.
+					// If not then check to see if the OptiTrack tab
+					// is selected.
+					if (this->mainTabControl->InvokeRequired) {
 						SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
 						BeginInvoke(d, nullptr);
-					} else {
-						ClientHandler* client = AppData::getInstance()->getClient();
-						if (client)
-						{
-							if (!client->lock())
-								return;
+					} else if (this->mainTabControl->SelectedIndex == 0) {
+						// Check if the OptiTrack DataGridView needs invoke.
+						// If not then update the view.
+						if (this->optiTrackDataGridView->InvokeRequired) {
+							SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
+							BeginInvoke(d, nullptr);
+						} else {
+							// Get client form the AppData
+							ClientHandler* client = AppData::getInstance()->getClient();
 
-							try {
-								this->optiTrackDataGridView->SuspendLayout();
-								this->optiTrackDataGridView->Refresh();
-								this->optiTrackDataGridView->ResumeLayout();
-							}
-							catch(Exception^) {
-								Debug::WriteLine("Error: Exception when trying to redraw the OptiTrack DataGridView.");
+							// Check if the client is created and not NULL
+							if (client)
+							{
+								// Lock the client
+								if (!client->lock())
+									return;
+
+								// Try to update the view
+								try {
+									this->optiTrackDataGridView->SuspendLayout();
+									this->optiTrackDataGridView->Invalidate();
+									this->optiTrackDataGridView->ResumeLayout();
+
+									// Set LastUpdateTime to CurrentTime
+									dwLastUpdateTime = dwCurrentTime;
+								}
+								catch(Exception^) {
+									Debug::WriteLine("Error: Exception when trying to redraw the OptiTrack DataGridView.");
+								}
+
+								// Unlock client
+								client->unlock();
 							}
 
-							client->unlock();
 						}
-
 					}
-				}
+				} // End of update
+
+				isUpdating = false;
 			}
 	public: System::Void optiTrackDataGridView_CellValueNeeded(Object^ /*sender*/,
        System::Windows::Forms::DataGridViewCellValueEventArgs^ e )
@@ -1771,7 +1811,7 @@ _WATCH_MEMORY
 				 this->optiTrackSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
 
 				 this->optiTrackMainSplitContainer->SuspendLayout();
-				 this->optiTrackMainSplitContainer->Refresh();
+				 this->optiTrackMainSplitContainer->Invalidate();
 				 this->optiTrackMainSplitContainer->ResumeLayout();
 
 				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
@@ -1784,7 +1824,7 @@ _WATCH_MEMORY
 				 this->dikablisSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
 
 				 this->dikablisMainSplitContainer->SuspendLayout();
-				 this->dikablisMainSplitContainer->Refresh();
+				 this->dikablisMainSplitContainer->Invalidate();
 				 this->dikablisMainSplitContainer->ResumeLayout();
 
 				 this->currentMainSplitContainer = this->dikablisMainSplitContainer;
@@ -1797,7 +1837,7 @@ _WATCH_MEMORY
 				 this->visualSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
 
 				 this->visualMainSplitContainer->SuspendLayout();
-				 this->visualMainSplitContainer->Refresh();
+				 this->visualMainSplitContainer->Invalidate();
 				 this->visualMainSplitContainer->ResumeLayout();
 
 				 this->currentMainSplitContainer = this->visualMainSplitContainer;

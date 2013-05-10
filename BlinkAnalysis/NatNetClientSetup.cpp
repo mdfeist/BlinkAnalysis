@@ -301,34 +301,37 @@ int initClient(ClientHandler** theClient, int iConnectionType)
 // DataHandler receives data from the server
 void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 {
+	// Cast user data as ClientHandler
 	ClientHandler* pClient = (ClientHandler*) pUserData;
 
-	int i=0;
-
-    // same system latency test
-    float fThisTick = (float)GetTickCount();
-    float fDiff = fThisTick - data->fLatency;
-    double dDuration = fDiff;
-
 	// Rigid Bodies
-	for(i=0; i < data->nRigidBodies; i++)
+	for(int i = 0; i < data->nRigidBodies; i++)
 	{
+		// Get pointer to Rigid Body
 		RigidBody* body = pClient->getRigidBody(data->RigidBodies[i].ID);
 
+		// Check if Rigid Body with the given ID exists
 		if ( body )
 		{
+			// Lock the ClientHandler so data isn't changed
+			// by another thread.
 			if (!pClient->lock())
 				continue;
 
+			// Update the Position and Orientation of the Rigid Body
 			body->addFrame(osg::Vec3(-data->RigidBodies[i].x, data->RigidBodies[i].z, data->RigidBodies[i].y),
 					osg::Vec4(data->RigidBodies[i].qx, -data->RigidBodies[i].qz, -data->RigidBodies[i].qy, data->RigidBodies[i].qw));
 
+			// Clear all the previous markers that were attached to the Rigid Body
 			body->clearMarkers();
 
+			// Gather all the Markers attached to the Rigid Body
 			for(int iMarker = 0; iMarker < data->RigidBodies[i].nMarkers; iMarker++)
 			{
+				// Create a new marker
 				Marker marker;
 
+				// Get the information about the marker
 				if(data->RigidBodies[i].MarkerIDs)
 					marker.id = data->RigidBodies[i].MarkerIDs[iMarker];
 				if(data->RigidBodies[i].MarkerSizes)
@@ -344,41 +347,18 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 				sprintf(buf, "Marker ID: %d\n\t{%f, %f, %f}\n", marker.id, marker.x, marker.y, marker.z);
 				OutputDebugStringA(buf);
 #endif
+
+				// Add the marker to the Rigid Body
 				body->addMarker(marker);
 			}
 
+			// Unlock the ClientHandler
 			pClient->unlock();
 		}
 	}
-	
-	// Calculate the number of frames per one second:
-	static unsigned int fps = 0;
-	static int dwFrames = 0;
-	static float dwCurrentTime = 0.f;
-	static float dwElapsedTime = 0.f;
-	static float dwLastUpdateTime = 0.f;
-	static float delay = 0.f;
-	static float delayCount = 0.f;
 
-	dwFrames++;
-	dwCurrentTime = (float)GetTickCount(); // Even better to use timeGetTime()
-	dwElapsedTime = dwCurrentTime - dwLastUpdateTime;
-
-	if(dwElapsedTime >= 1000)
-	{
-		unsigned int fps = (unsigned int)(dwFrames * 1000.0 / dwElapsedTime);
-		dwFrames = 0;
-		dwLastUpdateTime = dwCurrentTime;
-
-		delay = 1.f/fps;
-	}
-	
-	delayCount += delay;
-	if (delayCount >= 1.0f)
-	{
-		MainFormController::getInstance()->optiTrackUpdateData();
-		delayCount = 0.f;
-	}
+	// Update the OptiTrack page
+	MainFormController::getInstance()->optiTrackUpdateData();
 }
 
 // MessageHandler receives NatNet error/debug messages
