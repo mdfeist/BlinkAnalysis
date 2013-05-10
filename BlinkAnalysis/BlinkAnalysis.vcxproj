@@ -107,6 +107,7 @@
     <Content Include="DikablisHelpDocs\DikablisHelp.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="ClassDiagram1.cd" />
     <None Include="DikablisHelpDocs\DikablisHelp.rtf" />
     <Content Include="NatNetLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

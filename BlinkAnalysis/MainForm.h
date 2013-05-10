@@ -173,11 +173,13 @@ private: System::Windows::Forms::TabPage^  visualTabPage;
 
 private: System::Windows::Forms::SplitContainer^  visualMainSplitContainer;
 private: System::Windows::Forms::SplitContainer^  visualSplitContainer;
+private: System::Windows::Forms::TextBox^  visualOutputLogTextBox;
+private: System::Windows::Forms::Label^  visualOutputLogLabel;
 
 
 
-private: System::Windows::Forms::TextBox^  textBox1;
-private: System::Windows::Forms::Label^  label1;
+
+
 private: System::Windows::Forms::Label^  visualPropertiesLabel;
 private: System::Windows::Forms::DataGridView^  optiTrackDataGridView;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyIDColumn;
@@ -189,6 +191,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationYColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationZColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationWColumn;
+private: System::Windows::Forms::ListView^  visualRigidBodyListView;
+
 
 
 
@@ -326,8 +330,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 			this->visualTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualMainSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->visualSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->visualOutputLogTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->visualOutputLogLabel = (gcnew System::Windows::Forms::Label());
+			this->visualRigidBodyListView = (gcnew System::Windows::Forms::ListView());
 			this->visualPropertiesLabel = (gcnew System::Windows::Forms::Label());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -1256,6 +1261,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 			// visualMainSplitContainer.Panel2
 			// 
 			this->visualMainSplitContainer->Panel2->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualRigidBodyListView);
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualPropertiesLabel);
 			this->visualMainSplitContainer->Panel2MinSize = 100;
 			this->visualMainSplitContainer->Size = System::Drawing::Size(770, 503);
@@ -1277,39 +1283,53 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 			// visualSplitContainer.Panel2
 			// 
 			this->visualSplitContainer->Panel2->BackColor = System::Drawing::Color::LightSlateGray;
-			this->visualSplitContainer->Panel2->Controls->Add(this->textBox1);
-			this->visualSplitContainer->Panel2->Controls->Add(this->label1);
+			this->visualSplitContainer->Panel2->Controls->Add(this->visualOutputLogTextBox);
+			this->visualSplitContainer->Panel2->Controls->Add(this->visualOutputLogLabel);
 			this->visualSplitContainer->Size = System::Drawing::Size(493, 503);
 			this->visualSplitContainer->SplitterDistance = 376;
 			this->visualSplitContainer->TabIndex = 0;
 			// 
-			// textBox1
+			// visualOutputLogTextBox
 			// 
-			this->textBox1->AcceptsReturn = true;
-			this->textBox1->AcceptsTab = true;
-			this->textBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+			this->visualOutputLogTextBox->AcceptsReturn = true;
+			this->visualOutputLogTextBox->AcceptsTab = true;
+			this->visualOutputLogTextBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
 				| System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
-			this->textBox1->BackColor = System::Drawing::SystemColors::ControlLightLight;
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->visualOutputLogTextBox->BackColor = System::Drawing::SystemColors::ControlLightLight;
+			this->visualOutputLogTextBox->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(3, 16);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->ReadOnly = true;
-			this->textBox1->ScrollBars = System::Windows::Forms::ScrollBars::Both;
-			this->textBox1->Size = System::Drawing::Size(487, 101);
-			this->textBox1->TabIndex = 1;
+			this->visualOutputLogTextBox->Location = System::Drawing::Point(3, 16);
+			this->visualOutputLogTextBox->Multiline = true;
+			this->visualOutputLogTextBox->Name = L"visualOutputLogTextBox";
+			this->visualOutputLogTextBox->ReadOnly = true;
+			this->visualOutputLogTextBox->ScrollBars = System::Windows::Forms::ScrollBars::Both;
+			this->visualOutputLogTextBox->Size = System::Drawing::Size(487, 101);
+			this->visualOutputLogTextBox->TabIndex = 1;
 			// 
-			// label1
+			// visualOutputLogLabel
 			// 
-			this->label1->AutoSize = true;
-			this->label1->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->label1->Location = System::Drawing::Point(5, 0);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(67, 13);
-			this->label1->TabIndex = 0;
-			this->label1->Text = L"Output Log";
+			this->visualOutputLogLabel->AutoSize = true;
+			this->visualOutputLogLabel->ForeColor = System::Drawing::SystemColors::ControlLightLight;
+			this->visualOutputLogLabel->Location = System::Drawing::Point(5, 0);
+			this->visualOutputLogLabel->Name = L"visualOutputLogLabel";
+			this->visualOutputLogLabel->Size = System::Drawing::Size(67, 13);
+			this->visualOutputLogLabel->TabIndex = 0;
+			this->visualOutputLogLabel->Text = L"Output Log";
+			// 
+			// visualRigidBodyListView
+			// 
+			this->visualRigidBodyListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
+			this->visualRigidBodyListView->FullRowSelect = true;
+			this->visualRigidBodyListView->LabelWrap = false;
+			this->visualRigidBodyListView->Location = System::Drawing::Point(6, 48);
+			this->visualRigidBodyListView->MultiSelect = false;
+			this->visualRigidBodyListView->Name = L"visualRigidBodyListView";
+			this->visualRigidBodyListView->Size = System::Drawing::Size(262, 97);
+			this->visualRigidBodyListView->TabIndex = 1;
+			this->visualRigidBodyListView->TileSize = System::Drawing::Size(100, 20);
+			this->visualRigidBodyListView->UseCompatibleStateImageBehavior = false;
+			this->visualRigidBodyListView->View = System::Windows::Forms::View::SmallIcon;
 			// 
 			// visualPropertiesLabel
 			// 
@@ -1434,6 +1454,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 				 // Setup Main Tab
 				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
 				 this->currentSplitContainer = this->optiTrackSplitContainer;
+				 
+				 this->optiTrackMainSplitContainer->SplitterMoved += gcnew System::Windows::Forms::SplitterEventHandler(this, &MainForm::splitterMoved);
+				 this->optiTrackSplitContainer->SplitterMoved += gcnew System::Windows::Forms::SplitterEventHandler(this, &MainForm::splitterMoved);
 
 				 this->mainTabControl->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::updateCurrentSplitContainer);
 
@@ -1455,6 +1478,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 
 				 // Visual
 				 AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
+
+				 this->visualRigidBodyListView->View = View::Details;
+				 this->visualRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
+				 this->visualRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
 			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::EventArgs ^ e )
 			{
@@ -1649,7 +1676,7 @@ _WATCH_MEMORY
 				}
 			 }
 	public: System::Void optiTrackInitDataView() {
-				optiTrackRigidBodyVector = new std::vector<RigidBody*>();
+				this->optiTrackRigidBodyVector = new std::vector<RigidBody*>();
 
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
@@ -1658,9 +1685,18 @@ _WATCH_MEMORY
 
 					this->optiTrackDataGridView->RowCount = (unsigned int)bodyMap->size();
 					
+					this->visualRigidBodyListView->Items->Clear();
+					
 					for (std::map<int, RigidBody*>::iterator it=bodyMap->begin(); it!=bodyMap->end(); ++it)
 					{
-						optiTrackRigidBodyVector->push_back(it->second);
+						this->optiTrackRigidBodyVector->push_back(it->second);
+
+						// Add Rigid Body to list
+						String^ rigidBodyID = Convert::ToString(it->second->getID());
+						String^ rigidBodyName = gcnew String(it->second->getName());
+						ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
+						listViewItem->SubItems->Add(rigidBodyName);
+						this->visualRigidBodyListView->Items->Add(listViewItem);
 					}
 				}
 			}
@@ -1811,7 +1847,7 @@ _WATCH_MEMORY
 				 this->optiTrackSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
 
 				 this->optiTrackMainSplitContainer->SuspendLayout();
-				 this->optiTrackMainSplitContainer->Invalidate();
+				 this->optiTrackMainSplitContainer->Refresh();
 				 this->optiTrackMainSplitContainer->ResumeLayout();
 
 				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
@@ -1824,7 +1860,7 @@ _WATCH_MEMORY
 				 this->dikablisSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
 
 				 this->dikablisMainSplitContainer->SuspendLayout();
-				 this->dikablisMainSplitContainer->Invalidate();
+				 this->dikablisMainSplitContainer->Refresh();
 				 this->dikablisMainSplitContainer->ResumeLayout();
 
 				 this->currentMainSplitContainer = this->dikablisMainSplitContainer;
@@ -1837,7 +1873,7 @@ _WATCH_MEMORY
 				 this->visualSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
 
 				 this->visualMainSplitContainer->SuspendLayout();
-				 this->visualMainSplitContainer->Invalidate();
+				 this->visualMainSplitContainer->Refresh();
 				 this->visualMainSplitContainer->ResumeLayout();
 
 				 this->currentMainSplitContainer = this->visualMainSplitContainer;
@@ -1845,6 +1881,9 @@ _WATCH_MEMORY
 				 break;
 			 }
 		 }
+	private: System::Void splitterMoved(System::Object^ sender, System::Windows::Forms::SplitterEventArgs^  e) {
+            this->mainTabControl->Refresh();
+	}
 	//////////////////////
 	// OptiTrack Buttons
 	/////////////////////

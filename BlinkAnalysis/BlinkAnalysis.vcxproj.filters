@@ -22,6 +22,7 @@
     <None Include="DikablisHelpDocs\DikablisHelp.rtf">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlinkAnalysis.cpp">
