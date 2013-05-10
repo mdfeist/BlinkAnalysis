@@ -1,3 +1,8 @@
+/**
+ * AppData.cpp
+ * Created By: Michael Feist
+ */
+
 #include "StdAfx.h"
 #include "AppData.h"
 

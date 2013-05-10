@@ -7,6 +7,7 @@
 
 #include <string.h>
 
+// Constructor: Sets the default values for the ClientHandler
 ClientHandler::ClientHandler(void)
 { 
 	this->client = 0;
@@ -20,8 +21,6 @@ ClientHandler::ClientHandler(void)
 	this->setLocalIpAddress("127.0.0.1");
 	this->setOptiTrackServerIpAddress("127.0.0.1");
 	
-	//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE
-	
 	this->g_hMutex = CreateMutex(
 		NULL,
 		//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE, 
@@ -29,46 +28,60 @@ ClientHandler::ClientHandler(void)
 		NULL);
 }
 
+// Cleans up the ClientHandler
 ClientHandler::~ClientHandler(void)
 {
 	// Free the mutex
-	CloseHandle(g_hMutex);
+	CloseHandle(this->g_hMutex);
 }
 
+// Add a Rigid Body to the ClientHandler
 bool ClientHandler::addRigidBody(int id, RigidBody* rigidBody)
 {
+	// Try to insert the Rigid Body
 	std::pair<std::map<int,RigidBody*>::iterator,bool> ret;
-	ret = _rigidBodies.insert ( std::pair<int, RigidBody*>(id, rigidBody) );
+	ret = this->rigidBodies.insert ( std::pair<int, RigidBody*>(id, rigidBody) );
 
+	// Check if insertion was successful
 	if (ret.second == false)
 		return false;
 
+	// If insertion was successful return true
 	return true;
 }
 
+// Get Rigid Body based on ID
 RigidBody* ClientHandler::getRigidBody(int id)
 {
+	// Try to find the Rigid Body
 	std::map<int, RigidBody*>::iterator ret;
-	ret = _rigidBodies.find(id);
+	ret = this->rigidBodies.find(id);
 
-	if ( ret == _rigidBodies.end())
+	// If not found return NULL
+	if ( ret == this->rigidBodies.end())
 		return 0;
 
+	// If found return the Rigid Body
 	return ret->second;
 }
 
+// Update the Position and Orientation of a Rigid Body based on it's Id
 void ClientHandler::transformRigidBody(int id, osg::Vec3 pos, osg::Vec4 rot)
 {
+	// Find the Rigid Body based on its Id
 	std::map<int, RigidBody*>::iterator ret;
-	ret = _rigidBodies.find(id);
+	ret = this->rigidBodies.find(id);
 
-	if ( ret == _rigidBodies.end())
+	// If Rigid Body was not found return
+	if ( ret == this->rigidBodies.end())
 		return;
 
+	// If the Rigid Body was found update its Position and Orientation
 	ret->second->addFrame(pos, rot);
 }
 
+// Return the map of all the Rigid Bodies
 std::map<int, RigidBody*>* ClientHandler::getRigidBodyMap()
 {
-	return &_rigidBodies;
+	return &this->rigidBodies;
 }

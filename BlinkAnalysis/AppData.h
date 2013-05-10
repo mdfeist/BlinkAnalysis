@@ -1,3 +1,9 @@
+/**
+ * AppData.h
+ * Created By: Michael Feist
+ *
+ * Holds global information about the Application.
+ */
 #pragma once
 #include "stdafx.h"
 #include <string>
@@ -13,6 +19,7 @@ public:
 		return m_pInstance;
 	}
 
+	// Set/Get the ClientHandler
 	void setClient(ClientHandler *client) { this->client = client; }
 	ClientHandler* getClient() { return this->client; }
 

@@ -22,31 +22,39 @@
  */
 class ClientHandler
 {
-private:	
+private:
+	// Mutex used to lock the ClientHandler.
+	// Allowing multiple threads to read/write 
+	// data without errors.
 	HANDLE g_hMutex;
 
+	// Pointer to NatNetClient
 	NatNetClient* client;
+	// Used to see if the NatNetClient is connected to a server
 	bool natNetServerRunning;
-	std::map<int, RigidBody*> _rigidBodies;
+	// A map to store all the attached Rigid Bodies
+	std::map<int, RigidBody*> rigidBodies;
 
 	// OptiTrack Server Settings 
-	char cLocalIPAddress[128];
-	char cOtptiTrackServerIPAddress[128];
+	char cLocalIPAddress[128];					// Your local IP Address
+	char cOtptiTrackServerIPAddress[128];		// The OptiTrack servers Ip Address
 
-	unsigned int iOptiTrackServerDataPort;
-	unsigned int iOptiTrackServerCommandPort;
+	unsigned int iOptiTrackServerDataPort;		// The Data port of the OptiTrack server
+	unsigned int iOptiTrackServerCommandPort;	// The Command port of the OptiTrack server
 
-	int iOptiTrackConnectionType;
+	int iOptiTrackConnectionType;				// The Connection Type of the OptiTrack server
 
 public:
-	ClientHandler(void);
-	~ClientHandler(void);
+	ClientHandler(void);						// Constructor
+	~ClientHandler(void);						// Destructor
 
+	// Lock the client so data cannot be changed while doing updates
 	bool lock() { 
 		// Request ownership of mutex
 		DWORD  dwWaitResult;
 		while(true)
 		{
+			// Wait for Mutex to be free
 			dwWaitResult = WaitForSingleObject(g_hMutex, INFINITE);
 			switch (dwWaitResult) 
 			{
@@ -66,30 +74,39 @@ public:
 		return false;
 	}
 
+	// Unlocks the client allowing threads to change its data
 	void unlock() {
-		// Release the mutex
+		// Release the utex
 		ReleaseMutex(g_hMutex);
 	}
 
+	// Set/Get the NatNetClient
 	void setClient(NatNetClient* client) { this->client = client; }
 	NatNetClient* getClient() { return this->client; }
 
+	// Checks if the client is still connected to the server
 	bool isNatNetServerRunning() { return this->natNetServerRunning; }
+	// Tells the client to stop running
 	void setNatNetServerRunning(bool running) { this->natNetServerRunning = running; }
 
 	// Setters/Getters for OptiTrack settings
+	// Your local Ip Address
 	void setLocalIpAddress(const char *ip) { strncpy_s(cLocalIPAddress, 128, ip, 128); }
 	void getLocalIpAddress(char *ip) { strncpy_s(ip, 128, cLocalIPAddress, 128); }
 
+	// The OptiTrack servers Ip Address
 	void setOptiTrackServerIpAddress(const char *ip) { strncpy_s(cOtptiTrackServerIPAddress, 128, ip, 128); }
 	void getOptiTrackServerIpAddress(char *ip) { strncpy_s(ip, 128, cOtptiTrackServerIPAddress, 128); }
 
+	// The Data port of the OptiTrack server
 	void setOptiTrackServerDataPort(unsigned int port) { iOptiTrackServerDataPort = port; }
 	int getOptiTrackServerDataPort() { return iOptiTrackServerDataPort; }
 
+	// The Command port of the OptiTrack server
 	void setOptiTrackServerCommandPort(unsigned int port) { iOptiTrackServerCommandPort = port; }
 	int getOptiTrackServerCommandPort() { return iOptiTrackServerCommandPort; }
 
+	// The Connection Type of the OptiTrack server
 	void setOptiTrackServerConnectionType(int type) { iOptiTrackConnectionType = type; }
 	int getOptiTrackServerConnectionType() { return iOptiTrackConnectionType; }
 

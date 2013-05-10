@@ -1,8 +1,17 @@
+/**
+ * Dikablis.h
+ * Created By: Michael Feist
+ *
+ * Handles the eye tracking from the Dikablis Recorder.
+ */
 #pragma once
 #include "stdafx.h"
 #include <string>
 
 namespace Dikablis {
+
+	// Structure to hold the journal information from
+	// Dikablis Recorder.
 	typedef struct
 	{
 		unsigned int index;		// image number
@@ -19,11 +28,16 @@ namespace Dikablis {
 		int field_y;			// Range 0 to 576 | Vertical position of the focal point in field camera
 	} journal_struct;
 
+	// Set the Ip Address of the machine running Dikablis Recorder
 	void setIPAddress(std::string ip);
+	// Set the slave port of the machine running Dikablis Recorder
 	void setPort(std::string p);
 
+	// Start the connection with Dikablis Recorder
 	void startServer();
+	// Stop the connection with Dikablis Recorder
 	void stopServer();
 
+	// Create and start the connection with Dikablis Recorder
 	void connectToDikablis(std::string ip, std::string p);
 };

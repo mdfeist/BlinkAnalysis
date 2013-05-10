@@ -1,3 +1,11 @@
+/**
+ * MainForm.h
+ * Created By: Michael Feist
+ *
+ * MainForm handles the Windows GUI for the main window.
+ * Most of the code is auto generated but the user defined
+ * code is located at the bottom.
+ */
 #pragma once
 #include "stdafx.h"
 
@@ -147,16 +155,16 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::ComboBox^  optiTrackConnectionTypeComboBox;
 
 	private: System::Windows::Forms::Label^  optiTrackConnectionTypeLabel;
-private: System::Windows::Forms::DataGridView^  optiTrackDataGridView;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyIDColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyNameColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyPositionXColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyPositionYColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyPositionZColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationXColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationYColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationZColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationWColumn;
+
+
+
+
+
+
+
+
+
+
 private: System::Windows::Forms::TextBox^  optiTrackLocalIpAddressTextBox;
 private: System::Windows::Forms::Label^  optiTrackLocalIpAddressLabel;
 private: System::Windows::Forms::Label^  optiTrackLocalTitle;
@@ -171,6 +179,17 @@ private: System::Windows::Forms::SplitContainer^  visualSplitContainer;
 private: System::Windows::Forms::TextBox^  textBox1;
 private: System::Windows::Forms::Label^  label1;
 private: System::Windows::Forms::Label^  visualPropertiesLabel;
+private: System::Windows::Forms::DataGridView^  optiTrackDataGridView;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyIDColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyNameColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyPositionXColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyPositionYColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyPositionZColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationXColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationYColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationZColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationWColumn;
+
 
 
 
@@ -304,18 +323,18 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			this->dikablisIPLabel = (gcnew System::Windows::Forms::Label());
 			this->dikablisRecorderSetting = (gcnew System::Windows::Forms::Label());
 			this->dikablisPropertiesLabel = (gcnew System::Windows::Forms::Label());
-			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
-			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->visualTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualMainSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->visualSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->visualPropertiesLabel = (gcnew System::Windows::Forms::Label());
+			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
+			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -335,7 +354,6 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dikablisSplitContainer))->BeginInit();
 			this->dikablisSplitContainer->Panel2->SuspendLayout();
 			this->dikablisSplitContainer->SuspendLayout();
-			this->menuStrip->SuspendLayout();
 			this->visualTabPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualMainSplitContainer))->BeginInit();
 			this->visualMainSplitContainer->Panel1->SuspendLayout();
@@ -344,6 +362,7 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->BeginInit();
 			this->visualSplitContainer->Panel2->SuspendLayout();
 			this->visualSplitContainer->SuspendLayout();
+			this->menuStrip->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// mainTabControl
@@ -440,15 +459,27 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			this->optiTrackDataGridView->AllowUserToResizeRows = false;
 			this->optiTrackDataGridView->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->optiTrackDataGridView->BackgroundColor = System::Drawing::SystemColors::ButtonFace;
+			this->optiTrackDataGridView->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->optiTrackDataGridView->CausesValidation = false;
+			this->optiTrackDataGridView->ClipboardCopyMode = System::Windows::Forms::DataGridViewClipboardCopyMode::Disable;
+			this->optiTrackDataGridView->ColumnHeadersBorderStyle = System::Windows::Forms::DataGridViewHeaderBorderStyle::Single;
 			this->optiTrackDataGridView->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->optiTrackDataGridView->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(9) {this->optiTrackRigidBodyIDColumn, 
 				this->optiTrackRigidBodyNameColumn, this->optiTrackRigidBodyPositionXColumn, this->optiTrackRigidBodyPositionYColumn, this->optiTrackRigidBodyPositionZColumn, 
 				this->optiTrackRigidBodyRotationXColumn, this->optiTrackRigidBodyRotationYColumn, this->optiTrackRigidBodyRotationZColumn, this->optiTrackRigidBodyRotationWColumn});
 			this->optiTrackDataGridView->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->optiTrackDataGridView->EditMode = System::Windows::Forms::DataGridViewEditMode::EditProgrammatically;
+			this->optiTrackDataGridView->EnableHeadersVisualStyles = false;
 			this->optiTrackDataGridView->Location = System::Drawing::Point(0, 0);
 			this->optiTrackDataGridView->Name = L"optiTrackDataGridView";
 			this->optiTrackDataGridView->ReadOnly = true;
+			this->optiTrackDataGridView->RowHeadersBorderStyle = System::Windows::Forms::DataGridViewHeaderBorderStyle::Single;
 			this->optiTrackDataGridView->RowHeadersWidth = 25;
+			this->optiTrackDataGridView->RowHeadersWidthSizeMode = System::Windows::Forms::DataGridViewRowHeadersWidthSizeMode::DisableResizing;
+			this->optiTrackDataGridView->ShowCellErrors = false;
+			this->optiTrackDataGridView->ShowCellToolTips = false;
+			this->optiTrackDataGridView->ShowEditingIcon = false;
+			this->optiTrackDataGridView->ShowRowErrors = false;
 			this->optiTrackDataGridView->Size = System::Drawing::Size(493, 376);
 			this->optiTrackDataGridView->TabIndex = 1;
 			// 
@@ -1199,50 +1230,6 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			this->dikablisPropertiesLabel->TabIndex = 0;
 			this->dikablisPropertiesLabel->Text = L"Properties";
 			// 
-			// menuStrip
-			// 
-			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->projectToolStripMenuItem});
-			this->menuStrip->Location = System::Drawing::Point(0, 0);
-			this->menuStrip->Name = L"menuStrip";
-			this->menuStrip->Size = System::Drawing::Size(784, 24);
-			this->menuStrip->TabIndex = 1;
-			// 
-			// projectToolStripMenuItem
-			// 
-			this->projectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->newToolStripMenuItem, 
-				this->openToolStripMenuItem, this->saveToolStripMenuItem, this->saveAsToolStripMenuItem});
-			this->projectToolStripMenuItem->Name = L"projectToolStripMenuItem";
-			this->projectToolStripMenuItem->Size = System::Drawing::Size(56, 20);
-			this->projectToolStripMenuItem->Text = L"Project";
-			// 
-			// newToolStripMenuItem
-			// 
-			this->newToolStripMenuItem->Name = L"newToolStripMenuItem";
-			this->newToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+N";
-			this->newToolStripMenuItem->Size = System::Drawing::Size(186, 22);
-			this->newToolStripMenuItem->Text = L"New";
-			// 
-			// openToolStripMenuItem
-			// 
-			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+O";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(186, 22);
-			this->openToolStripMenuItem->Text = L"Open";
-			// 
-			// saveToolStripMenuItem
-			// 
-			this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
-			this->saveToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+S";
-			this->saveToolStripMenuItem->Size = System::Drawing::Size(186, 22);
-			this->saveToolStripMenuItem->Text = L"Save";
-			// 
-			// saveAsToolStripMenuItem
-			// 
-			this->saveAsToolStripMenuItem->Name = L"saveAsToolStripMenuItem";
-			this->saveAsToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+Shift+S";
-			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(186, 22);
-			this->saveAsToolStripMenuItem->Text = L"Save As";
-			// 
 			// visualTabPage
 			// 
 			this->visualTabPage->BackColor = System::Drawing::Color::Gainsboro;
@@ -1335,6 +1322,50 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			this->visualPropertiesLabel->TabIndex = 0;
 			this->visualPropertiesLabel->Text = L"Properties";
 			// 
+			// menuStrip
+			// 
+			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->projectToolStripMenuItem});
+			this->menuStrip->Location = System::Drawing::Point(0, 0);
+			this->menuStrip->Name = L"menuStrip";
+			this->menuStrip->Size = System::Drawing::Size(784, 24);
+			this->menuStrip->TabIndex = 1;
+			// 
+			// projectToolStripMenuItem
+			// 
+			this->projectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->newToolStripMenuItem, 
+				this->openToolStripMenuItem, this->saveToolStripMenuItem, this->saveAsToolStripMenuItem});
+			this->projectToolStripMenuItem->Name = L"projectToolStripMenuItem";
+			this->projectToolStripMenuItem->Size = System::Drawing::Size(56, 20);
+			this->projectToolStripMenuItem->Text = L"Project";
+			// 
+			// newToolStripMenuItem
+			// 
+			this->newToolStripMenuItem->Name = L"newToolStripMenuItem";
+			this->newToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+N";
+			this->newToolStripMenuItem->Size = System::Drawing::Size(186, 22);
+			this->newToolStripMenuItem->Text = L"New";
+			// 
+			// openToolStripMenuItem
+			// 
+			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
+			this->openToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+O";
+			this->openToolStripMenuItem->Size = System::Drawing::Size(186, 22);
+			this->openToolStripMenuItem->Text = L"Open";
+			// 
+			// saveToolStripMenuItem
+			// 
+			this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
+			this->saveToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+S";
+			this->saveToolStripMenuItem->Size = System::Drawing::Size(186, 22);
+			this->saveToolStripMenuItem->Text = L"Save";
+			// 
+			// saveAsToolStripMenuItem
+			// 
+			this->saveAsToolStripMenuItem->Name = L"saveAsToolStripMenuItem";
+			this->saveAsToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+Shift+S";
+			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(186, 22);
+			this->saveAsToolStripMenuItem->Text = L"Save As";
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1372,8 +1403,6 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			this->dikablisSplitContainer->Panel2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dikablisSplitContainer))->EndInit();
 			this->dikablisSplitContainer->ResumeLayout(false);
-			this->menuStrip->ResumeLayout(false);
-			this->menuStrip->PerformLayout();
 			this->visualTabPage->ResumeLayout(false);
 			this->visualMainSplitContainer->Panel1->ResumeLayout(false);
 			this->visualMainSplitContainer->Panel2->ResumeLayout(false);
@@ -1384,6 +1413,8 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 			this->visualSplitContainer->Panel2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->EndInit();
 			this->visualSplitContainer->ResumeLayout(false);
+			this->menuStrip->ResumeLayout(false);
+			this->menuStrip->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -1405,12 +1436,12 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 				 this->currentSplitContainer = this->optiTrackSplitContainer;
 
 				 this->mainTabControl->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::updateCurrentSplitContainer);
-				 this->mainTabControl->Selected += gcnew TabControlEventHandler(this, &BlinkAnalysis::MainForm::updateSplitContainer);
 
-				 this->SetStyle(ControlStyles::OptimizedDoubleBuffer, true);
-				 //this->SetStyle(ControlStyles::UserPaint, true);
-				 //this->SetStyle(ControlStyles::AllPaintingInWmPaint, true); 
-				 //this->SetStyle(ControlStyles::DoubleBuffer, true);
+				 //this->SetStyle(ControlStyles::OptimizedDoubleBuffer, true);
+				 this->SetStyle(ControlStyles::UserPaint, true);
+				 this->SetStyle(ControlStyles::AllPaintingInWmPaint, true); 
+				 this->SetStyle(ControlStyles::DoubleBuffer, true);
+				 this->SetStyle(ControlStyles::ResizeRedraw, true);
 
 				 this->optiTrackDataGridView->CellValueNeeded += gcnew
 					 DataGridViewCellValueEventHandler( this, &MainForm::optiTrackDataGridView_CellValueNeeded );
@@ -1424,7 +1455,7 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 
 				 // Visual
 				 AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
-			}
+			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::EventArgs ^ e )
 			{
 				ClientHandler* client = AppData::getInstance()->getClient();
@@ -1443,6 +1474,8 @@ private: System::Windows::Forms::Label^  visualPropertiesLabel;
 
 					delete client;
 				}
+
+				AppViewer::stopAppViewer();
 
 #if _DEBUG
 _WATCH_MEMORY
@@ -1640,15 +1673,24 @@ _WATCH_MEMORY
 						SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
 						BeginInvoke(d, nullptr);
 					} else {
-						 try {
-							this->optiTrackDataGridView->SuspendLayout();
-							this->optiTrackDataGridView->Invalidate();
-							this->optiTrackDataGridView->ResumeLayout();
-						 }
-						 catch(Exception^) {
-							 Debug::WriteLine("Error: Exception when trying to redraw the OptiTrack DataGridView.");
-						 }
-						
+						ClientHandler* client = AppData::getInstance()->getClient();
+						if (client)
+						{
+							if (!client->lock())
+								return;
+
+							try {
+								this->optiTrackDataGridView->SuspendLayout();
+								this->optiTrackDataGridView->Refresh();
+								this->optiTrackDataGridView->ResumeLayout();
+							}
+							catch(Exception^) {
+								Debug::WriteLine("Error: Exception when trying to redraw the OptiTrack DataGridView.");
+							}
+
+							client->unlock();
+						}
+
 					}
 				}
 			}
@@ -1719,39 +1761,45 @@ _WATCH_MEMORY
 	//////////////////////
 	// Split Container Updates
 	/////////////////////
-	private: System::Void updateSplitContainer(System::Object^  sender, System::Windows::Forms::TabControlEventArgs^  e) {
+	private: System::Void updateCurrentSplitContainer(System::Object^  sender, System::EventArgs^  e) {
+
 			 switch(this->mainTabControl->SelectedIndex) {
 			 case 0: 
+				 AppViewer::setVisible(false);
+
 				 this->optiTrackMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
 				 this->optiTrackSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
 
-				 this->optiTrackMainSplitContainer->Invalidate();
-				 break;
-			 case 1:
-				 this->dikablisMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
-				 this->dikablisSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
+				 this->optiTrackMainSplitContainer->SuspendLayout();
+				 this->optiTrackMainSplitContainer->Refresh();
+				 this->optiTrackMainSplitContainer->ResumeLayout();
 
-				 this->dikablisMainSplitContainer->Invalidate();
-				 break;
-			 case 2:
-				 this->visualMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
-				 this->visualSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
-
-				 this->visualMainSplitContainer->Invalidate();
-				 break;
-			 }
-		 }
-	private: System::Void updateCurrentSplitContainer(System::Object^  sender, System::EventArgs^  e) {
-			 switch(this->mainTabControl->SelectedIndex) {
-			 case 0: 
 				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
 				 this->currentSplitContainer = this->optiTrackSplitContainer;
 				 break;
 			 case 1:
+				 AppViewer::setVisible(false);
+
+				 this->dikablisMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
+				 this->dikablisSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
+
+				 this->dikablisMainSplitContainer->SuspendLayout();
+				 this->dikablisMainSplitContainer->Refresh();
+				 this->dikablisMainSplitContainer->ResumeLayout();
+
 				 this->currentMainSplitContainer = this->dikablisMainSplitContainer;
 				 this->currentSplitContainer = this->dikablisSplitContainer;
 				 break;
 			 case 2:
+				 AppViewer::setVisible(true);
+
+				 this->visualMainSplitContainer->SplitterDistance = this->currentMainSplitContainer->SplitterDistance;
+				 this->visualSplitContainer->SplitterDistance = this->currentSplitContainer->SplitterDistance;
+
+				 this->visualMainSplitContainer->SuspendLayout();
+				 this->visualMainSplitContainer->Refresh();
+				 this->visualMainSplitContainer->ResumeLayout();
+
 				 this->currentMainSplitContainer = this->visualMainSplitContainer;
 				 this->currentSplitContainer = this->visualSplitContainer;
 				 break;
