@@ -98,10 +98,10 @@ void render(void *) {
 								
 								// Get current position of marker by transforming
 								// the position relative to the attached Rigid Body.
-								osg::Vec3 pos = matrix * osg::Vec3( m.x, m.y, m.z );
+								osg::Vec3 pos = osg::Vec3( m.x, m.z, m.y ); //matrix * osg::Vec3( m.x, m.y, m.z );
 
 								// Add marker to the points array
-								points->push_back( pos ); 
+								points->push_back( pos / 100.f ); 
 
 								// Update the current index
 								markerIndex++;
