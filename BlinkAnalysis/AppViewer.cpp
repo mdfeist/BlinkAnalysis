@@ -203,8 +203,8 @@ void AppViewer::initAppViewer(HWND hwnd)
 
 	// Add the ground plane
 	osg::Geode* planeNode = Objects::createPlane();
-	osg::ref_ptr<osg::StateSet> planeNodeState = planeNode->getOrCreateStateSet();
-	planeNodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+	//osg::ref_ptr<osg::StateSet> planeNodeState = planeNode->getOrCreateStateSet();
+	//planeNodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 	rootNode->addChild(planeNode);
 
 	// Add the root node to the scene

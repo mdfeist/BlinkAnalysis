@@ -144,6 +144,9 @@
     <ClInclude Include="DikablisHelp.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="EyeCalibrationWizardForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -156,6 +159,7 @@
     <ClInclude Include="Split.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TCPClientListener.h" />
+    <ClInclude Include="WizardPages.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
@@ -163,6 +167,9 @@
   <ItemGroup>
     <EmbeddedResource Include="DikablisHelp.resx">
       <DependentUpon>DikablisHelp.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EyeCalibrationWizardForm.resx">
+      <DependentUpon>EyeCalibrationWizardForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resX">
       <DependentUpon>MainForm.h</DependentUpon>

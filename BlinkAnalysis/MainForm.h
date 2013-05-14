@@ -18,6 +18,7 @@
 
 #include "Dikablis.h"
 #include "DikablisHelp.h"
+#include "EyeCalibrationWizardForm.h"
 #include "AppData.h"
 #include "AppViewer.h"
 
@@ -192,6 +193,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationZColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationWColumn;
 private: System::Windows::Forms::ListView^  visualRigidBodyListView;
+private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 
 
 
@@ -340,6 +342,7 @@ private: System::Windows::Forms::ListView^  visualRigidBodyListView;
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dikablisCalibrationBtn = (gcnew System::Windows::Forms::Button());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -767,6 +770,7 @@ private: System::Windows::Forms::ListView^  visualRigidBodyListView;
 			// dikablisMainSplitContainer.Panel2
 			// 
 			this->dikablisMainSplitContainer->Panel2->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->dikablisMainSplitContainer->Panel2->Controls->Add(this->dikablisCalibrationBtn);
 			this->dikablisMainSplitContainer->Panel2->Controls->Add(this->dikablisFieldYOutputLabel);
 			this->dikablisMainSplitContainer->Panel2->Controls->Add(this->dikablisFieldXOutputLabel);
 			this->dikablisMainSplitContainer->Panel2->Controls->Add(this->dikablisEyeYOutputLabel);
@@ -976,9 +980,9 @@ private: System::Windows::Forms::ListView^  visualRigidBodyListView;
 			// dikablisHelpBtn
 			// 
 			this->dikablisHelpBtn->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
-			this->dikablisHelpBtn->Location = System::Drawing::Point(193, 391);
+			this->dikablisHelpBtn->Location = System::Drawing::Point(193, 380);
 			this->dikablisHelpBtn->Name = L"dikablisHelpBtn";
-			this->dikablisHelpBtn->Size = System::Drawing::Size(75, 23);
+			this->dikablisHelpBtn->Size = System::Drawing::Size(75, 22);
 			this->dikablisHelpBtn->TabIndex = 21;
 			this->dikablisHelpBtn->Text = L"Help";
 			this->dikablisHelpBtn->UseVisualStyleBackColor = true;
@@ -1385,6 +1389,17 @@ private: System::Windows::Forms::ListView^  visualRigidBodyListView;
 			this->saveAsToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+Shift+S";
 			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->saveAsToolStripMenuItem->Text = L"Save As";
+			// 
+			// dikablisCalibrationBtn
+			// 
+			this->dikablisCalibrationBtn->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
+			this->dikablisCalibrationBtn->Location = System::Drawing::Point(193, 408);
+			this->dikablisCalibrationBtn->Name = L"dikablisCalibrationBtn";
+			this->dikablisCalibrationBtn->Size = System::Drawing::Size(75, 22);
+			this->dikablisCalibrationBtn->TabIndex = 32;
+			this->dikablisCalibrationBtn->Text = L"Calibration";
+			this->dikablisCalibrationBtn->UseVisualStyleBackColor = true;
+			this->dikablisCalibrationBtn->Click += gcnew System::EventHandler(this, &MainForm::dikablisCalibrationBtn_Click);
 			// 
 			// MainForm
 			// 
@@ -1834,6 +1849,10 @@ _WATCH_MEMORY
 				DikablisHelp^ helpForm = gcnew DikablisHelp();
 				helpForm->Show();
 			}
+	private: System::Void dikablisCalibrationBtn_Click(System::Object^  sender, System::EventArgs^  e) {
+				EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
+				calibrationForm->Show();
+		 }
 	//////////////////////
 	// Split Container Updates
 	/////////////////////
