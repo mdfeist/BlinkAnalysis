@@ -194,6 +194,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyR
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  optiTrackRigidBodyRotationWColumn;
 private: System::Windows::Forms::ListView^  visualRigidBodyListView;
 private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
+private: System::Windows::Forms::ToolStripMenuItem^  calibrationToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenuItem;
 
 
 
@@ -343,6 +345,8 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->calibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->eyeCalibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1361,7 +1365,8 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			// 
 			// menuStrip
 			// 
-			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->projectToolStripMenuItem});
+			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->projectToolStripMenuItem, 
+				this->calibrationToolStripMenuItem});
 			this->menuStrip->Location = System::Drawing::Point(0, 0);
 			this->menuStrip->Name = L"menuStrip";
 			this->menuStrip->Size = System::Drawing::Size(784, 24);
@@ -1402,6 +1407,20 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->saveAsToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+Shift+S";
 			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->saveAsToolStripMenuItem->Text = L"Save As";
+			// 
+			// calibrationToolStripMenuItem
+			// 
+			this->calibrationToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->eyeCalibrationToolStripMenuItem});
+			this->calibrationToolStripMenuItem->Name = L"calibrationToolStripMenuItem";
+			this->calibrationToolStripMenuItem->Size = System::Drawing::Size(77, 20);
+			this->calibrationToolStripMenuItem->Text = L"Calibration";
+			// 
+			// eyeCalibrationToolStripMenuItem
+			// 
+			this->eyeCalibrationToolStripMenuItem->Name = L"eyeCalibrationToolStripMenuItem";
+			this->eyeCalibrationToolStripMenuItem->Size = System::Drawing::Size(153, 22);
+			this->eyeCalibrationToolStripMenuItem->Text = L"Eye Calibration";
+			this->eyeCalibrationToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::eyeCalibrationToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -1941,6 +1960,11 @@ private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System:
 
 			 if (client)
 				 NatNetClientSetup::deleteClient(&client);
+		 }
+// Menu Items
+private: System::Void eyeCalibrationToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
+			 calibrationForm->Show();
 		 }
 };
 }
