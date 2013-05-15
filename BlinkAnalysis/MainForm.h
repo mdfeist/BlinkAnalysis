@@ -297,6 +297,7 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->dikablisSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->dikablisOutputLogTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->dikablisOutputLogLabel = (gcnew System::Windows::Forms::Label());
+			this->dikablisCalibrationBtn = (gcnew System::Windows::Forms::Button());
 			this->dikablisFieldYOutputLabel = (gcnew System::Windows::Forms::Label());
 			this->dikablisFieldXOutputLabel = (gcnew System::Windows::Forms::Label());
 			this->dikablisEyeYOutputLabel = (gcnew System::Windows::Forms::Label());
@@ -342,7 +343,6 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->dikablisCalibrationBtn = (gcnew System::Windows::Forms::Button());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -432,7 +432,7 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->optiTrackMainSplitContainer->Panel2->Controls->Add(this->optiTrackServerTitleLabel);
 			this->optiTrackMainSplitContainer->Panel2->Controls->Add(this->optiTrackPropertiesLabel);
 			this->optiTrackMainSplitContainer->Panel2->Cursor = System::Windows::Forms::Cursors::Arrow;
-			this->optiTrackMainSplitContainer->Panel2MinSize = 200;
+			this->optiTrackMainSplitContainer->Panel2MinSize = 250;
 			this->optiTrackMainSplitContainer->Size = System::Drawing::Size(770, 503);
 			this->optiTrackMainSplitContainer->SplitterDistance = 493;
 			this->optiTrackMainSplitContainer->TabIndex = 1;
@@ -803,7 +803,7 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->dikablisMainSplitContainer->Panel2->Controls->Add(this->dikablisIPLabel);
 			this->dikablisMainSplitContainer->Panel2->Controls->Add(this->dikablisRecorderSetting);
 			this->dikablisMainSplitContainer->Panel2->Controls->Add(this->dikablisPropertiesLabel);
-			this->dikablisMainSplitContainer->Panel2MinSize = 100;
+			this->dikablisMainSplitContainer->Panel2MinSize = 250;
 			this->dikablisMainSplitContainer->Size = System::Drawing::Size(770, 503);
 			this->dikablisMainSplitContainer->SplitterDistance = 493;
 			this->dikablisMainSplitContainer->TabIndex = 0;
@@ -856,6 +856,17 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->dikablisOutputLogLabel->Size = System::Drawing::Size(67, 13);
 			this->dikablisOutputLogLabel->TabIndex = 0;
 			this->dikablisOutputLogLabel->Text = L"Output Log";
+			// 
+			// dikablisCalibrationBtn
+			// 
+			this->dikablisCalibrationBtn->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
+			this->dikablisCalibrationBtn->Location = System::Drawing::Point(193, 408);
+			this->dikablisCalibrationBtn->Name = L"dikablisCalibrationBtn";
+			this->dikablisCalibrationBtn->Size = System::Drawing::Size(75, 22);
+			this->dikablisCalibrationBtn->TabIndex = 32;
+			this->dikablisCalibrationBtn->Text = L"Calibration";
+			this->dikablisCalibrationBtn->UseVisualStyleBackColor = true;
+			this->dikablisCalibrationBtn->Click += gcnew System::EventHandler(this, &MainForm::dikablisCalibrationBtn_Click);
 			// 
 			// dikablisFieldYOutputLabel
 			// 
@@ -1267,7 +1278,7 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->visualMainSplitContainer->Panel2->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualRigidBodyListView);
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualPropertiesLabel);
-			this->visualMainSplitContainer->Panel2MinSize = 100;
+			this->visualMainSplitContainer->Panel2MinSize = 250;
 			this->visualMainSplitContainer->Size = System::Drawing::Size(770, 503);
 			this->visualMainSplitContainer->SplitterDistance = 493;
 			this->visualMainSplitContainer->TabIndex = 0;
@@ -1324,12 +1335,14 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			// visualRigidBodyListView
 			// 
 			this->visualRigidBodyListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
+			this->visualRigidBodyListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->visualRigidBodyListView->FullRowSelect = true;
 			this->visualRigidBodyListView->LabelWrap = false;
 			this->visualRigidBodyListView->Location = System::Drawing::Point(6, 48);
 			this->visualRigidBodyListView->MultiSelect = false;
 			this->visualRigidBodyListView->Name = L"visualRigidBodyListView";
-			this->visualRigidBodyListView->Size = System::Drawing::Size(262, 97);
+			this->visualRigidBodyListView->Size = System::Drawing::Size(262, 172);
 			this->visualRigidBodyListView->TabIndex = 1;
 			this->visualRigidBodyListView->TileSize = System::Drawing::Size(100, 20);
 			this->visualRigidBodyListView->UseCompatibleStateImageBehavior = false;
@@ -1389,17 +1402,6 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 			this->saveAsToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+Shift+S";
 			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->saveAsToolStripMenuItem->Text = L"Save As";
-			// 
-			// dikablisCalibrationBtn
-			// 
-			this->dikablisCalibrationBtn->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
-			this->dikablisCalibrationBtn->Location = System::Drawing::Point(193, 408);
-			this->dikablisCalibrationBtn->Name = L"dikablisCalibrationBtn";
-			this->dikablisCalibrationBtn->Size = System::Drawing::Size(75, 22);
-			this->dikablisCalibrationBtn->TabIndex = 32;
-			this->dikablisCalibrationBtn->Text = L"Calibration";
-			this->dikablisCalibrationBtn->UseVisualStyleBackColor = true;
-			this->dikablisCalibrationBtn->Click += gcnew System::EventHandler(this, &MainForm::dikablisCalibrationBtn_Click);
 			// 
 			// MainForm
 			// 

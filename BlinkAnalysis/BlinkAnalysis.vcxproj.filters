@@ -133,5 +133,8 @@
     <EmbeddedResource Include="DikablisHelp.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
+    <EmbeddedResource Include="EyeCalibrationWizardForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

@@ -40,8 +40,10 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Button^  nextBtn;
 	private: System::Windows::Forms::Button^  cancelBtn;
 	private: System::Windows::Forms::TabControl^ wizardPages;
-	private: System::Windows::Forms::TabPage^  tabPage1;
+	private: System::Windows::Forms::TabPage^  introPage;
+
 	private: System::Windows::Forms::TabPage^  tabPage2;
+	private: System::Windows::Forms::Label^  introTitleLabel;
 
 	private:
 		/// <summary>
@@ -60,9 +62,11 @@ namespace BlinkAnalysis {
 			this->nextBtn = (gcnew System::Windows::Forms::Button());
 			this->cancelBtn = (gcnew System::Windows::Forms::Button());
 			this->wizardPages = (gcnew System::Windows::Forms::TabControl());
-			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->introPage = (gcnew System::Windows::Forms::TabPage());
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->introTitleLabel = (gcnew System::Windows::Forms::Label());
 			this->wizardPages->SuspendLayout();
+			this->introPage->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// backBtn
@@ -98,24 +102,25 @@ namespace BlinkAnalysis {
 			// 
 			// wizardPages
 			// 
-			this->wizardPages->Controls->Add(this->tabPage1);
+			this->wizardPages->Controls->Add(this->introPage);
 			this->wizardPages->Controls->Add(this->tabPage2);
 			this->wizardPages->Location = System::Drawing::Point(0, 0);
 			this->wizardPages->Name = L"wizardPages";
 			this->wizardPages->SelectedIndex = 0;
-			this->wizardPages->Size = System::Drawing::Size(533, 321);
+			this->wizardPages->Size = System::Drawing::Size(537, 321);
 			this->wizardPages->TabIndex = 3;
 			this->wizardPages->SelectedIndexChanged += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::pageChanged);
 			// 
-			// tabPage1
+			// introPage
 			// 
-			this->tabPage1->Location = System::Drawing::Point(4, 22);
-			this->tabPage1->Name = L"tabPage1";
-			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage1->Size = System::Drawing::Size(525, 295);
-			this->tabPage1->TabIndex = 0;
-			this->tabPage1->Text = L"tabPage1";
-			this->tabPage1->UseVisualStyleBackColor = true;
+			this->introPage->Controls->Add(this->introTitleLabel);
+			this->introPage->Location = System::Drawing::Point(4, 22);
+			this->introPage->Name = L"introPage";
+			this->introPage->Padding = System::Windows::Forms::Padding(3);
+			this->introPage->Size = System::Drawing::Size(529, 295);
+			this->introPage->TabIndex = 0;
+			this->introPage->Text = L"Intro";
+			this->introPage->UseVisualStyleBackColor = true;
 			// 
 			// tabPage2
 			// 
@@ -127,6 +132,17 @@ namespace BlinkAnalysis {
 			this->tabPage2->Text = L"tabPage2";
 			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
+			// introTitleLabel
+			// 
+			this->introTitleLabel->AutoSize = true;
+			this->introTitleLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->introTitleLabel->Location = System::Drawing::Point(8, 16);
+			this->introTitleLabel->Name = L"introTitleLabel";
+			this->introTitleLabel->Size = System::Drawing::Size(235, 30);
+			this->introTitleLabel->TabIndex = 0;
+			this->introTitleLabel->Text = L"Eye Calibration Wizard";
+			// 
 			// EyeCalibrationWizardForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -136,9 +152,13 @@ namespace BlinkAnalysis {
 			this->Controls->Add(this->cancelBtn);
 			this->Controls->Add(this->nextBtn);
 			this->Controls->Add(this->backBtn);
+			this->MaximumSize = System::Drawing::Size(550, 400);
+			this->MinimumSize = System::Drawing::Size(550, 400);
 			this->Name = L"EyeCalibrationWizardForm";
 			this->Text = L"Eye Calibration Wizard";
 			this->wizardPages->ResumeLayout(false);
+			this->introPage->ResumeLayout(false);
+			this->introPage->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
