@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="objectSelectionInstructionsLabel.Text" xml:space="preserve">
+    <value>Please select a Rigid Body from the list of Rigid Body's to be the object the subject looks at while calibrating. If no Rigid Body's are shown then make sure you are connected to the OptiTrack system and are streaming data. You can use the OptiTrack view on the main tab bar to see if any data is being streamed.</value>
+  </data>
+  <data name="eyeCalibrationInstructionsLabel.Text" xml:space="preserve">
     <value>This wizard allows a user to define a Rigid Body being streamed from OptiTrack as the subjects head. Then calibrate the eye tracking relative to the selected head. Allowing the user to see what the subject is viewing in a 3D space.
 
 However, to do a proper calibration you must first set up the following:

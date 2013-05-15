@@ -21,13 +21,12 @@ protected:
 			TabControl::WndProc(m);
     }        
 
-	/*
-    protected override void OnKeyDown(KeyEventArgs ke)
+	
+    virtual void OnKeyDown(KeyEventArgs^ ke) override
     {
         // Block Ctrl+Tab and Ctrl+Shift+Tab hotkeys
-        //if (ke->Control && keKeyCode == Keys.Tab) 
-        //    return;
-        //base.OnKeyDown(ke);
+        if (ke->Control && ke->KeyCode == Keys::Tab) 
+            return;
+        TabControl::OnKeyDown(ke);
     }
-	*/
 };

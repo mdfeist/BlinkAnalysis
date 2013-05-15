@@ -48,12 +48,20 @@ namespace BlinkAnalysis {
 
 	private: System::Windows::Forms::Label^  introTitleLabel;
 	private: System::Windows::Forms::ListView^  headRigidBodyListView;
+	private: System::Windows::Forms::TabPage^  objectSelectPage;
 
-	private: System::Windows::Forms::TabPage^  tabPage1;
+
+
 	private: System::Windows::Forms::Button^  selectAsHeadBtn;
 	private: System::Windows::Forms::Label^  headSelectedLabel;
-	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::Label^  eyeCalibrationInstructionsLabel;
+
 	private: System::Windows::Forms::Label^  headSelectLabel;
+	private: System::Windows::Forms::Label^  selectedObjectLabel;
+	private: System::Windows::Forms::Button^  selectAsObjectBtn;
+	private: System::Windows::Forms::Label^  objectSelectionInstructionsLabel;
+
+	private: System::Windows::Forms::ListView^  objectRigidBodyListView;
 
 	private:
 		/// <summary>
@@ -74,17 +82,22 @@ namespace BlinkAnalysis {
 			this->cancelBtn = (gcnew System::Windows::Forms::Button());
 			this->wizardPages = (gcnew System::Windows::Forms::TabControl());
 			this->introPage = (gcnew System::Windows::Forms::TabPage());
-			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->eyeCalibrationInstructionsLabel = (gcnew System::Windows::Forms::Label());
 			this->introTitleLabel = (gcnew System::Windows::Forms::Label());
 			this->headSelectPage = (gcnew System::Windows::Forms::TabPage());
 			this->headSelectedLabel = (gcnew System::Windows::Forms::Label());
 			this->selectAsHeadBtn = (gcnew System::Windows::Forms::Button());
 			this->headSelectLabel = (gcnew System::Windows::Forms::Label());
 			this->headRigidBodyListView = (gcnew System::Windows::Forms::ListView());
-			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->objectSelectPage = (gcnew System::Windows::Forms::TabPage());
+			this->selectedObjectLabel = (gcnew System::Windows::Forms::Label());
+			this->selectAsObjectBtn = (gcnew System::Windows::Forms::Button());
+			this->objectSelectionInstructionsLabel = (gcnew System::Windows::Forms::Label());
+			this->objectRigidBodyListView = (gcnew System::Windows::Forms::ListView());
 			this->wizardPages->SuspendLayout();
 			this->introPage->SuspendLayout();
 			this->headSelectPage->SuspendLayout();
+			this->objectSelectPage->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// backBtn
@@ -122,7 +135,7 @@ namespace BlinkAnalysis {
 			// 
 			this->wizardPages->Controls->Add(this->introPage);
 			this->wizardPages->Controls->Add(this->headSelectPage);
-			this->wizardPages->Controls->Add(this->tabPage1);
+			this->wizardPages->Controls->Add(this->objectSelectPage);
 			this->wizardPages->Location = System::Drawing::Point(0, 0);
 			this->wizardPages->Name = L"wizardPages";
 			this->wizardPages->SelectedIndex = 0;
@@ -132,7 +145,7 @@ namespace BlinkAnalysis {
 			// 
 			// introPage
 			// 
-			this->introPage->Controls->Add(this->label1);
+			this->introPage->Controls->Add(this->eyeCalibrationInstructionsLabel);
 			this->introPage->Controls->Add(this->introTitleLabel);
 			this->introPage->Location = System::Drawing::Point(4, 22);
 			this->introPage->Name = L"introPage";
@@ -142,16 +155,16 @@ namespace BlinkAnalysis {
 			this->introPage->Text = L"Intro";
 			this->introPage->UseVisualStyleBackColor = true;
 			// 
-			// label1
+			// eyeCalibrationInstructionsLabel
 			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10));
-			this->label1->Location = System::Drawing::Point(6, 64);
-			this->label1->MaximumSize = System::Drawing::Size(500, 250);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(495, 228);
-			this->label1->TabIndex = 4;
-			this->label1->Text = resources->GetString(L"label1.Text");
+			this->eyeCalibrationInstructionsLabel->AutoSize = true;
+			this->eyeCalibrationInstructionsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10));
+			this->eyeCalibrationInstructionsLabel->Location = System::Drawing::Point(6, 64);
+			this->eyeCalibrationInstructionsLabel->MaximumSize = System::Drawing::Size(500, 250);
+			this->eyeCalibrationInstructionsLabel->Name = L"eyeCalibrationInstructionsLabel";
+			this->eyeCalibrationInstructionsLabel->Size = System::Drawing::Size(495, 228);
+			this->eyeCalibrationInstructionsLabel->TabIndex = 4;
+			this->eyeCalibrationInstructionsLabel->Text = resources->GetString(L"eyeCalibrationInstructionsLabel.Text");
 			// 
 			// introTitleLabel
 			// 
@@ -181,7 +194,8 @@ namespace BlinkAnalysis {
 			// headSelectedLabel
 			// 
 			this->headSelectedLabel->AutoSize = true;
-			this->headSelectedLabel->Location = System::Drawing::Point(269, 248);
+			this->headSelectedLabel->Location = System::Drawing::Point(266, 248);
+			this->headSelectedLabel->MaximumSize = System::Drawing::Size(250, 30);
 			this->headSelectedLabel->Name = L"headSelectedLabel";
 			this->headSelectedLabel->Size = System::Drawing::Size(203, 13);
 			this->headSelectedLabel->TabIndex = 5;
@@ -189,7 +203,7 @@ namespace BlinkAnalysis {
 			// 
 			// selectAsHeadBtn
 			// 
-			this->selectAsHeadBtn->Location = System::Drawing::Point(335, 157);
+			this->selectAsHeadBtn->Location = System::Drawing::Point(335, 200);
 			this->selectAsHeadBtn->Name = L"selectAsHeadBtn";
 			this->selectAsHeadBtn->Size = System::Drawing::Size(109, 23);
 			this->selectAsHeadBtn->TabIndex = 4;
@@ -223,15 +237,65 @@ namespace BlinkAnalysis {
 			this->headRigidBodyListView->UseCompatibleStateImageBehavior = false;
 			this->headRigidBodyListView->View = System::Windows::Forms::View::SmallIcon;
 			// 
-			// tabPage1
+			// objectSelectPage
 			// 
-			this->tabPage1->Location = System::Drawing::Point(4, 22);
-			this->tabPage1->Name = L"tabPage1";
-			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage1->Size = System::Drawing::Size(529, 295);
-			this->tabPage1->TabIndex = 2;
-			this->tabPage1->Text = L"tabPage1";
-			this->tabPage1->UseVisualStyleBackColor = true;
+			this->objectSelectPage->Controls->Add(this->selectedObjectLabel);
+			this->objectSelectPage->Controls->Add(this->selectAsObjectBtn);
+			this->objectSelectPage->Controls->Add(this->objectSelectionInstructionsLabel);
+			this->objectSelectPage->Controls->Add(this->objectRigidBodyListView);
+			this->objectSelectPage->Location = System::Drawing::Point(4, 22);
+			this->objectSelectPage->Name = L"objectSelectPage";
+			this->objectSelectPage->Padding = System::Windows::Forms::Padding(3);
+			this->objectSelectPage->Size = System::Drawing::Size(529, 295);
+			this->objectSelectPage->TabIndex = 2;
+			this->objectSelectPage->Text = L"Object";
+			this->objectSelectPage->UseVisualStyleBackColor = true;
+			// 
+			// selectedObjectLabel
+			// 
+			this->selectedObjectLabel->AutoSize = true;
+			this->selectedObjectLabel->Location = System::Drawing::Point(266, 248);
+			this->selectedObjectLabel->MaximumSize = System::Drawing::Size(250, 30);
+			this->selectedObjectLabel->Name = L"selectedObjectLabel";
+			this->selectedObjectLabel->Size = System::Drawing::Size(247, 13);
+			this->selectedObjectLabel->TabIndex = 9;
+			this->selectedObjectLabel->Text = L"No Rigid Body is selected to be the viewing object.";
+			// 
+			// selectAsObjectBtn
+			// 
+			this->selectAsObjectBtn->Location = System::Drawing::Point(335, 200);
+			this->selectAsObjectBtn->Name = L"selectAsObjectBtn";
+			this->selectAsObjectBtn->Size = System::Drawing::Size(109, 23);
+			this->selectAsObjectBtn->TabIndex = 8;
+			this->selectAsObjectBtn->Text = L"Select as Object";
+			this->selectAsObjectBtn->UseVisualStyleBackColor = true;
+			// 
+			// objectSelectionInstructionsLabel
+			// 
+			this->objectSelectionInstructionsLabel->AutoSize = true;
+			this->objectSelectionInstructionsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10));
+			this->objectSelectionInstructionsLabel->Location = System::Drawing::Point(265, 3);
+			this->objectSelectionInstructionsLabel->MaximumSize = System::Drawing::Size(250, 300);
+			this->objectSelectionInstructionsLabel->Name = L"objectSelectionInstructionsLabel";
+			this->objectSelectionInstructionsLabel->Size = System::Drawing::Size(249, 171);
+			this->objectSelectionInstructionsLabel->TabIndex = 7;
+			this->objectSelectionInstructionsLabel->Text = resources->GetString(L"objectSelectionInstructionsLabel.Text");
+			// 
+			// objectRigidBodyListView
+			// 
+			this->objectRigidBodyListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
+			this->objectRigidBodyListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->objectRigidBodyListView->FullRowSelect = true;
+			this->objectRigidBodyListView->LabelWrap = false;
+			this->objectRigidBodyListView->Location = System::Drawing::Point(0, 0);
+			this->objectRigidBodyListView->MultiSelect = false;
+			this->objectRigidBodyListView->Name = L"objectRigidBodyListView";
+			this->objectRigidBodyListView->Size = System::Drawing::Size(245, 295);
+			this->objectRigidBodyListView->TabIndex = 6;
+			this->objectRigidBodyListView->TileSize = System::Drawing::Size(100, 20);
+			this->objectRigidBodyListView->UseCompatibleStateImageBehavior = false;
+			this->objectRigidBodyListView->View = System::Windows::Forms::View::SmallIcon;
 			// 
 			// EyeCalibrationWizardForm
 			// 
@@ -253,17 +317,23 @@ namespace BlinkAnalysis {
 			this->introPage->PerformLayout();
 			this->headSelectPage->ResumeLayout(false);
 			this->headSelectPage->PerformLayout();
+			this->objectSelectPage->ResumeLayout(false);
+			this->objectSelectPage->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 //private: WizardPages^ wizardPages;
 private: EyeCalibration *eyeCalibration;
+private: int currentPage;
 		// User Defined Functions
 private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 // Create new Eye Calibration
 			 this->eyeCalibration = new EyeCalibration();
+
+			 // Set current page
+			 this->currentPage = 0;
 
 			 /*
 			 this->wizardPages = gcnew WizardPages();
@@ -283,17 +353,25 @@ private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e)
 			 this->Controls->Add(this->wizardPages);
 			 this->wizardPages->ResumeLayout(false);
 			 */
+
+			 // Create list of Rigid Body's
 			 this->headRigidBodyListView->View = View::Details;
 			 this->headRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
 			 this->headRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
 
+			 // Get ClientHandler
 			 ClientHandler* client = AppData::getInstance()->getClient();
+
+			 // Check if the client exists
 			 if (client) {
 
+				 // Get all the Rigid Body's
 				 std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
 
+				 // Clear any previous entries in the list view
 				 this->headRigidBodyListView->Items->Clear();
 
+				 // Loop through all Rigid Body's
 				 for (std::map<int, RigidBody*>::iterator it=bodyMap->begin(); it!=bodyMap->end(); ++it)
 				 {
 					 // Add Rigid Body to list
@@ -312,32 +390,67 @@ private: System::Void Form_Closing( Object^ sender, System::EventArgs ^ e )
 		 }
 
 private: System::Void pageChanged(System::Object^  sender, System::EventArgs^  e) {
+			 // Check if tab is enabled
+			 if (this->currentPage < this->wizardPages->SelectedIndex) {
+				 // Set the tab index to the current page
+				 this->wizardPages->SelectedIndex = this->currentPage;
+				 // Give message alerting user's that they are missing information
+				  MessageBox::Show(String::Concat("You have insufficient information. ",
+            "Please make sure all previous tabs have the proper information."));
+			 }
+
+			 // Head not selected and on Head Select Page
+			 if (this->wizardPages->SelectedTab == this->headSelectPage &&
+				 this->eyeCalibration->getHeadId() < 0) {
+				  this->nextBtn->Enabled = false;
+			 } else {
+				  this->nextBtn->Enabled = true;
+			 }
+
+			 // Done and change text in the next button to finished
 			 if (this->wizardPages->SelectedIndex == this->wizardPages->TabCount - 1)
 				 this->nextBtn->Text = "Finish";
 			 else
 				 this->nextBtn->Text = "Next";
 
+			 // First page so set enabled to false for the back button
 			 if (this->wizardPages->SelectedIndex == 0)
 				 this->backBtn->Enabled = false;
 			 else
 				 this->backBtn->Enabled = true;
 		 }
+// Cancels the Eye Calibration and closes the wizard
 private: System::Void cancelBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->Close();
 		 }
+// Advances through the wizard
 private: System::Void nextBtn_Click(System::Object^  sender, System::EventArgs^  e) {
+			 // Update current page
+			 if (this->currentPage == this->wizardPages->SelectedIndex)
+				 this->currentPage++;
+
+			 // Check if at last index and if so close Wizard
 			 if (this->wizardPages->SelectedIndex < this->wizardPages->TabCount - 1)
 				 this->wizardPages->SelectedIndex++;
 			 else if (this->wizardPages->SelectedIndex == this->wizardPages->TabCount - 1)
 				 this->Close();
 		 }
+// Go to the previous page
 private: System::Void backBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->wizardPages->SelectedIndex > 0)
 				 this->wizardPages->SelectedIndex--;
 		 }
+// When user selects the Rigid Body that represents the head of the subject
 private: System::Void selectAsHeadBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->headRigidBodyListView->SelectedItems->Count > 0) {
-				 this->headSelectedLabel->Text = this->headRigidBodyListView->SelectedItems[0]->Text;
+				 int headId = System::Int32::Parse(this->headRigidBodyListView->SelectedItems[0]->Text);
+				 this->eyeCalibration->setHeadId(headId);
+
+				 String^ message = gcnew String(this->eyeCalibration->getHeadName());
+				 message = message + " is the Rigid Body selected as the head.";
+
+				 this->headSelectedLabel->Text = message;
+				 this->nextBtn->Enabled = true;
 			 }
 			 else {
 				 this->headSelectedLabel->Text = "No Rigid Body is selected to be the head.";
