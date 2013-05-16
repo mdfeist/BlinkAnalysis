@@ -197,56 +197,6 @@ private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 private: System::Windows::Forms::ToolStripMenuItem^  calibrationToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenuItem;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -1386,6 +1336,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->newToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+N";
 			this->newToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->newToolStripMenuItem->Text = L"New";
+			this->newToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::newToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
@@ -1393,6 +1344,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->openToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+O";
 			this->openToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->openToolStripMenuItem->Text = L"Open";
+			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::openToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
@@ -1400,6 +1352,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->saveToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+S";
 			this->saveToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->saveToolStripMenuItem->Text = L"Save";
+			this->saveToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::saveToolStripMenuItem_Click);
 			// 
 			// saveAsToolStripMenuItem
 			// 
@@ -1407,6 +1360,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->saveAsToolStripMenuItem->ShortcutKeyDisplayString = L"Ctrl+Shift+S";
 			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(186, 22);
 			this->saveAsToolStripMenuItem->Text = L"Save As";
+			this->saveAsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::saveAsToolStripMenuItem_Click);
 			// 
 			// calibrationToolStripMenuItem
 			// 
@@ -1430,12 +1384,16 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->ClientSize = System::Drawing::Size(784, 562);
 			this->Controls->Add(this->mainTabControl);
 			this->Controls->Add(this->menuStrip);
+			this->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->MainMenuStrip = this->menuStrip;
 			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"MainForm";
 			this->Text = L"Main";
 			this->Closed += gcnew System::EventHandler(this, &MainForm::MainForm_Closing);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
+			this->KeyPreview = true;
+			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainForm::MainForm_OnKeyDown);
 			this->mainTabControl->ResumeLayout(false);
 			this->OptiTrackPage->ResumeLayout(false);
 			this->optiTrackMainSplitContainer->Panel1->ResumeLayout(false);
@@ -1486,6 +1444,19 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 	private: SplitContainer^ currentSplitContainer;
 
 	// User Defined Functions
+	private: void newProject() {
+				 MessageBox::Show("New Project");
+			 }
+	private: void openProject() {
+				 MessageBox::Show("Open Project");
+			 }
+	private: void saveProject() {
+				 MessageBox::Show("Save Project");
+			 }
+	private: void saveAsProject() {
+				 MessageBox::Show("Save As Project");
+			 }
+	// Form Events
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) {
 				 // Setup Main Tab
 				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
@@ -1543,7 +1514,18 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 #if _DEBUG
 _WATCH_MEMORY
 #endif
-			}
+			 }
+	private: System::Void MainForm_OnKeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+				 if ((e->Control) && (e->KeyCode == Keys::N)) {
+					 this->newProject();
+				 } else if ((e->Control) && (e->KeyCode == Keys::O)) {
+					 this->openProject();
+				 } else if ((e->Control && e->Shift) && (e->KeyCode == Keys::S)) {
+					 this->saveAsProject();
+				 } else if ((e->Control) && (e->KeyCode == Keys::S)) {
+					 this->saveProject();
+				 }
+			 }
 	//////////////////////
 	// Dikablis
 	/////////////////////
@@ -1854,6 +1836,43 @@ _WATCH_MEMORY
 				}
 			}
 	//////////////////////
+	// OptiTrack Buttons
+	/////////////////////
+private: System::Void optiTrackConnectBtn_Click(System::Object^  sender, System::EventArgs^  e) {
+			 ClientHandler* client = AppData::getInstance()->getClient();
+			 
+			 // Local Ip Address
+			 String^ localIP = this->optiTrackLocalIpAddressTextBox->Text;
+			 client->setLocalIpAddress( marshal_as<std::string>(localIP).c_str() );
+
+			 // Server Ip Address
+			 String^ serverIP = this->optiTrackSeverIpAddressTextBox->Text;
+			 client->setOptiTrackServerIpAddress( marshal_as<std::string>(serverIP).c_str() );
+			 
+			 // Command Port
+			 String^ commandPort = this->optiTrackCmdPortTextBox->Text;
+			 client->setOptiTrackServerCommandPort(System::Int32::Parse(commandPort));
+
+			 // Data Port
+			 String^ dataPort = this->optiTrackDataPortTextBox->Text;
+			 client->setOptiTrackServerDataPort(System::Int32::Parse(dataPort));
+
+			 // Connection Type
+			String^ connectionType = (String^)this->optiTrackConnectionTypeComboBox->SelectedItem;
+			if (!String::Compare(connectionType, "Multicast"))
+				client->setOptiTrackServerConnectionType(ConnectionType_Multicast);
+			else if (!String::Compare(connectionType, "Unicast"))
+				client->setOptiTrackServerConnectionType(ConnectionType_Unicast);
+
+			 NatNetClientSetup::createClient(&client);
+		 }
+private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System::EventArgs^  e) {
+			 ClientHandler* client = AppData::getInstance()->getClient();
+
+			 if (client)
+				 NatNetClientSetup::deleteClient(&client);
+		 }
+	//////////////////////
 	// Dikablis Buttons
 	/////////////////////
 	private: System::Void dikablisConnectBtn_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -1925,46 +1944,23 @@ _WATCH_MEMORY
             this->mainTabControl->Refresh();
 	}
 	//////////////////////
-	// OptiTrack Buttons
+	// Menu Items
 	/////////////////////
-private: System::Void optiTrackConnectBtn_Click(System::Object^  sender, System::EventArgs^  e) {
-			 ClientHandler* client = AppData::getInstance()->getClient();
-			 
-			 // Local Ip Address
-			 String^ localIP = this->optiTrackLocalIpAddressTextBox->Text;
-			 client->setLocalIpAddress( marshal_as<std::string>(localIP).c_str() );
-
-			 // Server Ip Address
-			 String^ serverIP = this->optiTrackSeverIpAddressTextBox->Text;
-			 client->setOptiTrackServerIpAddress( marshal_as<std::string>(serverIP).c_str() );
-			 
-			 // Command Port
-			 String^ commandPort = this->optiTrackCmdPortTextBox->Text;
-			 client->setOptiTrackServerCommandPort(System::Int32::Parse(commandPort));
-
-			 // Data Port
-			 String^ dataPort = this->optiTrackDataPortTextBox->Text;
-			 client->setOptiTrackServerDataPort(System::Int32::Parse(dataPort));
-
-			 // Connection Type
-			String^ connectionType = (String^)this->optiTrackConnectionTypeComboBox->SelectedItem;
-			if (!String::Compare(connectionType, "Multicast"))
-				client->setOptiTrackServerConnectionType(ConnectionType_Multicast);
-			else if (!String::Compare(connectionType, "Unicast"))
-				client->setOptiTrackServerConnectionType(ConnectionType_Unicast);
-
-			 NatNetClientSetup::createClient(&client);
-		 }
-private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System::EventArgs^  e) {
-			 ClientHandler* client = AppData::getInstance()->getClient();
-
-			 if (client)
-				 NatNetClientSetup::deleteClient(&client);
-		 }
-// Menu Items
 private: System::Void eyeCalibrationToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
 			 calibrationForm->Show();
+		 }
+private: System::Void newToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->newProject();
+		 }
+private: System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->openProject();
+		 }
+private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->saveProject();
+		 }
+private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->saveAsProject();
 		 }
 };
 }

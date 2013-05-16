@@ -85,6 +85,9 @@ void recieved(std::string msg) {
 
 		sscanf_s(split[10].c_str(), "%d", &journal.eye_x);
 		sscanf_s(split[11].c_str(), "%d", &journal.eye_y);
+		sscanf_s(split[12].c_str(), "%d", &journal.eye_w);
+		sscanf_s(split[13].c_str(), "%d", &journal.eye_h);
+		sscanf_s(split[14].c_str(), "%d", &journal.eye_a);
 		sscanf_s(split[15].c_str(), "%d", &journal.field_x);
 		sscanf_s(split[16].c_str(), "%d", &journal.field_y);
 	}

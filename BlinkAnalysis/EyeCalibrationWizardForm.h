@@ -62,6 +62,7 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Label^  objectSelectionInstructionsLabel;
 
 	private: System::Windows::Forms::ListView^  objectRigidBodyListView;
+	private: System::Windows::Forms::TabPage^  calibrationPage;
 
 	private:
 		/// <summary>
@@ -94,6 +95,7 @@ namespace BlinkAnalysis {
 			this->selectAsObjectBtn = (gcnew System::Windows::Forms::Button());
 			this->objectSelectionInstructionsLabel = (gcnew System::Windows::Forms::Label());
 			this->objectRigidBodyListView = (gcnew System::Windows::Forms::ListView());
+			this->calibrationPage = (gcnew System::Windows::Forms::TabPage());
 			this->wizardPages->SuspendLayout();
 			this->introPage->SuspendLayout();
 			this->headSelectPage->SuspendLayout();
@@ -103,6 +105,8 @@ namespace BlinkAnalysis {
 			// backBtn
 			// 
 			this->backBtn->Enabled = false;
+			this->backBtn->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->backBtn->Location = System::Drawing::Point(252, 327);
 			this->backBtn->Name = L"backBtn";
 			this->backBtn->Size = System::Drawing::Size(73, 23);
@@ -113,6 +117,8 @@ namespace BlinkAnalysis {
 			// 
 			// nextBtn
 			// 
+			this->nextBtn->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->nextBtn->Location = System::Drawing::Point(333, 327);
 			this->nextBtn->Name = L"nextBtn";
 			this->nextBtn->Size = System::Drawing::Size(73, 23);
@@ -123,6 +129,8 @@ namespace BlinkAnalysis {
 			// 
 			// cancelBtn
 			// 
+			this->cancelBtn->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->cancelBtn->Location = System::Drawing::Point(449, 327);
 			this->cancelBtn->Name = L"cancelBtn";
 			this->cancelBtn->Size = System::Drawing::Size(73, 23);
@@ -136,6 +144,9 @@ namespace BlinkAnalysis {
 			this->wizardPages->Controls->Add(this->introPage);
 			this->wizardPages->Controls->Add(this->headSelectPage);
 			this->wizardPages->Controls->Add(this->objectSelectPage);
+			this->wizardPages->Controls->Add(this->calibrationPage);
+			this->wizardPages->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->wizardPages->Location = System::Drawing::Point(0, 0);
 			this->wizardPages->Name = L"wizardPages";
 			this->wizardPages->SelectedIndex = 0;
@@ -194,10 +205,12 @@ namespace BlinkAnalysis {
 			// headSelectedLabel
 			// 
 			this->headSelectedLabel->AutoSize = true;
+			this->headSelectedLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->headSelectedLabel->Location = System::Drawing::Point(266, 248);
-			this->headSelectedLabel->MaximumSize = System::Drawing::Size(250, 30);
+			this->headSelectedLabel->MaximumSize = System::Drawing::Size(250, 60);
 			this->headSelectedLabel->Name = L"headSelectedLabel";
-			this->headSelectedLabel->Size = System::Drawing::Size(203, 13);
+			this->headSelectedLabel->Size = System::Drawing::Size(219, 34);
 			this->headSelectedLabel->TabIndex = 5;
 			this->headSelectedLabel->Text = L"No Rigid Body is selected to be the head.";
 			// 
@@ -254,10 +267,12 @@ namespace BlinkAnalysis {
 			// selectedObjectLabel
 			// 
 			this->selectedObjectLabel->AutoSize = true;
+			this->selectedObjectLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->selectedObjectLabel->Location = System::Drawing::Point(266, 248);
-			this->selectedObjectLabel->MaximumSize = System::Drawing::Size(250, 30);
+			this->selectedObjectLabel->MaximumSize = System::Drawing::Size(250, 60);
 			this->selectedObjectLabel->Name = L"selectedObjectLabel";
-			this->selectedObjectLabel->Size = System::Drawing::Size(247, 13);
+			this->selectedObjectLabel->Size = System::Drawing::Size(219, 34);
 			this->selectedObjectLabel->TabIndex = 9;
 			this->selectedObjectLabel->Text = L"No Rigid Body is selected to be the viewing object.";
 			// 
@@ -269,6 +284,7 @@ namespace BlinkAnalysis {
 			this->selectAsObjectBtn->TabIndex = 8;
 			this->selectAsObjectBtn->Text = L"Select as Object";
 			this->selectAsObjectBtn->UseVisualStyleBackColor = true;
+			this->selectAsObjectBtn->Click += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::selectAsObjectBtn_Click);
 			// 
 			// objectSelectionInstructionsLabel
 			// 
@@ -297,6 +313,16 @@ namespace BlinkAnalysis {
 			this->objectRigidBodyListView->UseCompatibleStateImageBehavior = false;
 			this->objectRigidBodyListView->View = System::Windows::Forms::View::SmallIcon;
 			// 
+			// calibrationPage
+			// 
+			this->calibrationPage->Location = System::Drawing::Point(4, 22);
+			this->calibrationPage->Name = L"calibrationPage";
+			this->calibrationPage->Padding = System::Windows::Forms::Padding(3);
+			this->calibrationPage->Size = System::Drawing::Size(529, 295);
+			this->calibrationPage->TabIndex = 3;
+			this->calibrationPage->Text = L"Calibration";
+			this->calibrationPage->UseVisualStyleBackColor = true;
+			// 
 			// EyeCalibrationWizardForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -306,6 +332,8 @@ namespace BlinkAnalysis {
 			this->Controls->Add(this->cancelBtn);
 			this->Controls->Add(this->nextBtn);
 			this->Controls->Add(this->backBtn);
+			this->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->MaximumSize = System::Drawing::Size(550, 400);
 			this->MinimumSize = System::Drawing::Size(550, 400);
 			this->Name = L"EyeCalibrationWizardForm";
@@ -359,6 +387,10 @@ private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e)
 			 this->headRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
 			 this->headRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
 
+			 this->objectRigidBodyListView->View = View::Details;
+			 this->objectRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
+			 this->objectRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
+
 			 // Get ClientHandler
 			 ClientHandler* client = AppData::getInstance()->getClient();
 
@@ -370,16 +402,27 @@ private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e)
 
 				 // Clear any previous entries in the list view
 				 this->headRigidBodyListView->Items->Clear();
+				 this->objectRigidBodyListView->Items->Clear();
 
 				 // Loop through all Rigid Body's
 				 for (std::map<int, RigidBody*>::iterator it=bodyMap->begin(); it!=bodyMap->end(); ++it)
 				 {
 					 // Add Rigid Body to list
-					 String^ rigidBodyID = Convert::ToString(it->second->getID());
-					 String^ rigidBodyName = gcnew String(it->second->getName());
-					 ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
-					 listViewItem->SubItems->Add(rigidBodyName);
-					 this->headRigidBodyListView->Items->Add(listViewItem);
+					 { // Add Rigid Body's for head
+						 String^ rigidBodyID = Convert::ToString(it->second->getID());
+						 String^ rigidBodyName = gcnew String(it->second->getName());
+						 ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
+						 listViewItem->SubItems->Add(rigidBodyName);
+						 this->headRigidBodyListView->Items->Add(listViewItem);
+					 }
+
+					 { // Add Rigid Body's for viewing object
+						 String^ rigidBodyID = Convert::ToString(it->second->getID());
+						 String^ rigidBodyName = gcnew String(it->second->getName());
+						 ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
+						 listViewItem->SubItems->Add(rigidBodyName);
+						 this->objectRigidBodyListView->Items->Add(listViewItem);
+					 }
 				 }
 			 }
 		 }
@@ -399,9 +442,12 @@ private: System::Void pageChanged(System::Object^  sender, System::EventArgs^  e
             "Please make sure all previous tabs have the proper information."));
 			 }
 
-			 // Head not selected and on Head Select Page
+			 // Check Valid information for each page
 			 if (this->wizardPages->SelectedTab == this->headSelectPage &&
 				 this->eyeCalibration->getHeadId() < 0) {
+				  this->nextBtn->Enabled = false;
+			 } else if (this->wizardPages->SelectedTab == this->objectSelectPage &&
+				 this->eyeCalibration->getViewingObjectId() < 0) {
 				  this->nextBtn->Enabled = false;
 			 } else {
 				  this->nextBtn->Enabled = true;
@@ -454,7 +500,22 @@ private: System::Void selectAsHeadBtn_Click(System::Object^  sender, System::Eve
 			 }
 			 else {
 				 this->headSelectedLabel->Text = "No Rigid Body is selected to be the head.";
-			 } 
+			 }
+		 }
+private: System::Void selectAsObjectBtn_Click(System::Object^  sender, System::EventArgs^  e) { 
+			 if (this->objectRigidBodyListView->SelectedItems->Count > 0) {
+				 int viewingObjectId = System::Int32::Parse(this->objectRigidBodyListView->SelectedItems[0]->Text);
+				 this->eyeCalibration->setViewingObjectId(viewingObjectId);
+
+				 String^ message = gcnew String(this->eyeCalibration->getViewingObjectName());
+				 message = message + " is the Rigid Body selected as the viewing object.";
+
+				 this->selectedObjectLabel->Text = message;
+				 this->nextBtn->Enabled = true;
+			 }
+			 else {
+				 this->selectedObjectLabel->Text = "No Rigid Body is selected to be the viewing object.";
+			 }
 		 }
 };
 }

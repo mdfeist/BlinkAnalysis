@@ -24,6 +24,9 @@ namespace Dikablis {
 		bool eye_valid;			// True if pupil was detected
 		int eye_x;				// Range 0 to 768 | Horizontal position of pupil in eye camera
 		int eye_y;				// Range 0 to 576 | Vertical position of pupil in eye camera
+		int eye_w;				// Number		  | Width of the pupil in pixels
+		int eye_h;				// Number		  | Height of the pupil in pixels
+		int eye_a;				// Number		  | Area of the pupil in pixels
 		int field_x;			// Range 0 to 768 | Horizontal position of the focal point in field camera
 		int field_y;			// Range 0 to 576 | Vertical position of the focal point in field camera
 	} journal_struct;

@@ -7,13 +7,35 @@
 class EyeCalibration {
 private:
 	int rbHeadId;
+	int rbViewingObjectId;
 	osg::Vec3 eyeVector;
 
-	static int hoirzontalSizeForTheFieldOfView;
-	static int verticalSizeForTheFieldOfView;
+	static int fieldOfViewWidth;
+	static int fieldOfViewHeight;
+
+	char* getNameById(int id) {
+		ClientHandler* client = AppData::getInstance()->getClient();
+
+		if (client)
+		{
+			RigidBody* body = client->getRigidBody(id);
+			if (body)
+			{
+				return body->getName();
+			}
+		}
+
+		return 0;
+	}
 public:
 	EyeCalibration(void) { this->rbHeadId = -1; };
 	~EyeCalibration(void) {};
+
+	static void setFieldOfViewWidth(int width) { EyeCalibration::fieldOfViewWidth = width; }
+	static int getFieldOfViewWidth() { return EyeCalibration::fieldOfViewWidth; }
+
+	static void setFieldOfViewHeight(int height) { EyeCalibration::fieldOfViewHeight = height; }
+	static int getFieldOfViewHeight() { return EyeCalibration::fieldOfViewHeight; }
 
 	void setHeadId(int id) { this->rbHeadId = id; }
 	int getHeadId() { return this->rbHeadId; }
@@ -22,17 +44,16 @@ public:
 		if (this->rbHeadId < 0)
 			return 0;
 
-		ClientHandler* client = AppData::getInstance()->getClient();
+		return getNameById(this->rbHeadId);
+	}
 
-		if (client)
-		{
-			RigidBody* body = client->getRigidBody(this->rbHeadId);
-			if (body)
-			{
-				return body->getName();
-			}
-		}
+	void setViewingObjectId(int id) { this->rbViewingObjectId = id; }
+	int getViewingObjectId() { return this->rbViewingObjectId; }
+	char* getViewingObjectName()
+	{
+		if (this->rbViewingObjectId < 0)
+			return 0;
 
-		return 0;
+		return getNameById(this->rbViewingObjectId);
 	}
 };
