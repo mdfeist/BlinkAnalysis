@@ -203,8 +203,10 @@ void AppViewer::initAppViewer(HWND hwnd)
 
 	// Add the ground plane
 	osg::Geode* planeNode = Objects::createPlane();
-	//osg::ref_ptr<osg::StateSet> planeNodeState = planeNode->getOrCreateStateSet();
-	//planeNodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+	Objects::applyTexture("Images/PlaneGrid.png", planeNode);
+	osg::ref_ptr<osg::StateSet> planeNodeState = planeNode->getOrCreateStateSet();
+	planeNodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+	planeNodeState->setMode( GL_BLEND, osg::StateAttribute::ON );
 	rootNode->addChild(planeNode);
 
 	// Add the root node to the scene
@@ -219,7 +221,7 @@ void AppViewer::initAppViewer(HWND hwnd)
 
 	// Set the starting position of the camera
 	viewer->getCameraManipulator()->setHomePosition(
-		osg::Vec3(25.f, -25.f, 15.f),
+		osg::Vec3(25.f, -35.f, 15.f),
 		osg::Vec3(0.f, 0.f, 0.f),
 		osg::Vec3(0.f, 0.f, 1.f));
 	
