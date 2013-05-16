@@ -1389,7 +1389,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->MainMenuStrip = this->menuStrip;
 			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"MainForm";
-			this->Text = L"Main";
+			this->Text = L"Untitled.xml - BlinkAnalysis";
 			this->Closed += gcnew System::EventHandler(this, &MainForm::MainForm_Closing);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->KeyPreview = true;
@@ -1444,17 +1444,68 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 	private: SplitContainer^ currentSplitContainer;
 
 	// User Defined Functions
+	public: void setFormName(String^ name) { 
+				FileInfo^ fileInfo = gcnew FileInfo( name );
+				if (  !fileInfo->Exists ) { return; }
+				this->Text = fileInfo->Name + " - BlinkAnalysis";
+			}
 	private: void newProject() {
-				 MessageBox::Show("New Project");
+				 System::Windows::Forms::DialogResult result;
+
+				 result = MessageBox::Show("Do you want to save any changes?", "New Project", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Question);
+				 if(result == ::DialogResult::Yes){
+					 saveProject();
+
+					 Application::Restart();
+					 Environment::Exit(0);
+				 } else if(result == ::DialogResult::No){
+					 Application::Restart();
+					 Environment::Exit(0);
+				 }
+			 }
+	private: void openProjectDialog() {
+				 OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
+
+				 openFileDialog->InitialDirectory = System::Environment::GetFolderPath(Environment::SpecialFolder::Desktop);
+				 openFileDialog->Filter = "XML File (*.xml)|*.xml|All files (*.*)|*.*";
+				 openFileDialog->FilterIndex = 2;
+				 openFileDialog->RestoreDirectory = true;
+
+				 if ( openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK )
+				 {
+					 System::Diagnostics::Process::Start( Application::ExecutablePath, openFileDialog->FileName);
+					 Environment::Exit(0);
+				 }
 			 }
 	private: void openProject() {
-				 MessageBox::Show("Open Project");
+				 System::Windows::Forms::DialogResult result;
+
+				 result = MessageBox::Show("Do you want to save any changes?", "New Project", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Question);
+				 if(result == ::DialogResult::Yes){
+					 saveProject();
+					 this->openProjectDialog();
+				 } else if(result == ::DialogResult::No){
+					 this->openProjectDialog();
+				 }
 			 }
 	private: void saveProject() {
 				 MessageBox::Show("Save Project");
 			 }
 	private: void saveAsProject() {
-				 MessageBox::Show("Save As Project");
+				 SaveFileDialog^ dialog = gcnew SaveFileDialog();
+				 dialog->Title = "Save As...";
+				 dialog->Filter = "XML File (*.xml)|*.xml";
+				 dialog->RestoreDirectory = true;
+
+				 if (dialog->ShowDialog() == ::DialogResult::OK)
+				 {
+					 /*
+					 FileInfo^ fileInfo = gcnew FileInfo( dialog->FileName );
+					 if (  !fileInfo->Exists ) { return; }
+					 
+					 MessageBox::Show(fileInfo->Name + " - BlinkAnalysis");
+					 */
+				 }
 			 }
 	// Form Events
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) {
@@ -1525,6 +1576,33 @@ _WATCH_MEMORY
 				 } else if ((e->Control) && (e->KeyCode == Keys::S)) {
 					 this->saveProject();
 				 }
+			 }
+	public: System::Void updateInformation() {
+				 ClientHandler* client = AppData::getInstance()->getClient();
+
+				 if (!client)
+					 return;
+
+				 char buf[128];
+				 // Local Ip Address
+				 client->getLocalIpAddress(buf);
+				 this->optiTrackLocalIpAddressTextBox->Text = gcnew String(buf);
+
+				 // Server Ip Address
+				 client->getOptiTrackServerIpAddress(buf);
+				 this->optiTrackSeverIpAddressTextBox->Text = gcnew String(buf);
+
+				 // Command Port
+				 this->optiTrackCmdPortTextBox->Text = Convert::ToString(client->getOptiTrackServerCommandPort());
+
+				 // Data Port
+				 this->optiTrackDataPortTextBox->Text = Convert::ToString(client->getOptiTrackServerDataPort());
+
+				 // Connection Type
+				 if (client->getOptiTrackServerConnectionType() == ConnectionType_Multicast)
+					 this->optiTrackConnectionTypeComboBox->SelectedItem = "Multicast";
+				 else if (client->getOptiTrackServerConnectionType() == ConnectionType_Unicast)
+				 this->optiTrackConnectionTypeComboBox->SelectedItem = "Unicast";
 			 }
 	//////////////////////
 	// Dikablis

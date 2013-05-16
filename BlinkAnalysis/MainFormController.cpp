@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MainFormController.h"
 
+#include "AppData.h"
+
 MainFormController::MainFormController(void)
 {
 }
@@ -9,13 +11,15 @@ MainFormController::~MainFormController(void)
 {
 }
 
-void MainFormController::dikablisOutputLog(std::string msg)
-{
+void MainFormController::updateInfo() {
+	mainForm->updateInformation();
+}
+
+void MainFormController::dikablisOutputLog(std::string msg) {
 	mainForm->dikablisOutputLog(gcnew String(msg.c_str()));
 }
 
-void MainFormController::dikablisMessage(Dikablis::journal_struct journal)
-{
+void MainFormController::dikablisMessage(Dikablis::journal_struct journal) {
 	// Image
 	mainForm->dikablisSetIndex(journal.index);
 	mainForm->dikablisSetTimeStamp(journal.timestamp);
@@ -43,8 +47,7 @@ void MainFormController::dikablisMessage(Dikablis::journal_struct journal)
 		mainForm->dikablisSetOnlineCalibration("No online calibration");
 }
 
-void MainFormController::optiTrackOutputLog(std::string msg)
-{
+void MainFormController::optiTrackOutputLog(std::string msg) {
 	mainForm->optiTrackOutputLog(gcnew String(msg.c_str()));
 }
 

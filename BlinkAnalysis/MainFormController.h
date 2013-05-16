@@ -22,6 +22,8 @@ public:
 		return m_pInstance;
 	}
 
+	void updateInfo();
+
 	// Prints to the Output window in the Dikablis Tab of the MainForm
 	void dikablisOutputLog(std::string msg);
 	// Send Dikablis Journal information to the Dikablis Tab of the MainForm

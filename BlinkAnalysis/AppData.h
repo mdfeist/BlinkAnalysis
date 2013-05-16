@@ -23,6 +23,13 @@ public:
 	void setClient(ClientHandler *client) { this->client = client; }
 	ClientHandler* getClient() { return this->client; }
 
+	void setFilePath(char* filePath) { strncpy_s(this->filePath, filePath, strlen(filePath)); }
+	char* getFilePath() { return this->filePath; }
+
+	char* getLastError() { return this->error; }
+
+	bool openFile(char* filePath);
+
 protected:
 	AppData(void);
 	~AppData(void);
@@ -32,6 +39,9 @@ private:
 
 	static AppData* m_pInstance;
 	ClientHandler *client;
+
+	char filePath[1024];
+	char error[1024];
 };
 
 

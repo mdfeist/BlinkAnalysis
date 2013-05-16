@@ -6,6 +6,7 @@
 #include "AppData.h"
 
 using namespace BlinkAnalysis;
+using namespace System::Runtime::InteropServices;
 
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
@@ -21,6 +22,17 @@ int main(array<System::String ^> ^args)
 	// Create the ClientHandler and attach it to the global App Data
 	ClientHandler* client = new ClientHandler();
 	AppData::getInstance()->setClient(client);
+
+	if (args->Length >= 1) {
+		char* fileName = (char*)Marshal::StringToHGlobalAnsi(args[0]).ToPointer();
+
+		if (AppData::getInstance()->openFile(fileName))
+			mainForm->setFormName(args[0]);
+		else
+			MessageBox::Show(gcnew String(AppData::getInstance()->getLastError()));
+
+		Marshal::FreeHGlobal((IntPtr)fileName);
+	} 
 
 	// Create the main window and run it
 	Application::Run(mainForm);
