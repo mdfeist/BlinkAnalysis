@@ -22,7 +22,10 @@ public:
 		return m_pInstance;
 	}
 
-	void updateInfo();
+	// Saving
+	void updateFormTitle() { this->mainForm->updateTitle(); }
+	void setInfo() { this->mainForm->setInformation(); }
+	void getInfo() { this->mainForm->getInformation(); }
 
 	// Prints to the Output window in the Dikablis Tab of the MainForm
 	void dikablisOutputLog(std::string msg);

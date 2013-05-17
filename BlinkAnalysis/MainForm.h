@@ -536,6 +536,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->optiTrackLocalIpAddressTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackLocalIpAddressTextBox->TabIndex = 28;
 			this->optiTrackLocalIpAddressTextBox->Text = L"127.0.0.1";
+			this->optiTrackLocalIpAddressTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackLocalIpAddressTextBox_TextChanged);
 			// 
 			// optiTrackLocalIpAddressLabel
 			// 
@@ -569,6 +570,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->optiTrackConnectionTypeComboBox->Name = L"optiTrackConnectionTypeComboBox";
 			this->optiTrackConnectionTypeComboBox->Size = System::Drawing::Size(144, 21);
 			this->optiTrackConnectionTypeComboBox->TabIndex = 25;
+			this->optiTrackConnectionTypeComboBox->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::optiTrackConnectionTypeComboBox_SelectedIndexChanged);
 			// 
 			// optiTrackConnectionTypeLabel
 			// 
@@ -590,6 +592,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->optiTrackDataPortTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackDataPortTextBox->TabIndex = 23;
 			this->optiTrackDataPortTextBox->Text = L"1511";
+			this->optiTrackDataPortTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackDataPortTextBox_TextChanged);
 			// 
 			// optiTrackDataPortLabel
 			// 
@@ -643,6 +646,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->optiTrackCmdPortTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackCmdPortTextBox->TabIndex = 5;
 			this->optiTrackCmdPortTextBox->Text = L"1510";
+			this->optiTrackCmdPortTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackCmdPortTextBox_TextChanged);
 			// 
 			// optiTrackCmdPortLabel
 			// 
@@ -664,6 +668,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->optiTrackSeverIpAddressTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackSeverIpAddressTextBox->TabIndex = 3;
 			this->optiTrackSeverIpAddressTextBox->Text = L"127.0.0.1";
+			this->optiTrackSeverIpAddressTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackSeverIpAddressTextBox_TextChanged);
 			// 
 			// optiTrackSeverIpAddressLabel
 			// 
@@ -1386,13 +1391,14 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->Controls->Add(this->menuStrip);
 			this->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
+			this->KeyPreview = true;
 			this->MainMenuStrip = this->menuStrip;
 			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"MainForm";
 			this->Text = L"Untitled.xml - BlinkAnalysis";
-			this->Closed += gcnew System::EventHandler(this, &MainForm::MainForm_Closing);
+			this->Closed += gcnew System::EventHandler(this, &MainForm::MainForm_Closed);
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainForm::MainForm_Closing);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
-			this->KeyPreview = true;
 			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainForm::MainForm_OnKeyDown);
 			this->mainTabControl->ResumeLayout(false);
 			this->OptiTrackPage->ResumeLayout(false);
@@ -1444,26 +1450,82 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 	private: SplitContainer^ currentSplitContainer;
 
 	// User Defined Functions
+	private: void getOptiTrackInfo() {
+				 ClientHandler* client = AppData::getInstance()->getClient();
+
+				 // Local Ip Address
+				 String^ localIP = this->optiTrackLocalIpAddressTextBox->Text;
+				 client->setLocalIpAddress( marshal_as<std::string>(localIP).c_str() );
+
+				 // Server Ip Address
+				 String^ serverIP = this->optiTrackSeverIpAddressTextBox->Text;
+				 client->setOptiTrackServerIpAddress( marshal_as<std::string>(serverIP).c_str() );
+
+				 // Command Port
+				 String^ commandPort = this->optiTrackCmdPortTextBox->Text;
+				 client->setOptiTrackServerCommandPort(System::Int32::Parse(commandPort));
+
+				 // Data Port
+				 String^ dataPort = this->optiTrackDataPortTextBox->Text;
+				 client->setOptiTrackServerDataPort(System::Int32::Parse(dataPort));
+
+				 // Connection Type
+				 String^ connectionType = (String^)this->optiTrackConnectionTypeComboBox->SelectedItem;
+				 if (!String::Compare(connectionType, "Multicast"))
+					 client->setOptiTrackServerConnectionType(ConnectionType_Multicast);
+				 else if (!String::Compare(connectionType, "Unicast"))
+					 client->setOptiTrackServerConnectionType(ConnectionType_Unicast);
+			 }
+	private: void setOptiTrackInfo() {
+				 ClientHandler* client = AppData::getInstance()->getClient();
+
+				 if (!client)
+					 return;
+
+				 char buf[128];
+				 // Local Ip Address
+				 client->getLocalIpAddress(buf);
+				 this->optiTrackLocalIpAddressTextBox->Text = gcnew String(buf);
+
+				 // Server Ip Address
+				 client->getOptiTrackServerIpAddress(buf);
+				 this->optiTrackSeverIpAddressTextBox->Text = gcnew String(buf);
+
+				 // Command Port
+				 this->optiTrackCmdPortTextBox->Text = Convert::ToString(client->getOptiTrackServerCommandPort());
+
+				 // Data Port
+				 this->optiTrackDataPortTextBox->Text = Convert::ToString(client->getOptiTrackServerDataPort());
+
+				 // Connection Type
+				 if (client->getOptiTrackServerConnectionType() == ConnectionType_Multicast)
+					 this->optiTrackConnectionTypeComboBox->SelectedItem = "Multicast";
+				 else if (client->getOptiTrackServerConnectionType() == ConnectionType_Unicast)
+				 this->optiTrackConnectionTypeComboBox->SelectedItem = "Unicast";
+			 }
+	public: void updateTitle() {
+				String^ fileName = gcnew String(AppData::getInstance()->getFileName());
+
+				if (AppData::getInstance()->isSaveNeeded())
+					this->Text = fileName + "* - BlinkAnalysis";
+				else
+					this->Text = fileName + " - BlinkAnalysis";
+			}
 	public: void setFormName(String^ name) { 
 				FileInfo^ fileInfo = gcnew FileInfo( name );
 				if (  !fileInfo->Exists ) { return; }
 				this->Text = fileInfo->Name + " - BlinkAnalysis";
+				
+				msclr::interop::marshal_context context;
+				std::string fileName =  context.marshal_as<std::string>(fileInfo->Name);
+				AppData::getInstance()->setFileName((char*)fileName.c_str());
 			}
 	private: void newProject() {
-				 System::Windows::Forms::DialogResult result;
-
-				 result = MessageBox::Show("Do you want to save any changes?", "New Project", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Question);
-				 if(result == ::DialogResult::Yes){
-					 saveProject();
-
+				 this->Close();
+				 if(this->IsDisposed)
 					 Application::Restart();
-					 Environment::Exit(0);
-				 } else if(result == ::DialogResult::No){
-					 Application::Restart();
-					 Environment::Exit(0);
-				 }
 			 }
-	private: void openProjectDialog() {
+	private: void openProject() {
 				 OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
 
 				 openFileDialog->InitialDirectory = System::Environment::GetFolderPath(Environment::SpecialFolder::Desktop);
@@ -1473,25 +1535,22 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 
 				 if ( openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK )
 				 {
-					 System::Diagnostics::Process::Start( Application::ExecutablePath, openFileDialog->FileName);
-					 Environment::Exit(0);
+					 this->Close();
+					 if(this->IsDisposed) {
+						 System::Diagnostics::Process::Start( Application::ExecutablePath, openFileDialog->FileName);
+						 Environment::Exit(0);
+					 }
 				 }
 			 }
-	private: void openProject() {
-				 System::Windows::Forms::DialogResult result;
+	private: bool saveProject() {
+				 String^ filePath = gcnew String(AppData::getInstance()->getFilePath());
 
-				 result = MessageBox::Show("Do you want to save any changes?", "New Project", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Question);
-				 if(result == ::DialogResult::Yes){
-					 saveProject();
-					 this->openProjectDialog();
-				 } else if(result == ::DialogResult::No){
-					 this->openProjectDialog();
-				 }
+				 if (filePath->Length == 0)
+					 return saveAsProject();
+				 else
+					 return AppData::getInstance()->saveFile();
 			 }
-	private: void saveProject() {
-				 MessageBox::Show("Save Project");
-			 }
-	private: void saveAsProject() {
+	private: bool saveAsProject() {
 				 SaveFileDialog^ dialog = gcnew SaveFileDialog();
 				 dialog->Title = "Save As...";
 				 dialog->Filter = "XML File (*.xml)|*.xml";
@@ -1499,13 +1558,23 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 
 				 if (dialog->ShowDialog() == ::DialogResult::OK)
 				 {
-					 /*
+					 msclr::interop::marshal_context context;
+					 std::string filePath =  context.marshal_as<std::string>(dialog->FileName);
+					 AppData::getInstance()->setFilePath((char*)filePath.c_str());
+
+					 bool success = AppData::getInstance()->saveFile();
+
 					 FileInfo^ fileInfo = gcnew FileInfo( dialog->FileName );
-					 if (  !fileInfo->Exists ) { return; }
+					 if (  !fileInfo->Exists ) { return false; }
 					 
-					 MessageBox::Show(fileInfo->Name + " - BlinkAnalysis");
-					 */
+					 std::string fileName =  context.marshal_as<std::string>(fileInfo->Name);
+					 AppData::getInstance()->setFileName((char*)fileName.c_str());
+					 this->updateTitle();
+
+					 return success;
 				 }
+
+				 return false;
 			 }
 	// Form Events
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) {
@@ -1541,7 +1610,21 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 				 this->visualRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
 				 this->visualRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
 			 }
-	private: System::Void MainForm_Closing( Object^ /*sender*/, System::EventArgs ^ e )
+	private: System::Void MainForm_Closing( Object^ /*sender*/, System::Windows::Forms::FormClosingEventArgs^ e) 
+			 {
+				 if (AppData::getInstance()->isSaveNeeded()) {
+					 System::Windows::Forms::DialogResult result;
+
+					 result = MessageBox::Show("Do you want to save any changes to the current Project?", "Closing Project", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Question);
+					 if(result == ::DialogResult::Yes){
+						 if(!saveProject())
+							 e->Cancel = true;
+					 } else if(result == ::DialogResult::Cancel){
+						 e->Cancel = true;
+					 }
+				 }
+			 }
+	private: System::Void MainForm_Closed( Object^ /*sender*/, System::EventArgs ^ e )
 			{
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
@@ -1577,32 +1660,11 @@ _WATCH_MEMORY
 					 this->saveProject();
 				 }
 			 }
-	public: System::Void updateInformation() {
-				 ClientHandler* client = AppData::getInstance()->getClient();
-
-				 if (!client)
-					 return;
-
-				 char buf[128];
-				 // Local Ip Address
-				 client->getLocalIpAddress(buf);
-				 this->optiTrackLocalIpAddressTextBox->Text = gcnew String(buf);
-
-				 // Server Ip Address
-				 client->getOptiTrackServerIpAddress(buf);
-				 this->optiTrackSeverIpAddressTextBox->Text = gcnew String(buf);
-
-				 // Command Port
-				 this->optiTrackCmdPortTextBox->Text = Convert::ToString(client->getOptiTrackServerCommandPort());
-
-				 // Data Port
-				 this->optiTrackDataPortTextBox->Text = Convert::ToString(client->getOptiTrackServerDataPort());
-
-				 // Connection Type
-				 if (client->getOptiTrackServerConnectionType() == ConnectionType_Multicast)
-					 this->optiTrackConnectionTypeComboBox->SelectedItem = "Multicast";
-				 else if (client->getOptiTrackServerConnectionType() == ConnectionType_Unicast)
-				 this->optiTrackConnectionTypeComboBox->SelectedItem = "Unicast";
+	public: System::Void setInformation() {
+				 this->setOptiTrackInfo();
+			 }
+	public: System::Void getInformation() {
+				 this->getOptiTrackInfo();
 			 }
 	//////////////////////
 	// Dikablis
@@ -1913,35 +1975,33 @@ _WATCH_MEMORY
 					}
 				}
 			}
+	private: System::Void optiTrackLocalIpAddressTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+				 AppData::getInstance()->needSave();
+				 this->updateTitle();
+			 }
+	private: System::Void optiTrackSeverIpAddressTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+				 AppData::getInstance()->needSave();
+				 this->updateTitle();
+			 }
+	private: System::Void optiTrackCmdPortTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+				 AppData::getInstance()->needSave();
+				 this->updateTitle();
+			 }
+	private: System::Void optiTrackDataPortTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+				 AppData::getInstance()->needSave();
+				 this->updateTitle();
+			 }
+	private: System::Void optiTrackConnectionTypeComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+				 AppData::getInstance()->needSave();
+				 this->updateTitle();
+			 }
 	//////////////////////
 	// OptiTrack Buttons
 	/////////////////////
 private: System::Void optiTrackConnectBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 ClientHandler* client = AppData::getInstance()->getClient();
 			 
-			 // Local Ip Address
-			 String^ localIP = this->optiTrackLocalIpAddressTextBox->Text;
-			 client->setLocalIpAddress( marshal_as<std::string>(localIP).c_str() );
-
-			 // Server Ip Address
-			 String^ serverIP = this->optiTrackSeverIpAddressTextBox->Text;
-			 client->setOptiTrackServerIpAddress( marshal_as<std::string>(serverIP).c_str() );
-			 
-			 // Command Port
-			 String^ commandPort = this->optiTrackCmdPortTextBox->Text;
-			 client->setOptiTrackServerCommandPort(System::Int32::Parse(commandPort));
-
-			 // Data Port
-			 String^ dataPort = this->optiTrackDataPortTextBox->Text;
-			 client->setOptiTrackServerDataPort(System::Int32::Parse(dataPort));
-
-			 // Connection Type
-			String^ connectionType = (String^)this->optiTrackConnectionTypeComboBox->SelectedItem;
-			if (!String::Compare(connectionType, "Multicast"))
-				client->setOptiTrackServerConnectionType(ConnectionType_Multicast);
-			else if (!String::Compare(connectionType, "Unicast"))
-				client->setOptiTrackServerConnectionType(ConnectionType_Unicast);
-
+			 this->getOptiTrackInfo();
 			 NatNetClientSetup::createClient(&client);
 		 }
 private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System::EventArgs^  e) {
