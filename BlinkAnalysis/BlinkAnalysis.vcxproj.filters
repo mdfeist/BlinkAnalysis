@@ -67,7 +67,11 @@
     <ClCompile Include="Objects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
     <ClCompile Include="pugixml.cpp">
+=======
+    <ClCompile Include="CaptureObject.cpp">
+>>>>>>> Stashed changes
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -130,6 +134,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pugiconfig.hpp">
+    <ClInclude Include="CaptureObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
