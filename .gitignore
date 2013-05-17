@@ -22,6 +22,7 @@ Bin
 BlinkAnalysis/Debug*/
 Debug*/
 *.lib
+!NatNetLib.lib
 *.sbr
 obj/
 Release*/
