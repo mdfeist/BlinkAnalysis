@@ -49,10 +49,10 @@ osg::Geode *Objects::createPlane() {
 
 	// texture coordinates
 	osg::Vec2Array *texCoords = new osg::Vec2Array();
-	texCoords->push_back(osg::Vec2(0.05, 0.95));
-	texCoords->push_back(osg::Vec2(0.05, 0.05));
-	texCoords->push_back(osg::Vec2(0.95, 0.05));
-	texCoords->push_back(osg::Vec2(0.95, 0.95));
+	texCoords->push_back(osg::Vec2(0.0, 1.0));
+	texCoords->push_back(osg::Vec2(0.0, 0.0));
+	texCoords->push_back(osg::Vec2(1.0, 0.0));
+	texCoords->push_back(osg::Vec2(1.0, 1.0));
 
 	osg::Geometry *geometry = new osg::Geometry();
 	geometry->setVertexArray(vertexArray);
