@@ -15,7 +15,7 @@ class CaptureWorld
 {
 private:
 
-	osg::Matrix* coordFrame;
+	osg::Matrix coordFrame;
 	static int _lastObjectID;
 	std::map<int, CaptureObject> objects;
 
@@ -23,23 +23,21 @@ public:
 
 	CaptureWorld()
 	{
-		coordFrame = NULL;
+		coordFrame.set(osg::Matrix::identity());
 	}
 
 	~CaptureWorld()
 	{
-		if (coordFrame)
-			delete coordFrame;
 	}
 
-	CaptureWorld(osg::Matrix* mat);
+	CaptureWorld(osg::Matrix mat);
 	
 	const osg::Matrix getCoordinateFrame() 
 	{ 
-		return *coordFrame; 
+		return coordFrame; 
 	}
 
-	void setCoordinateFrame(osg::Matrix* mat, bool deleteObjects, bool updateObjects);
+	void setCoordinateFrame(osg::Matrix mat, bool deleteObjects, bool updateObjects);
 
 	bool addObject(CaptureObject obj);
 	

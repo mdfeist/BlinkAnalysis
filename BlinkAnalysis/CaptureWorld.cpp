@@ -5,16 +5,14 @@
 
 
 
-CaptureWorld::CaptureWorld(osg::Matrix* mat)
+CaptureWorld::CaptureWorld(osg::Matrix mat)
 {
-	coordFrame = mat;
-
+	coordFrame.set(mat);
 }
 
-void CaptureWorld::setCoordinateFrame(osg::Matrix* mat, bool deleteObjects, bool updateObjects)
+void CaptureWorld::setCoordinateFrame(osg::Matrix mat, bool deleteObjects, bool updateObjects)
 {
-	delete coordFrame;
-	coordFrame = mat;
+	coordFrame.set(mat);
 
 	if (deleteObjects)
 	{
@@ -52,7 +50,7 @@ osg::Node* CaptureWorld::getAsNode()
 {
 	
 	osg::ref_ptr<osg::MatrixTransform> node = new osg::MatrixTransform();
-	node->setMatrix(*coordFrame);
+	node->setMatrix(coordFrame);
 
 	std::map<int, CaptureObject>::iterator iter;
 	for (iter = objects.begin(); iter != objects.end(); ++iter)
