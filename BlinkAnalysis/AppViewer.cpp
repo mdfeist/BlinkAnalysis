@@ -27,7 +27,6 @@
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
-osg::ref_ptr<osg::Vec3Array> points;
 
 bool running = false;
 bool visible = false;
@@ -65,7 +64,7 @@ void render(void *) {
 					osg::Geometry* geo = new osg::Geometry(); 
 
 					// Create array to hold points
-					points = new osg::Vec3Array(); 
+					osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array(); 
 
 					// Get the map of all the Rigid Bodies attached to the client
 					std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
@@ -79,11 +78,6 @@ void render(void *) {
 						// Get pointer to Rigid Body
 						RigidBody* body = it_body->second;
 
-						// Create transformation matrix of the Rigid Body
-						osg::Matrix matrix;
-						matrix.setTrans(body->getPosition());
-						matrix.setRotate(body->getRotation());
-
 						// Get the vector of all the Markers attached to the Rigid Body
 						std::vector<Marker>* markers = body->getMarkersVector();
 				
@@ -96,12 +90,12 @@ void render(void *) {
 								// Get Pointer to marker
 								Marker m = *it_marker;
 								
-								// Get current position of marker by transforming
-								// the position relative to the attached Rigid Body.
-								osg::Vec3 pos = osg::Vec3( m.x, m.z, m.y ); //matrix * osg::Vec3( m.x, m.y, m.z );
+								// Get current position of marker
+								osg::Vec3 pos = osg::Vec3( m.x, m.z, m.y ); 
 
 								// Add marker to the points array
-								points->push_back( pos / 100.f ); 
+								points->push_back( pos );
+								//points->push_back( pos / 100.f ); 
 
 								// Update the current index
 								markerIndex++;
@@ -132,7 +126,10 @@ void render(void *) {
 					// Set the size of the points and turn off lighting
 					osg::ref_ptr<osg::StateSet> nodeState = node->getOrCreateStateSet();
 					nodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-					nodeState->setAttribute( new osg::Point( 7.5f ), osg::StateAttribute::ON );
+					nodeState->setMode(GL_BLEND, osg::StateAttribute::ON);
+					nodeState->setMode(GL_POINT_SMOOTH, osg::StateAttribute::ON);
+					nodeState->setAttribute( new osg::Point( 10.0f ) , osg::StateAttribute::ON );
+					nodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 
 					// Add Node containing all the points to the scene
 					rootNode->addChild( node );
@@ -205,9 +202,12 @@ void AppViewer::initAppViewer(HWND hwnd)
 	osg::Geode* planeNode = Objects::createPlane();
 	Objects::applyTexture("Images/PlaneGrid.png", planeNode);
 	osg::ref_ptr<osg::StateSet> planeNodeState = planeNode->getOrCreateStateSet();
-	planeNodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+	planeNodeState->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 	planeNodeState->setMode( GL_BLEND, osg::StateAttribute::ON );
+	planeNodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 	rootNode->addChild(planeNode);
+
+	rootNode->getOrCreateStateSet()->setMode( GL_ALPHA_TEST, osg::StateAttribute::ON ); 
 
 	// Add the root node to the scene
 	viewer->setSceneData(rootNode);

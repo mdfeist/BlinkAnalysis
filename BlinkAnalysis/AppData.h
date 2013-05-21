@@ -10,6 +10,7 @@
 
 #include "ClientHandler.h"
 #include "NatNetTypes.h"
+#include "pugixml.hpp"
 
 public class AppData
 {
@@ -23,12 +24,17 @@ public:
 	void setClient(ClientHandler *client) { this->client = client; }
 	ClientHandler* getClient() { return this->client; }
 
+	void setFileName(char* fileName) { strncpy_s(this->fileName, fileName, strlen(fileName)); }
+	char* getFileName() { return this->fileName; }
 	void setFilePath(char* filePath) { strncpy_s(this->filePath, filePath, strlen(filePath)); }
 	char* getFilePath() { return this->filePath; }
 
 	char* getLastError() { return this->error; }
 
 	bool openFile(char* filePath);
+	bool saveFile();
+	bool isSaveNeeded() { return this->needSaveFlag; }
+	void needSave() { this->needSaveFlag = true; }
 
 protected:
 	AppData(void);
@@ -40,8 +46,12 @@ private:
 	static AppData* m_pInstance;
 	ClientHandler *client;
 
+	bool needSaveFlag;
+	pugi::xml_document doc;
+	char fileName[1024];
 	char filePath[1024];
 	char error[1024];
+
 };
 
 
