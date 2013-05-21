@@ -70,6 +70,15 @@
     <ClCompile Include="pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CaptureObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptureObjectUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptureWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -130,6 +139,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pugiconfig.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptureObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptureObjectUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptureWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

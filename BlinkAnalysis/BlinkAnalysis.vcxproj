@@ -121,6 +121,8 @@
     <ClCompile Include="AppViewer.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlinkAnalysis.cpp" />
+    <ClCompile Include="CaptureObjectUtil.cpp" />
+    <ClCompile Include="CaptureWorld.cpp" />
     <ClCompile Include="ClientHandler.cpp" />
     <ClCompile Include="Dikablis.cpp" />
     <ClCompile Include="DikablisHelp.cpp" />
@@ -143,6 +145,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppViewer.h" />
+    <ClInclude Include="CaptureObjectUtil.h" />
+    <ClInclude Include="CaptureWorld.h" />
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Dikablis.h" />

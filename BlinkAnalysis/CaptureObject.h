@@ -2,26 +2,11 @@
 #define CAPTUREOBJECT_H
 
 #include <vector>
-#include <osg/AutoTransform>
+#include <string>
 
-#include "NatNetTypes.h"
-#include "RigidBody.h" // may have to move Marker class outside to avoid circular inclusion
+#include "CaptureObjectUtil.h"
 
-#define EPSILON 0.000001
-
-// for streaming to MATLAB
-struct Vector3D
-{
-	int x;
-	int y;
-	int z;
-};
-
-struct CaptureFace
-{
-	Vector3D *vertices;
-	Vector3D normal;
-};
+#define EPSILON 0.00001
 
 
 class CaptureObject
@@ -29,56 +14,69 @@ class CaptureObject
 private:
 	// -1 if static object
 	int rigidBody;
+
+	int id;
 	
-	osg::Geode *geo;
-	
-	unsigned int numVertices;
+	//bool triangleFace;
+
+	std::string name;
+
+	std::vector<osg::Vec3Array*> faces;
+
 
 public:
 
 	CaptureObject()
 	{
+		//triangleFace = true;
+		id = -1;
+		rigidBody = -1;
 	}
-	
+
+	CaptureObject(int id);
+
 	~CaptureObject()
 	{
 	}
-
-};
-
-class CaptureCube : public CaptureObject 
-{
-private:
 	
+	void addFace(osg::Vec3Array* face)
+	{
+		faces.push_back(face);
+	}
 
-public:
+	int getNumFaces()
+	{
+		return faces.size();
+	}
 
-	CaptureCube(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, osg::Vec3 pt3);
+	void removeFaces()
+	{
+		faces.clear();
+	}
 
-	bool intersectsVector(osg::Vec3 position, osg::Vec3 direction);
+	void setRigidBody(int rid)
+	{
+		id = rid;
+	}
+
+	int getRigidBody()
+	{
+		return id;
+	}
+
+	void setName(std::string name)
+	{
+		this->name = name;
+	}
+
+	std::string getName()
+	{
+		return name;
+	}
+
+
+
+
 };
-
-class CoordinatePlane : public CaptureObject 
-{
-private:
-	osg::Matrix coordTransform;
-
-public:
-	
-	//float vs int for unit definition?
-	CoordinatePlane(osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y, unsigned int xUnit, unsigned int yUnit);
-
-
-};
-
-class CaptureUtil
-{
-public:
-	static bool orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon);
-
-	static osg::Vec3* CaptureUtil::markerToVector(const Marker m);
-
-};
- 
 
 #endif
