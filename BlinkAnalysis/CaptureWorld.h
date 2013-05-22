@@ -11,36 +11,49 @@
 #include "CaptureObjectUtil.h"
 
 
+typedef std::map<int, CaptureObject*>::iterator objects_iterator;
+
 class CaptureWorld 
 {
 private:
 
-	osg::Matrix coordFrame;
-	static int _lastObjectID;
-	std::map<int, CaptureObject> objects;
-
+	osg::Matrix _localToGlobal;
+	osg::Matrix _globalToLocal;
+	int _lastObjectID;
+	std::map<int, CaptureObject*> _objects;
+	
+	int addObject(CaptureObject* obj);
+	
 public:
 
 	CaptureWorld()
 	{
-		coordFrame.set(osg::Matrix::identity());
+		_localToGlobal.set(osg::Matrix::identity());
+		_globalToLocal.set(osg::Matrix::identity());
+		_lastObjectID = 0;
 	}
 
 	~CaptureWorld()
 	{
+		clearObjects();
 	}
 
-	CaptureWorld(osg::Matrix mat);
+	CaptureWorld(osg::Matrix locToGlob);
 	
-	const osg::Matrix getCoordinateFrame() 
+	const osg::Matrix getLocalToGlobalMatrix() 
 	{ 
-		return coordFrame; 
+		return _localToGlobal; 
 	}
 
-	void setCoordinateFrame(osg::Matrix mat, bool deleteObjects, bool updateObjects);
+	const osg::Matrix getGlobalToLocalMatrix()
+	{
+		return _globalToLocal;
+	}
 
-	bool addObject(CaptureObject obj);
-	
+	void setCoordinateFrame(osg::Matrix locToGlob, bool deleteObjects, bool updateObjects);
+
+	int addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
+
 	bool removeObject(int id);
 
 	void clearObjects();

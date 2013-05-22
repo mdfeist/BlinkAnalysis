@@ -3,12 +3,16 @@
 
 #include <vector>
 #include <string>
+#include <osg/PrimitiveSet>
 
 #include "CaptureObjectUtil.h"
 
 #define EPSILON 0.00001
 
+typedef std::vector<osg::ref_ptr<osg::DrawElementsUInt>>::iterator faces_iterator;
 
+// TODO: eventually support texture?
+// TODO: check for NULL
 class CaptureObject
 {
 private:
@@ -17,66 +21,43 @@ private:
 
 	int id;
 	
-	//bool triangleFace;
-
 	std::string name;
 
-	std::vector<osg::Vec3Array*> faces;
+	osg::ref_ptr<osg::Vec3Array> vertices;
 
+	std::vector<osg::ref_ptr<osg::DrawElementsUInt>> faces;
 
 public:
 
 	CaptureObject()
 	{
-		//triangleFace = true;
 		id = -1;
 		rigidBody = -1;
 	}
 
-	CaptureObject(int id);
+	~CaptureObject() { faces.clear(); }
 
-	~CaptureObject()
-	{
-	}
+	void setID(int id) { this->id = id; }
+
+	int getID() { return id; }
 	
-	void addFace(osg::Vec3Array* face)
-	{
-		faces.push_back(face);
-	}
+	void setVertices(osg::Vec3Array* vertices) { this->vertices = vertices; }
 
-	int getNumFaces()
-	{
-		return faces.size();
-	}
+	void addFace(osg::DrawElementsUInt* face) { faces.push_back(face); }
 
-	void removeFaces()
-	{
-		faces.clear();
-	}
+	int getNumFaces() { return faces.size(); }
 
-	void setRigidBody(int rid)
-	{
-		id = rid;
-	}
+	void removeFaces() { faces.clear(); }
 
-	int getRigidBody()
-	{
-		return id;
-	}
+	void setRigidBody(int rid) { id = rid; }
 
-	void setName(std::string name)
-	{
-		this->name = name;
-	}
+	int getRigidBody() { return id; }
 
-	std::string getName()
-	{
-		return name;
-	}
+	void setName(std::string name) { this->name = name; }
 
+	std::string getName() { return name; }
 
-
-
+	osg::Geode* getAsGeode();
 };
 
 #endif
