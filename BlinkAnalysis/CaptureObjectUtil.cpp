@@ -13,11 +13,7 @@ osg::Vec3* CaptureObjectUtil::markerToVector(const Marker m)
 }
 
 // based on MATLAB function MakeCoordSystem by J. Lanovaz
-/*
-Note:  The 4 x 4 transformation matrix consists of the 3 x 3 rotation
-matrix in the upper left hand corner and the translation vector as the
-first 3 rows of the 4th column.  The last row is [0 0 0 1].*/
-osg::Matrix CaptureObjectUtil::makeLocalToGlobalMatrix(
+osg::Matrix* CaptureObjectUtil::makeLocalToGlobalMatrix(
 	osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y)
 {
 	// form axis vectors
@@ -42,7 +38,9 @@ osg::Matrix CaptureObjectUtil::makeLocalToGlobalMatrix(
 										vec_x.z(), vec_y.z(), vec_z.z(), origin.z(),
 										0, 0, 0, 1);
 
-	return *mat;
+	*mat *= osg::Matrix::translate(osg::Vec3(origin.x(), origin.y(), origin.z()));
+
+	return mat;
 }
 
 

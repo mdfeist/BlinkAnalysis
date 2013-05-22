@@ -17,8 +17,7 @@ class CaptureWorld
 {
 private:
 
-	osg::Matrix _localToGlobal;
-	osg::Matrix _globalToLocal;
+	osg::Matrix* _localToGlobal;
 	int _lastObjectID;
 	std::map<int, CaptureObject*> _objects;
 	
@@ -28,29 +27,30 @@ public:
 
 	CaptureWorld()
 	{
-		_localToGlobal.set(osg::Matrix::identity());
-		_globalToLocal.set(osg::Matrix::identity());
+		_localToGlobal = new osg::Matrix();
+		_localToGlobal->makeIdentity();
 		_lastObjectID = 0;
 	}
 
 	~CaptureWorld()
 	{
+		delete _localToGlobal;
 		clearObjects();
 	}
 
-	CaptureWorld(osg::Matrix locToGlob);
+	CaptureWorld(osg::Matrix* locToGlob);
 	
 	const osg::Matrix getLocalToGlobalMatrix() 
 	{ 
-		return _localToGlobal; 
+		return *_localToGlobal; 
 	}
 
 	const osg::Matrix getGlobalToLocalMatrix()
 	{
-		return _globalToLocal;
+		return osg::Matrix::inverse(*_localToGlobal);
 	}
 
-	void setCoordinateFrame(osg::Matrix locToGlob, bool deleteObjects, bool updateObjects);
+	void setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects=false, bool updateObjects=false);
 
 	int addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
 

@@ -8,17 +8,16 @@
 
 
 
-CaptureWorld::CaptureWorld(osg::Matrix locToGlob)
+CaptureWorld::CaptureWorld(osg::Matrix* locToGlob)
 {
 	_localToGlobal = locToGlob;
-	_globalToLocal = osg::Matrix::inverse(locToGlob);
 	_lastObjectID = 0;
 }
 
-void CaptureWorld::setCoordinateFrame(osg::Matrix locToGlob, bool deleteObjects, bool updateObjects)
+void CaptureWorld::setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects, bool updateObjects)
 {
+	delete _localToGlobal;
 	_localToGlobal = locToGlob;
-	_globalToLocal = osg::Matrix::inverse(locToGlob);
 
 	if (deleteObjects)
 	{
@@ -85,7 +84,7 @@ int CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::
 
 	// set up plane vertices
 	osg::Vec3 opposite = pt1 + pt2 - corner;
-	osg::Vec3Array* vertices = new osg::Vec3Array(4);
+	osg::Vec3Array* vertices = new osg::Vec3Array();
 	vertices->push_back(corner);
 	vertices->push_back(pt1);
 	vertices->push_back(opposite);
@@ -109,7 +108,7 @@ osg::Node* CaptureWorld::getAsNode()
 {
 	
 	osg::ref_ptr<osg::MatrixTransform> node = new osg::MatrixTransform();
-	node->setMatrix(_globalToLocal);
+	node->setMatrix(getGlobalToLocalMatrix());
 
 	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
 	{
