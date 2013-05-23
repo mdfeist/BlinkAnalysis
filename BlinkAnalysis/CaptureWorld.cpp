@@ -42,9 +42,10 @@ int CaptureWorld::addObject(CaptureObject* obj)
 		obj->setName(sstr.str());
 	}
 
-	_objects.insert(std::pair<int, CaptureObject*>(_lastObjectID, obj));
+	std::pair<objects_iterator, bool> ret;
+	ret = _objects.insert(std::pair<int, CaptureObject*>(_lastObjectID, obj));
 
-	return _lastObjectID++;
+	return (ret.second == false) ? false : _lastObjectID++;
 }
 
 	

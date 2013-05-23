@@ -198,6 +198,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  calibrationToolStripMenuIte
 private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenuItem;
 private: System::Windows::Forms::ListView^  objectsListView;
 private: System::Windows::Forms::Label^  objectsLabel;
+private: System::Windows::Forms::ToolStripMenuItem^  addObjectToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  defineCoordinatesToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -289,6 +292,8 @@ private: System::Windows::Forms::Label^  objectsLabel;
 			this->visualSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->visualOutputLogTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->visualOutputLogLabel = (gcnew System::Windows::Forms::Label());
+			this->objectsListView = (gcnew System::Windows::Forms::ListView());
+			this->objectsLabel = (gcnew System::Windows::Forms::Label());
 			this->visualRigidBodyListView = (gcnew System::Windows::Forms::ListView());
 			this->visualPropertiesLabel = (gcnew System::Windows::Forms::Label());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
@@ -299,8 +304,9 @@ private: System::Windows::Forms::Label^  objectsLabel;
 			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->calibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->eyeCalibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->objectsLabel = (gcnew System::Windows::Forms::Label());
-			this->objectsListView = (gcnew System::Windows::Forms::ListView());
+			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->defineCoordinatesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addPlaneToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1297,6 +1303,33 @@ private: System::Windows::Forms::Label^  objectsLabel;
 			this->visualOutputLogLabel->TabIndex = 0;
 			this->visualOutputLogLabel->Text = L"Output Log";
 			// 
+			// objectsListView
+			// 
+			this->objectsListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
+			this->objectsListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->objectsListView->FullRowSelect = true;
+			this->objectsListView->LabelWrap = false;
+			this->objectsListView->Location = System::Drawing::Point(6, 295);
+			this->objectsListView->MultiSelect = false;
+			this->objectsListView->Name = L"objectsListView";
+			this->objectsListView->Size = System::Drawing::Size(262, 172);
+			this->objectsListView->TabIndex = 3;
+			this->objectsListView->TileSize = System::Drawing::Size(100, 20);
+			this->objectsListView->UseCompatibleStateImageBehavior = false;
+			this->objectsListView->View = System::Windows::Forms::View::SmallIcon;
+			// 
+			// objectsLabel
+			// 
+			this->objectsLabel->AutoSize = true;
+			this->objectsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->objectsLabel->Location = System::Drawing::Point(3, 255);
+			this->objectsLabel->Name = L"objectsLabel";
+			this->objectsLabel->Size = System::Drawing::Size(114, 17);
+			this->objectsLabel->TabIndex = 2;
+			this->objectsLabel->Text = L"Captured Objects";
+			// 
 			// visualRigidBodyListView
 			// 
 			this->visualRigidBodyListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
@@ -1326,8 +1359,8 @@ private: System::Windows::Forms::Label^  objectsLabel;
 			// 
 			// menuStrip
 			// 
-			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->projectToolStripMenuItem, 
-				this->calibrationToolStripMenuItem});
+			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->projectToolStripMenuItem, 
+				this->calibrationToolStripMenuItem, this->addObjectToolStripMenuItem});
 			this->menuStrip->Location = System::Drawing::Point(0, 0);
 			this->menuStrip->Name = L"menuStrip";
 			this->menuStrip->Size = System::Drawing::Size(784, 24);
@@ -1387,32 +1420,27 @@ private: System::Windows::Forms::Label^  objectsLabel;
 			this->eyeCalibrationToolStripMenuItem->Text = L"Eye Calibration";
 			this->eyeCalibrationToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::eyeCalibrationToolStripMenuItem_Click);
 			// 
-			// objectsLabel
+			// addObjectToolStripMenuItem
 			// 
-			this->objectsLabel->AutoSize = true;
-			this->objectsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->objectsLabel->Location = System::Drawing::Point(3, 255);
-			this->objectsLabel->Name = L"objectsLabel";
-			this->objectsLabel->Size = System::Drawing::Size(114, 17);
-			this->objectsLabel->TabIndex = 2;
-			this->objectsLabel->Text = L"Captured Objects";
+			this->addObjectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->defineCoordinatesToolStripMenuItem, 
+				this->addPlaneToolStripMenuItem});
+			this->addObjectToolStripMenuItem->Name = L"addObjectToolStripMenuItem";
+			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(79, 20);
+			this->addObjectToolStripMenuItem->Text = L"Add Object";
 			// 
-			// objectsListView
+			// defineCoordinatesToolStripMenuItem
 			// 
-			this->objectsListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
-			this->objectsListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->objectsListView->FullRowSelect = true;
-			this->objectsListView->LabelWrap = false;
-			this->objectsListView->Location = System::Drawing::Point(6, 295);
-			this->objectsListView->MultiSelect = false;
-			this->objectsListView->Name = L"objectsListView";
-			this->objectsListView->Size = System::Drawing::Size(262, 172);
-			this->objectsListView->TabIndex = 3;
-			this->objectsListView->TileSize = System::Drawing::Size(100, 20);
-			this->objectsListView->UseCompatibleStateImageBehavior = false;
-			this->objectsListView->View = System::Windows::Forms::View::SmallIcon;
+			this->defineCoordinatesToolStripMenuItem->Name = L"defineCoordinatesToolStripMenuItem";
+			this->defineCoordinatesToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->defineCoordinatesToolStripMenuItem->Text = L"Define Coordinates";
+			this->defineCoordinatesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::defineCoordinatesToolStripMenuItem_Click);
+			// 
+			// addPlaneToolStripMenuItem
+			// 
+			this->addPlaneToolStripMenuItem->Name = L"addPlaneToolStripMenuItem";
+			this->addPlaneToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->addPlaneToolStripMenuItem->Text = L"Add Plane";
+			this->addPlaneToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addPlaneToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -1608,6 +1636,14 @@ private: System::Windows::Forms::Label^  objectsLabel;
 				 }
 
 				 return false;
+			 }
+	private: bool defineCoordinates() {
+				 // TODO 
+				 return false;
+			 }
+	private: bool addPlane() {
+				 return false;
+
 			 }
 	// Form Events
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) {
@@ -2155,6 +2191,13 @@ private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, Syste
 private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->saveAsProject();
 		 }
+private: System::Void defineCoordinatesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->defineCoordinates();
+		 }
+private: System::Void addPlaneToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->addPlane();
+		 }
+
 };
 }
 
