@@ -196,6 +196,8 @@ private: System::Windows::Forms::ListView^  visualRigidBodyListView;
 private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 private: System::Windows::Forms::ToolStripMenuItem^  calibrationToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenuItem;
+private: System::Windows::Forms::ListView^  objectsListView;
+private: System::Windows::Forms::Label^  objectsLabel;
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -297,6 +299,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->calibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->eyeCalibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->objectsLabel = (gcnew System::Windows::Forms::Label());
+			this->objectsListView = (gcnew System::Windows::Forms::ListView());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1235,6 +1239,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			// visualMainSplitContainer.Panel2
 			// 
 			this->visualMainSplitContainer->Panel2->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->visualMainSplitContainer->Panel2->Controls->Add(this->objectsListView);
+			this->visualMainSplitContainer->Panel2->Controls->Add(this->objectsLabel);
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualRigidBodyListView);
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualPropertiesLabel);
 			this->visualMainSplitContainer->Panel2MinSize = 250;
@@ -1380,6 +1386,33 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 			this->eyeCalibrationToolStripMenuItem->Size = System::Drawing::Size(153, 22);
 			this->eyeCalibrationToolStripMenuItem->Text = L"Eye Calibration";
 			this->eyeCalibrationToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::eyeCalibrationToolStripMenuItem_Click);
+			// 
+			// objectsLabel
+			// 
+			this->objectsLabel->AutoSize = true;
+			this->objectsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->objectsLabel->Location = System::Drawing::Point(3, 255);
+			this->objectsLabel->Name = L"objectsLabel";
+			this->objectsLabel->Size = System::Drawing::Size(114, 17);
+			this->objectsLabel->TabIndex = 2;
+			this->objectsLabel->Text = L"Captured Objects";
+			// 
+			// objectsListView
+			// 
+			this->objectsListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
+			this->objectsListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->objectsListView->FullRowSelect = true;
+			this->objectsListView->LabelWrap = false;
+			this->objectsListView->Location = System::Drawing::Point(6, 295);
+			this->objectsListView->MultiSelect = false;
+			this->objectsListView->Name = L"objectsListView";
+			this->objectsListView->Size = System::Drawing::Size(262, 172);
+			this->objectsListView->TabIndex = 3;
+			this->objectsListView->TileSize = System::Drawing::Size(100, 20);
+			this->objectsListView->UseCompatibleStateImageBehavior = false;
+			this->objectsListView->View = System::Windows::Forms::View::SmallIcon;
 			// 
 			// MainForm
 			// 
@@ -1609,6 +1642,10 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 				 this->visualRigidBodyListView->View = View::Details;
 				 this->visualRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
 				 this->visualRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
+
+				 this->objectsListView->View = View::Details;
+				 this->objectsListView->Columns->Add("ID", 50, HorizontalAlignment::Left ); 
+				 this->objectsListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
 			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::Windows::Forms::FormClosingEventArgs^ e) 
 			 {
@@ -1855,6 +1892,24 @@ _WATCH_MEMORY
 						ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
 						listViewItem->SubItems->Add(rigidBodyName);
 						this->visualRigidBodyListView->Items->Add(listViewItem);
+					}
+				}
+
+				CaptureWorld* world = AppData::getInstance()->getWorld();
+				if (world)
+				{
+					std::map<int, CaptureObject*> objectMap = world->getObjects();
+
+					this->objectsListView->Items->Clear();
+					
+					for (objects_iterator it = objectMap.begin(); it != objectMap.end(); it++)
+					{
+						// Add Capture Object to list
+						String^ objectID = Convert::ToString(it->second->getID());
+						String^ objectName = gcnew String(it->second->getName().c_str());
+						ListViewItem^ listViewItem = gcnew ListViewItem(objectID); 
+						listViewItem->SubItems->Add(objectName);
+						this->objectsListView->Items->Add(listViewItem);
 					}
 				}
 			}

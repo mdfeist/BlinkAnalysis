@@ -58,6 +58,8 @@ public:
 
 	void clearObjects();
 
+	std::map<int, CaptureObject*> getObjects() { return _objects; }
+
 	int getNumberObjects();
 
 	osg::Node* getAsNode();

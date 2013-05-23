@@ -198,6 +198,9 @@ void AppViewer::initAppViewer(HWND hwnd)
 	rootNode->addChild(modelTransform);
 	*/
 
+	// TESTING for CaptureWorld
+	rootNode->addChild(AppData::getInstance()->getWorld()->getAsNode());
+	
 	// Add the ground plane
 	osg::Geode* planeNode = Objects::createPlane();
 	Objects::applyTexture("Images/PlaneGrid.png", planeNode);
