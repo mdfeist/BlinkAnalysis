@@ -82,6 +82,9 @@
     <ClCompile Include="DefineCoordinateFrameForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LabeledMarker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="DefineCoordinateFrameForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LabeledMarker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -173,6 +179,9 @@
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="EyeCalibrationWizardForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DefineCoordinateFrameForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>

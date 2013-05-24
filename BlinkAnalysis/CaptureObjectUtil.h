@@ -1,12 +1,12 @@
 #ifndef CAPTUREOBJECTUTIL_H
 #define CAPTUREOBJECTUTIL_H
 
-#include <vector>
-#include <osg/AutoTransform>
 #include <osg/Vec3>
+#include <osg/Matrix>
 
-#include "NatNetTypes.h"
-#include "RigidBody.h" // may have to move Marker class outside to avoid circular inclusion
+#include "Marker.h"
+
+#define EPSILON 0.00001
 
 class CaptureObjectUtil
 {

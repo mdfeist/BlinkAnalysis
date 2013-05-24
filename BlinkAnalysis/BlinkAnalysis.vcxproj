@@ -133,6 +133,7 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="LabeledMarker.cpp" />
     <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="AppData.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Marker.h" />
     <ClInclude Include="NatNetClientSetup.h" />
     <ClInclude Include="Objects.h" />
+    <ClInclude Include="LabeledMarker.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="resource.h" />

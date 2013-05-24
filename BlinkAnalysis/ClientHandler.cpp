@@ -85,3 +85,32 @@ std::map<int, RigidBody*>* ClientHandler::getRigidBodyMap()
 {
 	return &this->rigidBodies;
 }
+
+bool ClientHandler::addLabeledMarker(int id, LabeledMarker* marker)
+{
+	std::pair<labeledmarker_iterator, bool> ret;
+	ret = labeledMarkers.insert(std::pair<int, LabeledMarker*>(id, marker));
+
+	return (ret.second == false) ? false : true;
+}
+
+LabeledMarker* ClientHandler::getLabeledMarker(int id)
+{
+	labeledmarker_iterator itr = labeledMarkers.find(id);
+
+	return (itr == labeledMarkers.end()) ? NULL : itr->second;
+}
+
+std::map<int, LabeledMarker*>* ClientHandler::getLabeledMarkerMap()
+{
+	return &labeledMarkers;
+}
+
+// TODO add size change as well?
+void ClientHandler::updateLabeledMarker(int id, float x, float y, float z)
+{
+	LabeledMarker* marker = getLabeledMarker(id);
+	if (marker)
+		marker->setPosition(x, y, z);
+}
+

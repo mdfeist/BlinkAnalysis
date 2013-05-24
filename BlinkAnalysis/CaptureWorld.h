@@ -4,7 +4,6 @@
 #include <hash_map>
 #include <osg/Node>
 #include <osg/Matrix>
-#include <osg/MatrixTransform>
 
 
 #include "CaptureObject.h"

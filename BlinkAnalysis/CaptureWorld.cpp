@@ -3,6 +3,8 @@
 #include "StdAfx.h"
 
 #include <sstream>
+#include <osg/Geode>
+#include <osg/MatrixTransform>
 
 #include "CaptureWorld.h"
 
@@ -114,8 +116,7 @@ osg::Node* CaptureWorld::getAsNode()
 	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
 	{
 		// TODO 
-		// is there a way to avoid Geode to Node casting? 
-		node->addChild((osg::Node*)itr->second->getAsGeode());
+		node->addChild(itr->second->getAsGeode());
 	}
 
 	return node.release();
