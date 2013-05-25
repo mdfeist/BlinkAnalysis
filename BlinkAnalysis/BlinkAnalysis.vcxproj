@@ -124,6 +124,7 @@
     <ClCompile Include="ClientHandler.cpp" />
     <ClCompile Include="Dikablis.cpp" />
     <ClCompile Include="DikablisHelp.cpp" />
+    <ClCompile Include="EyeCalibration.cpp" />
     <ClCompile Include="MainFormController.cpp" />
     <ClCompile Include="NatNetClientSetup.cpp">
       <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
