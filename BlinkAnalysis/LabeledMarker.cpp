@@ -72,7 +72,7 @@ osg::Node* LabeledMarker::getAsNode()
 		marker = new osg::Sphere(osg::Vec3(x, y, z), size);
 		osg::ref_ptr<osg::ShapeDrawable> draw = new osg::ShapeDrawable();
 
-		geo = new osg::Geode();
+		osg::ref_ptr<osg::Geode> geo = new osg::Geode();
 		draw->setShape(marker.get());
 		draw->setColor(osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f)); // blue by default
 		geo->addDrawable(draw.get());

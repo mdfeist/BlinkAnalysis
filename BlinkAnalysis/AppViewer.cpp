@@ -103,7 +103,6 @@ void render(void *) {
 						}
 					}
 
-					// TODO add other marker display as well
 					// Labeled Markers
 					std::map<int, LabeledMarker*>* markerMap = client->getLabeledMarkerMap();
 

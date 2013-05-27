@@ -14,7 +14,7 @@ class LabeledMarker : public Marker
 private:
 	osg::ref_ptr<osg::Sphere> marker;
 	//osg::ref_ptr<osg::ShapeDrawable> draw;
-	osg::ref_ptr<osg::Geode> geo;
+	//osg::ref_ptr<osg::Geode> geo;
 	osg::ref_ptr<osg::MatrixTransform> node;
 	bool toggled;
 

@@ -129,5 +129,7 @@ public:
 	LabeledMarker* getLabeledMarker(int id);
 	std::map<int, LabeledMarker*>* getLabeledMarkerMap();
 	void updateLabeledMarker(int id, float x, float y, float z);
+	void clearLabeledMarkers();
+
 };
 

@@ -378,31 +378,23 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 		}
 	}
 
-	// Other Markers
+	// TODO better handling of marker creation?
+	// Labeled Markers
+
 	for(int i = 0; i < data->nLabeledMarkers; i++)
 	{
 		if (!pClient->lock())
 			continue;
-		
-		LabeledMarker* marker = pClient->getLabeledMarker(data->LabeledMarkers[i].ID);
 
-		if (!marker)
-		{
-			LabeledMarker* marker = new LabeledMarker(data->LabeledMarkers[i].ID, 
+		if (i==0)
+			pClient->clearLabeledMarkers();
+
+		LabeledMarker* marker = new LabeledMarker(data->LabeledMarkers[i].ID, 
 													data->LabeledMarkers[i].x,
 													data->LabeledMarkers[i].y,
 													data->LabeledMarkers[i].z,
 													data->LabeledMarkers[i].size);
-			pClient->addLabeledMarker(marker->id, marker);
-		}
-		else
-		{
-			marker->setPosition(data->LabeledMarkers[i].x,
-								data->LabeledMarkers[i].y,
-								data->LabeledMarkers[i].z);
-			// TODO set size too?
-			// marker->setSize(data->LabeledMarkers[i].size);
-		}
+		pClient->addLabeledMarker(marker->id, marker);
 		
 		pClient->unlock();
 	}

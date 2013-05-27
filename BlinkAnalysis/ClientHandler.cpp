@@ -114,3 +114,11 @@ void ClientHandler::updateLabeledMarker(int id, float x, float y, float z)
 		marker->setPosition(x, y, z);
 }
 
+void ClientHandler::clearLabeledMarkers()
+{
+	for (labeledmarker_iterator itr = labeledMarkers.begin(); itr != labeledMarkers.end(); itr++)
+	{
+		delete itr->second;
+	}
+	labeledMarkers.clear();
+}
