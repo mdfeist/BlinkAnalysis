@@ -27,6 +27,7 @@
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
+osg::Group* markersNode;
 
 bool running = false;
 bool visible = false;
@@ -105,11 +106,13 @@ void render(void *) {
 
 					// Labeled Markers
 					std::map<int, LabeledMarker*>* markerMap = client->getLabeledMarkerMap();
+					if (markersNode->getNumChildren() > 0)
+						markersNode->removeChildren(0, markersNode->getNumChildren());
 
 					for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
 					{
 						LabeledMarker* marker = it_marker->second;
-						rootNode->addChild(marker->getAsNode());
+						markersNode->addChild(marker->getAsNode());
 					}
 
 
@@ -219,6 +222,10 @@ void AppViewer::initAppViewer(HWND hwnd)
 	planeNodeState->setMode( GL_BLEND, osg::StateAttribute::ON );
 	planeNodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 	rootNode->addChild(planeNode);
+
+	//add node containing markers
+	markersNode = new osg::Group();
+	rootNode->addChild(markersNode);
 
 	rootNode->getOrCreateStateSet()->setMode( GL_ALPHA_TEST, osg::StateAttribute::ON ); 
 
