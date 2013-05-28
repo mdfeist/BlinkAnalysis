@@ -2112,6 +2112,15 @@ _WATCH_MEMORY
 								if (!client->lock())
 									return;
 
+								// update the vector list
+								std::map<int, LabeledMarker*>* markerMap = client->getLabeledMarkerMap();
+								this->markersListView->VirtualListSize = (unsigned int) markerMap->size();
+								this->optiTrackLabeledMarkerVector->clear();
+								for (std::map<int, LabeledMarker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
+								{
+									this->optiTrackLabeledMarkerVector->push_back(it->second);
+								}
+
 								// Try to update the view
 								try {
 									this->markersListView->SuspendLayout();
