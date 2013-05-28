@@ -26,6 +26,7 @@ ClientHandler::ClientHandler(void)
 		//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE, 
 		FALSE, 
 		NULL);
+	this->toggledMarker = NULL;
 }
 
 // Cleans up the ClientHandler
@@ -121,4 +122,39 @@ void ClientHandler::clearLabeledMarkers()
 		delete itr->second;
 	}
 	labeledMarkers.clear();
+	toggledMarker = NULL;
+}
+
+void ClientHandler::clearStaleMarkers()
+{
+	if (toggledMarker && !toggledMarker->updated)
+		toggledMarker = NULL;
+
+	for (labeledmarker_iterator itr = labeledMarkers.begin(); itr != labeledMarkers.end();)
+	{
+		if (itr->second->updated)
+		{
+			itr->second->updated = false;
+			++itr;
+		}
+		else
+		{
+			delete itr->second;
+			labeledMarkers.erase(itr++);
+		}
+	}
+}
+
+bool ClientHandler::toggleMarker(int id)
+{
+	if (toggledMarker)
+		toggledMarker->deselect();
+
+	toggledMarker = getLabeledMarker(id);
+
+	if (!toggledMarker)
+		return false;
+
+	toggledMarker->select();
+	return true;
 }

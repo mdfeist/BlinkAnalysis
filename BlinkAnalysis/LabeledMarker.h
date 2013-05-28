@@ -16,9 +16,10 @@ private:
 	//osg::ref_ptr<osg::ShapeDrawable> draw;
 	//osg::ref_ptr<osg::Geode> geo;
 	osg::ref_ptr<osg::MatrixTransform> node;
-	bool toggled;
 
 public:
+	bool updated; // to determine if it should be removed from map
+	bool toggled;
 	
 	LabeledMarker();
 
@@ -29,6 +30,10 @@ public:
 	void setSize(float size);
 
 	void toggleMarkerColour();
+
+	void select();
+
+	void deselect();
 	
 	osg::Node* getAsNode();
 

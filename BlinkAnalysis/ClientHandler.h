@@ -40,6 +40,7 @@ private:
 	std::map<int, RigidBody*> rigidBodies;
 	// map to store all other markers
 	std::map<int, LabeledMarker*> labeledMarkers;
+	LabeledMarker* toggledMarker;
 
 	// OptiTrack Server Settings 
 	char cLocalIPAddress[128];					// Your local IP Address
@@ -130,6 +131,7 @@ public:
 	std::map<int, LabeledMarker*>* getLabeledMarkerMap();
 	void updateLabeledMarker(int id, float x, float y, float z);
 	void clearLabeledMarkers();
-
+	void clearStaleMarkers();
+	bool toggleMarker(int id);
 };
 

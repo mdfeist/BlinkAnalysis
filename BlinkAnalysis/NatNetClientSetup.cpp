@@ -386,16 +386,32 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 		if (!pClient->lock())
 			continue;
 
-		if (i==0)
-			pClient->clearLabeledMarkers();
-
-		LabeledMarker* marker = new LabeledMarker(data->LabeledMarkers[i].ID, 
+		LabeledMarker* marker = pClient->getLabeledMarker(data->LabeledMarkers[i].ID);
+		
+		if (marker)
+		{
+			marker->setPosition(data->LabeledMarkers[i].x, 
+								data->LabeledMarkers[i].y,
+								data->LabeledMarkers[i].z);
+			marker->updated = true;
+		}
+		else
+		{
+			marker = new LabeledMarker(data->LabeledMarkers[i].ID, 
 													data->LabeledMarkers[i].x,
 													data->LabeledMarkers[i].y,
 													data->LabeledMarkers[i].z,
 													data->LabeledMarkers[i].size);
-		pClient->addLabeledMarker(marker->id, marker);
+			marker->updated = true;
+			pClient->addLabeledMarker(marker->id, marker);
+		}
 		
+		pClient->unlock();
+	}
+
+	if (pClient->lock())
+	{
+		pClient->clearStaleMarkers();
 		pClient->unlock();
 	}
 

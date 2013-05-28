@@ -24,6 +24,7 @@ LabeledMarker::LabeledMarker(int id, float x, float y, float z, float size)
 	//geo = NULL;
 	node = NULL;
 	toggled = false;
+	updated = false;
 }
 
 void LabeledMarker::setPosition(float x, float y, float z)
@@ -62,6 +63,32 @@ void LabeledMarker::toggleMarkerColour()
 		draw->setColor(osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f)); // green
 	
 	toggled = !toggled;
+}
+
+void LabeledMarker::select()
+{
+	if (!node)
+		return;
+
+	// TODO
+	osg::ShapeDrawable* draw = dynamic_cast<osg::ShapeDrawable*>(node->getChild(0)->asGeode()->getDrawable(0));
+
+	draw->setColor(osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f)); // green
+	
+	toggled = true;
+}
+
+void LabeledMarker::deselect()
+{
+	if (!node)
+		return;
+
+	// TODO
+	osg::ShapeDrawable* draw = dynamic_cast<osg::ShapeDrawable*>(node->getChild(0)->asGeode()->getDrawable(0));
+
+	draw->setColor(osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f)); // blue
+	
+	toggled = false;
 }
 
 osg::Node* LabeledMarker::getAsNode()
