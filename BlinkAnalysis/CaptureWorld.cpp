@@ -30,6 +30,9 @@ void CaptureWorld::setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects
 	{
 		//TODO
 	}
+
+	if (node)
+		node->setMatrix(getGlobalToLocalMatrix());
 }
 
 int CaptureWorld::addObject(CaptureObject* obj)
@@ -107,10 +110,12 @@ int CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::
 }
 
 
-osg::Node* CaptureWorld::getAsNode()
+osg::Group* CaptureWorld::getAsGroup()
 {
-	
-	osg::ref_ptr<osg::MatrixTransform> node = new osg::MatrixTransform();
+	if (node)
+		return node;
+
+	node = new osg::MatrixTransform();
 	node->setMatrix(getGlobalToLocalMatrix());
 
 	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)

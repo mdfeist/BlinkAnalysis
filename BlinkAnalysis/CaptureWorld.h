@@ -4,6 +4,7 @@
 #include <hash_map>
 #include <osg/Node>
 #include <osg/Matrix>
+#include <osg/MatrixTransform>
 
 
 #include "CaptureObject.h"
@@ -23,6 +24,7 @@ private:
 	std::map<int, CaptureObject*> _objects;
 	
 	int addObject(CaptureObject* obj);
+	osg::ref_ptr<osg::MatrixTransform> node;
 	
 public:
 
@@ -64,7 +66,7 @@ public:
 
 	int getNumberObjects();
 
-	osg::Node* getAsNode();
+	osg::Group* getAsGroup();
 
 };
 

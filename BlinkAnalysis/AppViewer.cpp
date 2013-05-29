@@ -151,12 +151,14 @@ void render(void *) {
 
 			// Add Node containing all the points to the scene
 			rootNode->addChild( node );
+			//AppData::getInstance()->getWorld()->getAsGroup()->addChild( node );
 			
 			// Render frame
 			viewer->frame();
 
 			// Remove points from the scene
 			rootNode->removeChild( node );
+			//AppData::getInstance()->getWorld()->getAsGroup()->removeChild( node );
 		} else {
 			// View not visible so Sleep for 1000 milliseconds
 			Sleep(1000);
@@ -213,8 +215,8 @@ void AppViewer::initAppViewer(HWND hwnd)
 	rootNode->addChild(modelTransform);
 	*/
 
-	// TESTING for CaptureWorld
-	rootNode->addChild(AppData::getInstance()->getWorld()->getAsNode());
+	// TODO TESTING for CaptureWorld
+	rootNode->addChild(AppData::getInstance()->getWorld()->getAsGroup());
 	
 	// Add the ground plane
 	osg::Geode* planeNode = Objects::createPlane();

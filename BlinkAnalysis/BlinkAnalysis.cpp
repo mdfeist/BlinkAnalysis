@@ -24,7 +24,7 @@ int main(array<System::String ^> ^args)
 	AppData::getInstance()->setClient(client);
 	CaptureWorld* world = new CaptureWorld();
 	AppData::getInstance()->setWorld(world);
-	//TESTING
+	//TODO TESTING
 	world->setCoordinateFrame(CaptureObjectUtil::makeLocalToGlobalMatrix(osg::Vec3(0, 0, 5),
 								osg::Vec3(1, 0, 5), osg::Vec3(0, 1, 5)));
 	world->addPlane(osg::Vec3(0, 0, 5), osg::Vec3(10, 0, 5), osg::Vec3(0, 10, 5), "");

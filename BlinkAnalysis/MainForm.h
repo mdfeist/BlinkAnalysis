@@ -19,6 +19,7 @@
 #include "Dikablis.h"
 #include "DikablisHelp.h"
 #include "EyeCalibrationWizardForm.h"
+#include "DefineCoordinateFrameForm.h"
 #include "AppData.h"
 #include "AppViewer.h"
 
@@ -1681,14 +1682,6 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 
 				 return false;
 			 }
-	private: bool defineCoordinates() {
-				 // TODO define coordinate form
-				 return false;
-			 }
-	private: bool addPlane() {
-				 return false;
-
-			 }
 	// Form Events
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) {
 				 // Setup Main Tab
@@ -1717,7 +1710,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 				 this->optiTrackDataGridView->VirtualMode = true;
 
 				 // Visual
-				 AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
+				 //AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
 
 				 this->visualRigidBodyListView->View = View::Details;
 				 this->visualRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
@@ -2328,10 +2321,11 @@ private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, Sys
 			 this->saveAsProject();
 		 }
 private: System::Void defineCoordinatesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 this->defineCoordinates();
+			 DefineCoordinateFrameForm^ coordinateForm = gcnew DefineCoordinateFrameForm();
+			 coordinateForm->Show();
 		 }
 private: System::Void addPlaneToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 this->addPlane();
+			// TODO add plane
 		 }
 private: System::Void objectsListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
