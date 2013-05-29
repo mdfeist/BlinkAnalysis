@@ -103,6 +103,17 @@ void render(void *) {
 						}
 					}
 
+					// TODO add other marker display as well
+					// Labeled Markers
+					std::map<int, LabeledMarker*>* markerMap = client->getLabeledMarkerMap();
+
+					for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
+					{
+						LabeledMarker* marker = it_marker->second;
+						rootNode->addChild(marker->getAsNode());
+					}
+
+
 					// Unlock Client so marker data can be updated
 					client->unlock();
 
@@ -198,6 +209,9 @@ void AppViewer::initAppViewer(HWND hwnd)
 	rootNode->addChild(modelTransform);
 	*/
 
+	// TESTING for CaptureWorld
+	rootNode->addChild(AppData::getInstance()->getWorld()->getAsNode());
+	
 	// Add the ground plane
 	osg::Geode* planeNode = Objects::createPlane();
 	Objects::applyTexture("Images/PlaneGrid.png", planeNode);

@@ -9,6 +9,7 @@
 #include <string>
 
 #include "ClientHandler.h"
+#include "CaptureWorld.h"
 #include "NatNetTypes.h"
 #include "pugixml.hpp"
 
@@ -23,6 +24,10 @@ public:
 	// Set/Get the ClientHandler
 	void setClient(ClientHandler *client) { this->client = client; }
 	ClientHandler* getClient() { return this->client; }
+
+	// Set/Get CaptureWorld
+	void setWorld(CaptureWorld *world) { this->world = world; }
+	CaptureWorld* getWorld() { return this->world; }
 
 	void setFileName(char* fileName) { strncpy_s(this->fileName, fileName, strlen(fileName)); }
 	char* getFileName() { return this->fileName; }
@@ -45,6 +50,7 @@ private:
 
 	static AppData* m_pInstance;
 	ClientHandler *client;
+	CaptureWorld *world;
 
 	bool needSaveFlag;
 	pugi::xml_document doc;

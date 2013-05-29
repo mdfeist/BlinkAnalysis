@@ -2,83 +2,61 @@
 #define CAPTUREOBJECT_H
 
 #include <vector>
-#include <osg/AutoTransform>
+#include <string>
+#include <osg/PrimitiveSet>
 
-#include "NatNetTypes.h"
-#include "RigidBody.h" // may have to move Marker class outside to avoid circular inclusion
-
-#define EPSILON 0.000001
-
-// for streaming to MATLAB
-struct Vector3D
-{
-	int x;
-	int y;
-	int z;
-};
-
-struct CaptureFace
-{
-	Vector3D *vertices;
-	Vector3D normal;
-};
+#include "CaptureObjectUtil.h"
 
 
+typedef std::vector<osg::ref_ptr<osg::DrawElementsUInt>>::iterator faces_iterator;
+
+// TODO: eventually support texture?
+// TODO: check for NULL
 class CaptureObject
 {
 private:
 	// -1 if static object
 	int rigidBody;
+
+	int id;
 	
-	osg::Geode *geo;
-	
-	unsigned int numVertices;
+	std::string name;
+
+	osg::ref_ptr<osg::Vec3Array> vertices;
+
+	std::vector<osg::ref_ptr<osg::DrawElementsUInt>> faces;
 
 public:
 
 	CaptureObject()
 	{
-	}
-	
-	~CaptureObject()
-	{
+		id = -1;
+		rigidBody = -1;
 	}
 
-};
+	~CaptureObject() { faces.clear(); }
 
-class CaptureCube : public CaptureObject 
-{
-private:
+	void setID(int id) { this->id = id; }
+
+	int getID() { return id; }
 	
+	void setVertices(osg::Vec3Array* vertices) { this->vertices = vertices; }
 
-public:
+	void addFace(osg::DrawElementsUInt* face) { faces.push_back(face); }
 
-	CaptureCube(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, osg::Vec3 pt3);
+	int getNumFaces() { return faces.size(); }
 
-	bool intersectsVector(osg::Vec3 position, osg::Vec3 direction);
+	void removeFaces() { faces.clear(); }
+
+	void setRigidBody(int rid) { id = rid; }
+
+	int getRigidBody() { return id; }
+
+	void setName(std::string name) { this->name = name; }
+
+	std::string getName() { return name; }
+
+	osg::Geode* getAsGeode();
 };
-
-class CoordinatePlane : public CaptureObject 
-{
-private:
-	osg::Matrix coordTransform;
-
-public:
-	
-	//float vs int for unit definition?
-	CoordinatePlane(osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y, unsigned int xUnit, unsigned int yUnit);
-
-
-};
-
-class CaptureUtil
-{
-public:
-	static bool orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon);
-
-	static osg::Vec3* CaptureUtil::markerToVector(const Marker m);
-
-};
- 
 
 #endif

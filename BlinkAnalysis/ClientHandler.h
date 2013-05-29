@@ -10,9 +10,13 @@
 #include <map>
 
 #include "RigidBody.h"
+#include "LabeledMarker.h"
 
 #include "NatNetTypes.h"
 #include "NatNetClient.h"
+
+
+typedef std::map<int, LabeledMarker*>::iterator labeledmarker_iterator;
 
 /*
  * The ClientHandler Class handles multiple
@@ -34,6 +38,8 @@ private:
 	bool natNetServerRunning;
 	// A map to store all the attached Rigid Bodies
 	std::map<int, RigidBody*> rigidBodies;
+	// map to store all other markers
+	std::map<int, LabeledMarker*> labeledMarkers;
 
 	// OptiTrack Server Settings 
 	char cLocalIPAddress[128];					// Your local IP Address
@@ -118,5 +124,10 @@ public:
 	std::map<int, RigidBody*>* getRigidBodyMap();
 	// Updates the RigidBody's transformation based on it's id
 	void transformRigidBody(int id, osg::Vec3 pos, osg::Vec4 rot);
+
+	bool addLabeledMarker(int id, LabeledMarker* marker);
+	LabeledMarker* getLabeledMarker(int id);
+	std::map<int, LabeledMarker*>* getLabeledMarkerMap();
+	void updateLabeledMarker(int id, float x, float y, float z);
 };
 

@@ -121,7 +121,10 @@
     <ClCompile Include="AppViewer.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlinkAnalysis.cpp" />
+    <ClCompile Include="CaptureObjectUtil.cpp" />
+    <ClCompile Include="CaptureWorld.cpp" />
     <ClCompile Include="ClientHandler.cpp" />
+    <ClCompile Include="DefineCoordinateFrameForm.cpp" />
     <ClCompile Include="Dikablis.cpp" />
     <ClCompile Include="DikablisHelp.cpp" />
     <ClCompile Include="EyeCalibration.cpp" />
@@ -131,6 +134,7 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="LabeledMarker.cpp" />
     <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="AppData.cpp" />
@@ -144,8 +148,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppViewer.h" />
+    <ClInclude Include="CaptureObjectUtil.h" />
+    <ClInclude Include="CaptureWorld.h" />
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DefineCoordinateFrameForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Dikablis.h" />
     <ClInclude Include="DikablisHelp.h">
       <FileType>CppForm</FileType>
@@ -161,6 +170,7 @@
     <ClInclude Include="Marker.h" />
     <ClInclude Include="NatNetClientSetup.h" />
     <ClInclude Include="Objects.h" />
+    <ClInclude Include="LabeledMarker.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="resource.h" />
@@ -176,6 +186,9 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DefineCoordinateFrameForm.resx">
+      <DependentUpon>DefineCoordinateFrameForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DikablisHelp.resx">
       <DependentUpon>DikablisHelp.h</DependentUpon>
     </EmbeddedResource>
