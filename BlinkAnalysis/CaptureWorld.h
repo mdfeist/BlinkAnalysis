@@ -15,9 +15,11 @@ typedef std::map<int, CaptureObject*>::iterator objects_iterator;
 class CaptureWorld 
 {
 private:
-
+	// matrix transforming from local to global coordinates
 	osg::Matrix* _localToGlobal;
+	// increments for each new object added
 	int _lastObjectID;
+	// map of IDs to objects in this world
 	std::map<int, CaptureObject*> _objects;
 	
 	int addObject(CaptureObject* obj);
@@ -48,7 +50,8 @@ public:
 	{
 		return osg::Matrix::inverse(*_localToGlobal);
 	}
-
+	// setting a new transformation matrix
+	// choose to delete objects with change, or update them w.r.t. new transformation
 	void setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects=false, bool updateObjects=false);
 
 	int addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);

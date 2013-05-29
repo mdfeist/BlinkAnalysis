@@ -354,20 +354,17 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 
 				// Get the information about the marker
 				if(data->RigidBodies[i].MarkerIDs)
-					marker.id = data->RigidBodies[i].MarkerIDs[iMarker];
+					marker.setID(data->RigidBodies[i].MarkerIDs[iMarker]);
 				if(data->RigidBodies[i].MarkerSizes)
-					marker.size = data->RigidBodies[i].MarkerSizes[iMarker];
+					marker.setSize(data->RigidBodies[i].MarkerSizes[iMarker]);
 				if(data->RigidBodies[i].Markers)
 				{
-					marker.x = data->RigidBodies[i].Markers[iMarker][0];
-					marker.y = data->RigidBodies[i].Markers[iMarker][1];
-					marker.z = data->RigidBodies[i].Markers[iMarker][2];
+					float x = data->RigidBodies[i].Markers[iMarker][0];
+					float y = data->RigidBodies[i].Markers[iMarker][1];
+					float z = data->RigidBodies[i].Markers[iMarker][2];
+
+					marker.setPosition(osg::Vec3(x, y, z));
 				}
-#if 0 // Print Markers
-				char buf[4096];
-				sprintf(buf, "Marker ID: %d\n\t{%f, %f, %f}\n", marker.id, marker.x, marker.y, marker.z);
-				OutputDebugStringA(buf);
-#endif
 
 				// Add the marker to the Rigid Body
 				body->addMarker(marker);
@@ -386,24 +383,26 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 		if (!pClient->lock())
 			continue;
 
-		LabeledMarker* marker = pClient->getLabeledMarker(data->LabeledMarkers[i].ID);
+		Marker* marker = pClient->getLabeledMarker(data->LabeledMarkers[i].ID);
 		
 		if (marker)
 		{
-			marker->setPosition(data->LabeledMarkers[i].x, 
-								data->LabeledMarkers[i].y,
-								data->LabeledMarkers[i].z);
-			marker->updated = true;
+			float x = data->LabeledMarkers[i].x;
+			float y = data->LabeledMarkers[i].y;
+			float z = data->LabeledMarkers[i].z;
+
+			marker->setPosition(osg::Vec3(x, y, z));
+			marker->update();
 		}
 		else
 		{
-			marker = new LabeledMarker(data->LabeledMarkers[i].ID, 
+			marker = new Marker(data->LabeledMarkers[i].ID, 
 													data->LabeledMarkers[i].x,
 													data->LabeledMarkers[i].y,
 													data->LabeledMarkers[i].z,
 													data->LabeledMarkers[i].size);
-			marker->updated = true;
-			pClient->addLabeledMarker(marker->id, marker);
+			marker->update();
+			pClient->addLabeledMarker(marker->getID(), marker);
 		}
 		
 		pClient->unlock();

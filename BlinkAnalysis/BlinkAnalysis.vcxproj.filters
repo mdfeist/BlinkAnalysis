@@ -82,9 +82,6 @@
     <ClCompile Include="DefineCoordinateFrameForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LabeledMarker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -160,9 +157,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DefineCoordinateFrameForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LabeledMarker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,7 +26,6 @@ ClientHandler::ClientHandler(void)
 		//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE, 
 		FALSE, 
 		NULL);
-	this->toggledMarker = NULL;
 }
 
 // Cleans up the ClientHandler
@@ -87,22 +86,22 @@ std::map<int, RigidBody*>* ClientHandler::getRigidBodyMap()
 	return &this->rigidBodies;
 }
 
-bool ClientHandler::addLabeledMarker(int id, LabeledMarker* marker)
+bool ClientHandler::addLabeledMarker(int id, Marker* marker)
 {
 	std::pair<labeledmarker_iterator, bool> ret;
-	ret = labeledMarkers.insert(std::pair<int, LabeledMarker*>(id, marker));
+	ret = labeledMarkers.insert(std::pair<int, Marker*>(id, marker));
 
 	return (ret.second == false) ? false : true;
 }
 
-LabeledMarker* ClientHandler::getLabeledMarker(int id)
+Marker* ClientHandler::getLabeledMarker(int id)
 {
 	labeledmarker_iterator itr = labeledMarkers.find(id);
 
 	return (itr == labeledMarkers.end()) ? NULL : itr->second;
 }
 
-std::map<int, LabeledMarker*>* ClientHandler::getLabeledMarkerMap()
+std::map<int, Marker*>* ClientHandler::getLabeledMarkerMap()
 {
 	return &labeledMarkers;
 }
@@ -110,9 +109,9 @@ std::map<int, LabeledMarker*>* ClientHandler::getLabeledMarkerMap()
 // TODO add size change as well?
 void ClientHandler::updateLabeledMarker(int id, float x, float y, float z)
 {
-	LabeledMarker* marker = getLabeledMarker(id);
+	Marker* marker = getLabeledMarker(id);
 	if (marker)
-		marker->setPosition(x, y, z);
+		marker->setPosition(osg::Vec3(x, y, z));
 }
 
 void ClientHandler::clearLabeledMarkers()
@@ -121,40 +120,33 @@ void ClientHandler::clearLabeledMarkers()
 	{
 		delete itr->second;
 	}
+
 	labeledMarkers.clear();
-	toggledMarker = NULL;
 }
 
 void ClientHandler::clearStaleMarkers()
 {
-	if (toggledMarker && !toggledMarker->updated)
-		toggledMarker = NULL;
-
 	for (labeledmarker_iterator itr = labeledMarkers.begin(); itr != labeledMarkers.end();)
 	{
-		if (itr->second->updated)
-		{
-			itr->second->updated = false;
-			++itr;
-		}
-		else
+		if (!itr->second->isUpdated())
 		{
 			delete itr->second;
 			labeledMarkers.erase(itr++);
+		}
+		else
+		{
+			++itr;
 		}
 	}
 }
 
 bool ClientHandler::toggleMarker(int id)
 {
-	if (toggledMarker)
-		toggledMarker->deselect();
+	Marker *marker = getLabeledMarker(id);
 
-	toggledMarker = getLabeledMarker(id);
-
-	if (!toggledMarker)
+	if (!marker)
 		return false;
 
-	toggledMarker->select();
+	marker->select();
 	return true;
 }

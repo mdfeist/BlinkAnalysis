@@ -27,7 +27,6 @@
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
-osg::Group* markersNode;
 
 bool running = false;
 bool visible = false;
@@ -66,6 +65,7 @@ void render(void *) {
 
 					// Create array to hold points
 					osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array(); 
+					osg::Vec4Array* colors = new osg::Vec4Array(); 
 
 					// Get the map of all the Rigid Bodies attached to the client
 					std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
@@ -89,32 +89,40 @@ void render(void *) {
 							for (std::vector<Marker>::iterator it_marker=markers->begin(); it_marker!=markers->end(); ++it_marker)
 							{
 								// Get Pointer to marker
-								Marker m = *it_marker;
+								Marker marker = *it_marker;
 								
 								// Get current position of marker
-								osg::Vec3 pos = osg::Vec3( m.x, m.z, m.y ); 
+								osg::Vec3 pos = marker.getPosition();
 
 								// Add marker to the points array
 								points->push_back( pos );
 								//points->push_back( pos / 100.f ); 
 
+								// Add colors
+								colors->push_back( marker.getColor() );
+
 								// Update the current index
 								markerIndex++;
 							}
 						}
+
+						// Labeled Markers
+						std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
+						for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
+						{
+							// Get Pointer to marker
+							Marker* marker = it_marker->second;
+							
+							// Get current position of marker
+							osg::Vec3 pos = marker->getPosition(); 
+
+							// Add marker to the points array
+							points->push_back( pos );
+
+							// Add colors
+							colors->push_back( marker->getColor() );
+						}
 					}
-
-					// Labeled Markers
-					std::map<int, LabeledMarker*>* markerMap = client->getLabeledMarkerMap();
-					if (markersNode->getNumChildren() > 0)
-						markersNode->removeChildren(0, markersNode->getNumChildren());
-
-					for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
-					{
-						LabeledMarker* marker = it_marker->second;
-						markersNode->addChild(marker->getAsNode());
-					}
-
 
 					// Unlock Client so marker data can be updated
 					client->unlock();
@@ -124,10 +132,6 @@ void render(void *) {
 
 					// Render the points geometry as Points
 					geo->addPrimitiveSet( new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, points->size() ) ); 
-	
-					// Add colors
-					osg::Vec4Array* colors = new osg::Vec4Array(); 
-					colors->push_back(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f) ); 
 
 					// Set Color array to the geometry
 					geo->setColorArray(colors); 
@@ -222,10 +226,6 @@ void AppViewer::initAppViewer(HWND hwnd)
 	planeNodeState->setMode( GL_BLEND, osg::StateAttribute::ON );
 	planeNodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 	rootNode->addChild(planeNode);
-
-	//add node containing markers
-	markersNode = new osg::Group();
-	rootNode->addChild(markersNode);
 
 	rootNode->getOrCreateStateSet()->setMode( GL_ALPHA_TEST, osg::StateAttribute::ON ); 
 

@@ -1545,7 +1545,7 @@ private: System::Windows::Forms::Label^  markersLabel;
 
 	// Local Variables
 	private: std::vector<RigidBody*>* optiTrackRigidBodyVector;
-	private: std::vector<LabeledMarker*>* optiTrackLabeledMarkerVector;
+	private: std::vector<Marker*>* optiTrackLabeledMarkerVector;
 	private: SplitContainer^ currentMainSplitContainer;
 	private: SplitContainer^ currentSplitContainer;
 
@@ -1677,7 +1677,7 @@ private: System::Windows::Forms::Label^  markersLabel;
 				 return false;
 			 }
 	private: bool defineCoordinates() {
-				 // TODO 
+				 // TODO define coordinate form
 				 return false;
 			 }
 	private: bool addPlane() {
@@ -1959,7 +1959,7 @@ _WATCH_MEMORY
 			 }
 	public: System::Void optiTrackInitDataView() {
 				this->optiTrackRigidBodyVector = new std::vector<RigidBody*>();
-				this->optiTrackLabeledMarkerVector = new std::vector<LabeledMarker*>();
+				this->optiTrackLabeledMarkerVector = new std::vector<Marker*>();
 
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
@@ -1984,13 +1984,13 @@ _WATCH_MEMORY
 					if (client->lock())
 					{
 						// labeled markers
-						std::map<int, LabeledMarker*>* markerMap = client->getLabeledMarkerMap();
+						std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
 
 						this->markersListView->VirtualListSize = (unsigned int) markerMap->size();
 
 						//this->markersListView->Items->Clear();
 					
-						for (std::map<int, LabeledMarker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
+						for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
 						{
 							this->optiTrackLabeledMarkerVector->push_back(it->second);
 
@@ -2113,10 +2113,10 @@ _WATCH_MEMORY
 									return;
 
 								// update the vector list
-								std::map<int, LabeledMarker*>* markerMap = client->getLabeledMarkerMap();
+								std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
 								this->markersListView->VirtualListSize = (unsigned int) markerMap->size();
 								this->optiTrackLabeledMarkerVector->clear();
-								for (std::map<int, LabeledMarker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
+								for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
 								{
 									this->optiTrackLabeledMarkerVector->push_back(it->second);
 								}
@@ -2195,16 +2195,20 @@ _WATCH_MEMORY
 					if ((int)e->ItemIndex >= (int)optiTrackLabeledMarkerVector->size())
 						return;
 
-					LabeledMarker* marker = optiTrackLabeledMarkerVector->at(e->ItemIndex);
+					Marker* marker = optiTrackLabeledMarkerVector->at(e->ItemIndex);
 
-					String^ markerID = Convert::ToString(marker->id);
-					String^ markerX = Convert::ToString(marker->x);
-					String^ markerY = Convert::ToString(marker->y);
-					String^ markerZ = Convert::ToString(marker->z);
+					String^ markerID = Convert::ToString(marker->getID());
+
+					osg::Vec3 pos = marker->getPosition();
+					String^ markerX = Convert::ToString(pos.x());
+					String^ markerY = Convert::ToString(pos.y());
+					String^ markerZ = Convert::ToString(pos.z());
+
 					ListViewItem^ listViewItem = gcnew ListViewItem(markerID); 
 					listViewItem->SubItems->Add(markerX);
 					listViewItem->SubItems->Add(markerY);
 					listViewItem->SubItems->Add(markerZ);
+
 					e->Item = listViewItem;
 				}
 			 }
@@ -2353,7 +2357,7 @@ private: System::Void markersListView_SelectedIndexChanged(System::Object^ sende
 			{
 				// should only have one selected
 				toggled = this->markersListView->SelectedIndices->default[0];
-				toggled = optiTrackLabeledMarkerVector->at(toggled)->id;
+				toggled = optiTrackLabeledMarkerVector->at(toggled)->getID();
 			}
 			// TODO check for false return
 			client->toggleMarker(toggled);
