@@ -55,7 +55,6 @@ void render(void *) {
 
 			// Check if the client was created and is not NULL
 			if (client) {
-			
 				// Lock Client so marker data isn't changed
 				if (client->lock())
 				{
@@ -65,7 +64,7 @@ void render(void *) {
 
 					// Create array to hold points
 					osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array(); 
-					osg::Vec4Array* colors = new osg::Vec4Array(); 
+					osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(); 
 
 					// Get the map of all the Rigid Bodies attached to the client
 					std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
@@ -95,8 +94,7 @@ void render(void *) {
 								osg::Vec3 pos = marker.getPosition();
 
 								// Add marker to the points array
-								points->push_back( pos );
-								//points->push_back( pos / 100.f ); 
+								points->push_back( pos / 100.f ); 
 
 								// Add colors
 								colors->push_back( marker.getColor() );
@@ -105,25 +103,25 @@ void render(void *) {
 								markerIndex++;
 							}
 						}
-
-						// Labeled Markers
-						std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
-						for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
-						{
-							// Get Pointer to marker
-							Marker* marker = it_marker->second;
-							
-							// Get current position of marker
-							osg::Vec3 pos = marker->getPosition(); 
-
-							// Add marker to the points array
-							points->push_back( pos );
-
-							// Add colors
-							colors->push_back( marker->getColor() );
-						}
 					}
+					
+					// Labeled Markers
+					std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
+					for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
+					{
+						// Get Pointer to marker
+						Marker* marker = it_marker->second;
 
+						// Get current position of marker
+						osg::Vec3 pos = marker->getPosition(); 
+
+						// Add marker to the points array
+						points->push_back( pos / 100.f );
+
+						// Add colors
+						colors->push_back( marker->getColor() );
+					}
+					
 					// Unlock Client so marker data can be updated
 					client->unlock();
 
@@ -147,12 +145,12 @@ void render(void *) {
 					nodeState->setMode(GL_POINT_SMOOTH, osg::StateAttribute::ON);
 					nodeState->setAttribute( new osg::Point( 10.0f ) , osg::StateAttribute::ON );
 					nodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-
-					// Add Node containing all the points to the scene
-					rootNode->addChild( node );
 					// End Create Points
 				}
 			}
+
+			// Add Node containing all the points to the scene
+			rootNode->addChild( node );
 			
 			// Render frame
 			viewer->frame();
