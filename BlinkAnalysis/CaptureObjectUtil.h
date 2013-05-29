@@ -13,8 +13,6 @@ class CaptureObjectUtil
 public:
 	static bool orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon);
 
-	static osg::Vec3* markerToVector(const Marker m);
-
 	static osg::Matrix* makeLocalToGlobalMatrix(osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y);
 
 };

@@ -15,15 +15,12 @@ typedef std::vector<osg::ref_ptr<osg::DrawElementsUInt>>::iterator faces_iterato
 class CaptureObject
 {
 private:
-	// -1 if static object
-	int rigidBody;
-
+	// for tracking object with a rigid body
+	int rigidBody;	// -1 if static object
+	// identifier for this object (generated)
 	int id;
-	
 	std::string name;
-
 	osg::ref_ptr<osg::Vec3Array> vertices;
-
 	std::vector<osg::ref_ptr<osg::DrawElementsUInt>> faces;
 
 public:
@@ -55,7 +52,7 @@ public:
 	void setName(std::string name) { this->name = name; }
 
 	std::string getName() { return name; }
-
+	// returns a Geode representing this object
 	osg::Geode* getAsGeode();
 };
 

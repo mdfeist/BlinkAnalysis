@@ -201,6 +201,11 @@ private: System::Windows::Forms::Label^  objectsLabel;
 private: System::Windows::Forms::ToolStripMenuItem^  addObjectToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  defineCoordinatesToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
+private: System::Windows::Forms::ListView^  markersListView;
+
+
+private: System::Windows::Forms::Label^  markersLabel;
+
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -307,6 +312,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->defineCoordinatesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->addPlaneToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->markersLabel = (gcnew System::Windows::Forms::Label());
+			this->markersListView = (gcnew System::Windows::Forms::ListView());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1245,6 +1252,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 			// visualMainSplitContainer.Panel2
 			// 
 			this->visualMainSplitContainer->Panel2->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->visualMainSplitContainer->Panel2->Controls->Add(this->markersListView);
+			this->visualMainSplitContainer->Panel2->Controls->Add(this->markersLabel);
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->objectsListView);
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->objectsLabel);
 			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualRigidBodyListView);
@@ -1310,21 +1319,22 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->objectsListView->FullRowSelect = true;
 			this->objectsListView->LabelWrap = false;
-			this->objectsListView->Location = System::Drawing::Point(6, 295);
+			this->objectsListView->Location = System::Drawing::Point(6, 269);
 			this->objectsListView->MultiSelect = false;
 			this->objectsListView->Name = L"objectsListView";
-			this->objectsListView->Size = System::Drawing::Size(262, 172);
+			this->objectsListView->Size = System::Drawing::Size(262, 85);
 			this->objectsListView->TabIndex = 3;
 			this->objectsListView->TileSize = System::Drawing::Size(100, 20);
 			this->objectsListView->UseCompatibleStateImageBehavior = false;
 			this->objectsListView->View = System::Windows::Forms::View::SmallIcon;
+			this->objectsListView->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::objectsListView_SelectedIndexChanged);
 			// 
 			// objectsLabel
 			// 
 			this->objectsLabel->AutoSize = true;
 			this->objectsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->objectsLabel->Location = System::Drawing::Point(3, 255);
+			this->objectsLabel->Location = System::Drawing::Point(3, 239);
 			this->objectsLabel->Name = L"objectsLabel";
 			this->objectsLabel->Size = System::Drawing::Size(114, 17);
 			this->objectsLabel->TabIndex = 2;
@@ -1442,6 +1452,34 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 			this->addPlaneToolStripMenuItem->Text = L"Add Plane";
 			this->addPlaneToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addPlaneToolStripMenuItem_Click);
 			// 
+			// markersLabel
+			// 
+			this->markersLabel->AutoSize = true;
+			this->markersLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->markersLabel->Location = System::Drawing::Point(3, 376);
+			this->markersLabel->Name = L"markersLabel";
+			this->markersLabel->Size = System::Drawing::Size(57, 17);
+			this->markersLabel->TabIndex = 4;
+			this->markersLabel->Text = L"Markers";
+			// 
+			// markersListView
+			// 
+			this->markersListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
+			this->markersListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->markersListView->FullRowSelect = true;
+			this->markersListView->LabelWrap = false;
+			this->markersListView->Location = System::Drawing::Point(6, 408);
+			this->markersListView->MultiSelect = false;
+			this->markersListView->Name = L"markersListView";
+			this->markersListView->Size = System::Drawing::Size(262, 89);
+			this->markersListView->TabIndex = 5;
+			this->markersListView->TileSize = System::Drawing::Size(100, 20);
+			this->markersListView->UseCompatibleStateImageBehavior = false;
+			this->markersListView->View = System::Windows::Forms::View::SmallIcon;
+			this->markersListView->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::markersListView_SelectedIndexChanged);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1507,6 +1545,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 
 	// Local Variables
 	private: std::vector<RigidBody*>* optiTrackRigidBodyVector;
+	private: std::vector<Marker*>* optiTrackLabeledMarkerVector;
 	private: SplitContainer^ currentMainSplitContainer;
 	private: SplitContainer^ currentSplitContainer;
 
@@ -1638,7 +1677,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 				 return false;
 			 }
 	private: bool defineCoordinates() {
-				 // TODO 
+				 // TODO define coordinate form
 				 return false;
 			 }
 	private: bool addPlane() {
@@ -1682,6 +1721,15 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 				 this->objectsListView->View = View::Details;
 				 this->objectsListView->Columns->Add("ID", 50, HorizontalAlignment::Left ); 
 				 this->objectsListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
+
+				 this->markersListView->VirtualMode = true;
+				 this->markersListView->RetrieveVirtualItem += gcnew RetrieveVirtualItemEventHandler(this, &MainForm::markersListView_RetrieveVitualItem);
+				 this->markersListView->View = View::Details;
+				 this->markersListView->Columns->Add("ID", 50, HorizontalAlignment::Left ); 
+				 this->markersListView->Columns->Add("x", 50, HorizontalAlignment::Left ); 
+ 				 this->markersListView->Columns->Add("y", 50, HorizontalAlignment::Left ); 
+ 				 this->markersListView->Columns->Add("z", 50, HorizontalAlignment::Left ); 
+
 			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::Windows::Forms::FormClosingEventArgs^ e) 
 			 {
@@ -1712,6 +1760,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 
 					if (optiTrackRigidBodyVector)
 						delete optiTrackRigidBodyVector;
+
+					if (optiTrackLabeledMarkerVector)
+						delete optiTrackLabeledMarkerVector;
 
 					delete client;
 				}
@@ -1908,6 +1959,7 @@ _WATCH_MEMORY
 			 }
 	public: System::Void optiTrackInitDataView() {
 				this->optiTrackRigidBodyVector = new std::vector<RigidBody*>();
+				this->optiTrackLabeledMarkerVector = new std::vector<Marker*>();
 
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
@@ -1928,6 +1980,35 @@ _WATCH_MEMORY
 						ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
 						listViewItem->SubItems->Add(rigidBodyName);
 						this->visualRigidBodyListView->Items->Add(listViewItem);
+					}
+					if (client->lock())
+					{
+						// labeled markers
+						std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
+
+						this->markersListView->VirtualListSize = (unsigned int) markerMap->size();
+
+						//this->markersListView->Items->Clear();
+					
+						for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
+						{
+							this->optiTrackLabeledMarkerVector->push_back(it->second);
+
+							/*
+							// Add to list
+							String^ markerID = Convert::ToString(it->second->id);
+							String^ markerX = Convert::ToString(it->second->x);
+							String^ markerY = Convert::ToString(it->second->y);
+							String^ markerZ = Convert::ToString(it->second->z);
+							ListViewItem^ listViewItem = gcnew ListViewItem(markerID); 
+							listViewItem->SubItems->Add(markerX);
+							listViewItem->SubItems->Add(markerY);
+							listViewItem->SubItems->Add(markerZ);
+							this->markersListView->Items->Add(listViewItem);
+							*/
+						}
+
+						client->unlock();
 					}
 				}
 
@@ -2014,6 +2095,47 @@ _WATCH_MEMORY
 							}
 
 						}
+					} else if (this->mainTabControl->SelectedIndex == 2) { // Visual tab
+						// Check if the ListView needs invoke.
+						// If not then update the view.
+						if (this->markersListView->InvokeRequired) {
+							SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
+							BeginInvoke(d, nullptr);
+						} else {
+							// Get client form the AppData
+							ClientHandler* client = AppData::getInstance()->getClient();
+
+							// Check if the client is created and not NULL
+							if (client)
+							{
+								// Lock the client
+								if (!client->lock())
+									return;
+
+								// update the vector list
+								std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
+								this->markersListView->VirtualListSize = (unsigned int) markerMap->size();
+								this->optiTrackLabeledMarkerVector->clear();
+								for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
+								{
+									this->optiTrackLabeledMarkerVector->push_back(it->second);
+								}
+
+								// Try to update the view
+								try {
+									this->markersListView->SuspendLayout();
+									this->markersListView->Invalidate();
+									this->markersListView->ResumeLayout();
+								}
+								catch(Exception^) {
+									Debug::WriteLine("Error: Exception when trying to redraw the labeled markers ListView.");
+								}
+
+								// Unlock client
+								client->unlock();
+							}
+
+						}
 					}
 				} // End of update
 
@@ -2066,6 +2188,30 @@ _WATCH_MEMORY
 					}
 				}
 			}
+	private: System::Void markersListView_RetrieveVitualItem(System::Object^ sender, 
+								System::Windows::Forms::RetrieveVirtualItemEventArgs^ e) {
+				 if (optiTrackLabeledMarkerVector)
+				{
+					if ((int)e->ItemIndex >= (int)optiTrackLabeledMarkerVector->size())
+						return;
+
+					Marker* marker = optiTrackLabeledMarkerVector->at(e->ItemIndex);
+
+					String^ markerID = Convert::ToString(marker->getID());
+
+					osg::Vec3 pos = marker->getPosition();
+					String^ markerX = Convert::ToString(pos.x());
+					String^ markerY = Convert::ToString(pos.y());
+					String^ markerZ = Convert::ToString(pos.z());
+
+					ListViewItem^ listViewItem = gcnew ListViewItem(markerID); 
+					listViewItem->SubItems->Add(markerX);
+					listViewItem->SubItems->Add(markerY);
+					listViewItem->SubItems->Add(markerZ);
+
+					e->Item = listViewItem;
+				}
+			 }
 	private: System::Void optiTrackLocalIpAddressTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 				 AppData::getInstance()->needSave();
 				 this->updateTitle();
@@ -2086,6 +2232,7 @@ _WATCH_MEMORY
 				 AppData::getInstance()->needSave();
 				 this->updateTitle();
 			 }
+
 	//////////////////////
 	// OptiTrack Buttons
 	/////////////////////
@@ -2198,6 +2345,23 @@ private: System::Void addPlaneToolStripMenuItem_Click(System::Object^  sender, S
 			 this->addPlane();
 		 }
 
+private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void objectsListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+			ClientHandler* client = AppData::getInstance()->getClient();
+			int toggled = -1;
+
+			if ( client && (this->markersListView->SelectedIndices->Count > 0) )
+			{
+				// should only have one selected
+				toggled = this->markersListView->SelectedIndices->default[0];
+				toggled = optiTrackLabeledMarkerVector->at(toggled)->getID();
+			}
+			// TODO check for false return
+			client->toggleMarker(toggled);
+		}
 };
 }
 

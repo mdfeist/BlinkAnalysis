@@ -86,22 +86,22 @@ std::map<int, RigidBody*>* ClientHandler::getRigidBodyMap()
 	return &this->rigidBodies;
 }
 
-bool ClientHandler::addLabeledMarker(int id, LabeledMarker* marker)
+bool ClientHandler::addLabeledMarker(int id, Marker* marker)
 {
 	std::pair<labeledmarker_iterator, bool> ret;
-	ret = labeledMarkers.insert(std::pair<int, LabeledMarker*>(id, marker));
+	ret = labeledMarkers.insert(std::pair<int, Marker*>(id, marker));
 
 	return (ret.second == false) ? false : true;
 }
 
-LabeledMarker* ClientHandler::getLabeledMarker(int id)
+Marker* ClientHandler::getLabeledMarker(int id)
 {
 	labeledmarker_iterator itr = labeledMarkers.find(id);
 
 	return (itr == labeledMarkers.end()) ? NULL : itr->second;
 }
 
-std::map<int, LabeledMarker*>* ClientHandler::getLabeledMarkerMap()
+std::map<int, Marker*>* ClientHandler::getLabeledMarkerMap()
 {
 	return &labeledMarkers;
 }
@@ -109,8 +109,44 @@ std::map<int, LabeledMarker*>* ClientHandler::getLabeledMarkerMap()
 // TODO add size change as well?
 void ClientHandler::updateLabeledMarker(int id, float x, float y, float z)
 {
-	LabeledMarker* marker = getLabeledMarker(id);
+	Marker* marker = getLabeledMarker(id);
 	if (marker)
-		marker->setPosition(x, y, z);
+		marker->setPosition(osg::Vec3(x, y, z));
 }
 
+void ClientHandler::clearLabeledMarkers()
+{
+	for (labeledmarker_iterator itr = labeledMarkers.begin(); itr != labeledMarkers.end(); itr++)
+	{
+		delete itr->second;
+	}
+
+	labeledMarkers.clear();
+}
+
+void ClientHandler::clearStaleMarkers()
+{
+	for (labeledmarker_iterator itr = labeledMarkers.begin(); itr != labeledMarkers.end();)
+	{
+		if (!itr->second->isUpdated())
+		{
+			delete itr->second;
+			labeledMarkers.erase(itr++);
+		}
+		else
+		{
+			++itr;
+		}
+	}
+}
+
+bool ClientHandler::toggleMarker(int id)
+{
+	Marker *marker = getLabeledMarker(id);
+
+	if (!marker)
+		return false;
+
+	marker->select();
+	return true;
+}
