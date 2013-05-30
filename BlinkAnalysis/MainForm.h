@@ -2330,17 +2330,19 @@ private: System::Void addPlaneToolStripMenuItem_Click(System::Object^  sender, S
 private: System::Void objectsListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
-			ClientHandler* client = AppData::getInstance()->getClient();
 			int toggled = -1;
 
-			if ( client && (this->visualMarkersListView->SelectedIndices->Count > 0) )
+			for (std::vector<Marker*>::iterator itr = optiTrackLabeledMarkerVector->begin();
+				itr != optiTrackLabeledMarkerVector->end(); itr++)
 			{
-				// should only have one selected
-				toggled = this->visualMarkersListView->SelectedIndices->default[0];
-				toggled = optiTrackLabeledMarkerVector->at(toggled)->getID();
+				(*itr)->deselect();
 			}
-			// TODO check for false return
-			client->toggleMarker(toggled);
+
+			IEnumerator^ num = this->visualMarkersListView->SelectedIndices->GetEnumerator();
+			while (num->MoveNext())
+			{
+				optiTrackLabeledMarkerVector->at(safe_cast<int>(num->Current))->select();
+			}
 		}
 };
 }

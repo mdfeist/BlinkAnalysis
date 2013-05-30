@@ -122,7 +122,10 @@ void render(void *) {
 						//points->push_back( pos / 100.f );
 
 						// Add colors
-						colors->push_back( marker->getColor() );
+						if (marker->isSelected())
+							colors->push_back(osg::Vec4(0, 1, 0, 1));
+						else
+							colors->push_back(osg::Vec4(0, 0, 1, 1));
 					}
 					
 					// Unlock Client so marker data can be updated
@@ -136,7 +139,7 @@ void render(void *) {
 
 					// Set Color array to the geometry
 					geo->setColorArray(colors); 
-					geo->setColorBinding(osg::Geometry::BIND_OVERALL); 
+					geo->setColorBinding(osg::Geometry::BIND_PER_VERTEX); 
 
 					// Add the geometry to the node
 					node->addDrawable( geo );

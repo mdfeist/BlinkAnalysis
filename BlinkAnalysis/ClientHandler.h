@@ -127,9 +127,7 @@ public:
 	bool addLabeledMarker(int id, Marker* marker);
 	Marker* getLabeledMarker(int id);
 	std::map<int, Marker*>* getLabeledMarkerMap();
-	void updateLabeledMarker(int id, float x, float y, float z);
 	void clearLabeledMarkers();
 	void clearStaleMarkers();
-	bool toggleMarker(int id);
 };
 

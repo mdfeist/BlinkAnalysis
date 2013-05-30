@@ -397,6 +397,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 		{
 			marker = new Marker(data->LabeledMarkers[i].ID, x, y, z, data->LabeledMarkers[i].size);
 			marker->update();
+			marker->setColor(osg::Vec4(0, 0, 1, 1));
 			pClient->addLabeledMarker(marker->getID(), marker);
 		}
 		

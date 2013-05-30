@@ -106,14 +106,6 @@ std::map<int, Marker*>* ClientHandler::getLabeledMarkerMap()
 	return &labeledMarkers;
 }
 
-// TODO add size change as well?
-void ClientHandler::updateLabeledMarker(int id, float x, float y, float z)
-{
-	Marker* marker = getLabeledMarker(id);
-	if (marker)
-		marker->setPosition(osg::Vec3(x, y, z));
-}
-
 void ClientHandler::clearLabeledMarkers()
 {
 	for (labeledmarker_iterator itr = labeledMarkers.begin(); itr != labeledMarkers.end(); itr++)
@@ -138,15 +130,4 @@ void ClientHandler::clearStaleMarkers()
 			++itr;
 		}
 	}
-}
-
-bool ClientHandler::toggleMarker(int id)
-{
-	Marker *marker = getLabeledMarker(id);
-
-	if (!marker)
-		return false;
-
-	marker->select();
-	return true;
 }
