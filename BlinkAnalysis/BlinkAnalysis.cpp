@@ -25,9 +25,7 @@ int main(array<System::String ^> ^args)
 	CaptureWorld* world = new CaptureWorld();
 	AppData::getInstance()->setWorld(world);
 	//TODO TESTING
-	world->setCoordinateFrame(CaptureObjectUtil::makeLocalToGlobalMatrix(osg::Vec3(0, 0, 5),
-								osg::Vec3(1, 0, 5), osg::Vec3(0, 1, 5)));
-	world->addPlane(osg::Vec3(0, 0, 5), osg::Vec3(10, 0, 5), osg::Vec3(0, 10, 5), "");
+	world->addPlane(osg::Vec3(0, 0, 0.5)/CaptureWorld::VIEWER_SCALE, osg::Vec3(1, 0, 0.5)/CaptureWorld::VIEWER_SCALE, osg::Vec3(0, 1, 0.5)/CaptureWorld::VIEWER_SCALE, "");
 
 	if (args->Length >= 1) {
 		char* fileName = (char*)Marshal::StringToHGlobalAnsi(args[0]).ToPointer();

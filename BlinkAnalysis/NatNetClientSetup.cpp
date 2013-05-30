@@ -359,9 +359,9 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 					marker.setSize(data->RigidBodies[i].MarkerSizes[iMarker]);
 				if(data->RigidBodies[i].Markers)
 				{
-					float x = -data->RigidBodies[i].Markers[iMarker][0];
+					float x = data->RigidBodies[i].Markers[iMarker][0];
 					float z = data->RigidBodies[i].Markers[iMarker][1];
-					float y = data->RigidBodies[i].Markers[iMarker][2];
+					float y = -data->RigidBodies[i].Markers[iMarker][2];
 
 					marker.setPosition(osg::Vec3(x, y, z));
 				}
@@ -384,23 +384,18 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 			continue;
 
 		Marker* marker = pClient->getLabeledMarker(data->LabeledMarkers[i].ID);
+		float x = data->LabeledMarkers[i].x;
+		float z = data->LabeledMarkers[i].y;
+		float y = -data->LabeledMarkers[i].z;
 		
 		if (marker)
 		{
-			float x = -data->LabeledMarkers[i].x;
-			float z = data->LabeledMarkers[i].y;
-			float y = data->LabeledMarkers[i].z;
-
 			marker->setPosition(osg::Vec3(x, y, z));
 			marker->update();
 		}
 		else
 		{
-			marker = new Marker(data->LabeledMarkers[i].ID, 
-													-data->LabeledMarkers[i].x,
-													data->LabeledMarkers[i].z,
-													data->LabeledMarkers[i].y,
-													data->LabeledMarkers[i].size);
+			marker = new Marker(data->LabeledMarkers[i].ID, x, y, z, data->LabeledMarkers[i].size);
 			marker->update();
 			pClient->addLabeledMarker(marker->getID(), marker);
 		}

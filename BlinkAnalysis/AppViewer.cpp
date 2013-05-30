@@ -27,6 +27,7 @@
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
+osg::MatrixTransform* worldNode;
 
 bool running = false;
 bool visible = false;
@@ -94,7 +95,8 @@ void render(void *) {
 								osg::Vec3 pos = marker.getPosition();
 
 								// Add marker to the points array
-								points->push_back( pos / 100.f ); 
+								points->push_back( pos );
+								//points->push_back( pos / 100.f ); 
 
 								// Add colors
 								colors->push_back( marker.getColor() );
@@ -116,7 +118,8 @@ void render(void *) {
 						osg::Vec3 pos = marker->getPosition(); 
 
 						// Add marker to the points array
-						points->push_back( pos / 100.f );
+						points->push_back( pos );
+						//points->push_back( pos / 100.f );
 
 						// Add colors
 						colors->push_back( marker->getColor() );
@@ -150,15 +153,13 @@ void render(void *) {
 			}
 
 			// Add Node containing all the points to the scene
-			rootNode->addChild( node );
-			//AppData::getInstance()->getWorld()->getAsGroup()->addChild( node );
+			worldNode->addChild( node );
 			
 			// Render frame
 			viewer->frame();
 
 			// Remove points from the scene
-			rootNode->removeChild( node );
-			//AppData::getInstance()->getWorld()->getAsGroup()->removeChild( node );
+			worldNode->removeChild( node );
 		} else {
 			// View not visible so Sleep for 1000 milliseconds
 			Sleep(1000);
@@ -182,6 +183,11 @@ void AppViewer::initAppViewer(HWND hwnd)
 	// Create new root node if one doesn't exist
 	if (!rootNode)
 		rootNode = new osg::Group();
+	
+	// Add worldNode, a MatrixTransform node containing user defined
+	// ground plane coordinates
+	worldNode = AppData::getInstance()->getWorld()->getAsGroup();
+	rootNode->addChild(worldNode);
 
 	// Set the traits for the rendering view
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits();
@@ -215,9 +221,6 @@ void AppViewer::initAppViewer(HWND hwnd)
 	rootNode->addChild(modelTransform);
 	*/
 
-	// TODO TESTING for CaptureWorld
-	rootNode->addChild(AppData::getInstance()->getWorld()->getAsGroup());
-	
 	// Add the ground plane
 	osg::Geode* planeNode = Objects::createPlane();
 	Objects::applyTexture("Images/PlaneGrid.png", planeNode);

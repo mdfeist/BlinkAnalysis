@@ -9,17 +9,18 @@
 #include "CaptureWorld.h"
 
 
+double CaptureWorld::VIEWER_SCALE = 10;
 
-CaptureWorld::CaptureWorld(osg::Matrix* locToGlob)
+CaptureWorld::CaptureWorld(osg::Matrix* globToLoc)
 {
-	_localToGlobal = locToGlob;
+	_globalToLocal = globToLoc;
 	_lastObjectID = 0;
 }
 
-void CaptureWorld::setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects, bool updateObjects)
+void CaptureWorld::setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects, bool updateObjects)
 {
-	delete _localToGlobal;
-	_localToGlobal = locToGlob;
+	delete _globalToLocal;
+	_globalToLocal = globToLoc;
 
 	if (deleteObjects)
 	{
@@ -32,7 +33,7 @@ void CaptureWorld::setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects
 	}
 
 	if (node)
-		node->setMatrix(getGlobalToLocalMatrix());
+		node->setMatrix(getLocalToGlobalMatrix()*osg::Matrix::scale(VIEWER_SCALE, VIEWER_SCALE, VIEWER_SCALE));
 }
 
 int CaptureWorld::addObject(CaptureObject* obj)
@@ -110,21 +111,22 @@ int CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::
 }
 
 
-osg::Group* CaptureWorld::getAsGroup()
+osg::MatrixTransform* CaptureWorld::getAsGroup()
 {
-	if (node)
-		return node;
+	if (!node)
+	{
+		node = new osg::MatrixTransform();
+	}
 
-	node = new osg::MatrixTransform();
-	node->setMatrix(getGlobalToLocalMatrix());
-
+	node->removeChild(0, node->getNumChildren());
+	node->setMatrix(getLocalToGlobalMatrix()*osg::Matrix::scale(VIEWER_SCALE, VIEWER_SCALE, VIEWER_SCALE));
 	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
 	{
 		// TODO 
 		node->addChild(itr->second->getAsGeode());
 	}
 
-	return node.release();
+	return node;
 }
 
 

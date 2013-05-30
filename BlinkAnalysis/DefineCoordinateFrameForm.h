@@ -55,6 +55,7 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Label^  coordinateXLabel;
 
 	private: System::Windows::Forms::Button^  coordinateGetButton;
+	private: System::Windows::Forms::Button^  coordinateResetButton;
 
 
 	private:
@@ -82,7 +83,9 @@ namespace BlinkAnalysis {
 			this->coordinateYTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->coordinateOTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->rigidPage = (gcnew System::Windows::Forms::TabPage());
+			this->coordinateResetButton = (gcnew System::Windows::Forms::Button());
 			this->CoordinateFramePages->SuspendLayout();
+			this->infoPage->SuspendLayout();
 			this->markerPage->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -99,6 +102,7 @@ namespace BlinkAnalysis {
 			// 
 			// infoPage
 			// 
+			this->infoPage->Controls->Add(this->coordinateResetButton);
 			this->infoPage->Location = System::Drawing::Point(4, 22);
 			this->infoPage->Name = L"infoPage";
 			this->infoPage->Padding = System::Windows::Forms::Padding(3);
@@ -210,6 +214,16 @@ namespace BlinkAnalysis {
 			this->rigidPage->Text = L"Rigid Body";
 			this->rigidPage->UseVisualStyleBackColor = true;
 			// 
+			// coordinateResetButton
+			// 
+			this->coordinateResetButton->Location = System::Drawing::Point(143, 205);
+			this->coordinateResetButton->Name = L"coordinateResetButton";
+			this->coordinateResetButton->Size = System::Drawing::Size(125, 23);
+			this->coordinateResetButton->TabIndex = 0;
+			this->coordinateResetButton->Text = L"Reset Coordinates";
+			this->coordinateResetButton->UseVisualStyleBackColor = true;
+			this->coordinateResetButton->Click += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::coordinateResetButton_Click);
+			// 
 			// DefineCoordinateFrameForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -220,6 +234,7 @@ namespace BlinkAnalysis {
 			this->Text = L"Define Coordinate Frame";
 			this->Load += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::DefineCoordinateFrameForm_Load);
 			this->CoordinateFramePages->ResumeLayout(false);
+			this->infoPage->ResumeLayout(false);
 			this->markerPage->ResumeLayout(false);
 			this->markerPage->PerformLayout();
 			this->ResumeLayout(false);
@@ -253,13 +268,13 @@ namespace BlinkAnalysis {
 					 }
 					 else
 					 {
-						 posO = &(marker->getPosition());
-						 String^ str = Convert::ToString(posO->x());
-						 str += ", ";
-						 str += Convert::ToString(posO->y());
-						 str += ", ";
-						 str += Convert::ToString(posO->z());
-						 coordinateOLabel->Text = str;
+						 osg::Vec3 pt = marker->getPosition();
+						 if (!posO)
+							 posO = new osg::Vec3(pt.x(), pt.y(), pt.z());
+						 else
+							 posO->set(pt.x(), pt.y(), pt.z());
+
+						 coordinate_setPoint(posO, coordinateOLabel);
 					 }
 
 					 // x
@@ -272,13 +287,13 @@ namespace BlinkAnalysis {
 					 }
 					 else
 					 {
-						 posX = &(marker->getPosition());
-						 String^ str = Convert::ToString(posX->x());
-						 str += ", ";
-						 str += Convert::ToString(posX->y());
-						 str += ", ";
-						 str += Convert::ToString(posX->z());
-						 coordinateXLabel->Text = str;
+						 osg::Vec3 pt = marker->getPosition();
+						 if (!posX)
+							 posX = new osg::Vec3(pt.x(), pt.y(), pt.z());
+						 else
+							 posX->set(pt.x(), pt.y(), pt.z());
+
+						 coordinate_setPoint(posX, coordinateXLabel);
 					 }
 
 					 // y
@@ -291,13 +306,13 @@ namespace BlinkAnalysis {
 					 }
 					 else
 					 {
-						 posY = &(marker->getPosition());
-						 String^ str = Convert::ToString(posY->x());
-						 str += ", ";
-						 str += Convert::ToString(posY->y());
-						 str += ", ";
-						 str += Convert::ToString(posY->z());
-						 coordinateYLabel->Text = str;
+						 osg::Vec3 pt = marker->getPosition();
+						 if (!posY)
+							 posY = new osg::Vec3(pt.x(), pt.y(), pt.z());
+						 else
+							 posY->set(pt.x(), pt.y(), pt.z());
+
+						 coordinate_setPoint(posY, coordinateYLabel);
 					 }
 
 					 client->unlock();
@@ -306,13 +321,41 @@ namespace BlinkAnalysis {
 	private: System::Void coordinate_setDefaultText(Label^ text) {
 				 text->Text = L"No data found";
 			 }
+	private: System::Void coordinate_setPoint(osg::Vec3* pos, Label^ text) {
+				String^ str = Convert::ToString(pos->x());
+				str += ", ";
+				str += Convert::ToString(pos->y());
+				str += ", ";
+				str += Convert::ToString(pos->z());
+				text->Text = str;
+			 }
 
 	private: System::Void coordinateSetButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 CaptureWorld* world = AppData::getInstance()->getWorld();
 				 if (world)
-					 world->setCoordinateFrame(CaptureObjectUtil::makeLocalToGlobalMatrix(*posO, *posX, *posY));
+					 world->setCoordinateFrame(CaptureObjectUtil::makeGlobalToLocalMatrix(*posO, *posX, *posY));
 				 
+				 delete posO;
+				 delete posX;
+				 delete posY;
+
 				 this->Close();
 			 }
+	private: System::Void coordinateResetButton_Click(System::Object^  sender, System::EventArgs^  e) {
+				 CaptureWorld* world = AppData::getInstance()->getWorld();
+				 if (world)
+				 {
+					 osg::Matrix* m = new osg::Matrix();
+					 m->makeIdentity();
+					 world->setCoordinateFrame(m);
+				 }
+				 
+				 if (posO) delete posO;
+				 if (posX) delete posX;
+				 if (posY) delete posY;
+
+				 this->Close();
+			 }
+
 };
 }
