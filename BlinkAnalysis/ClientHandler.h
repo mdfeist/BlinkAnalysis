@@ -37,6 +37,7 @@ private:
 	bool natNetServerRunning;
 	// A map to store all the attached Rigid Bodies
 	std::map<int, RigidBody*> rigidBodies;
+	int rigidBodyTool;
 	// map to store all other markers
 	std::map<int, Marker*> labeledMarkers;
 
@@ -129,5 +130,8 @@ public:
 	std::map<int, Marker*>* getLabeledMarkerMap();
 	void clearLabeledMarkers();
 	void clearStaleMarkers();
+
+	void setRigidBodyTool(int id) { rigidBodyTool = id; }
+	int getRigidBodyTool() { return rigidBodyTool; }
 };
 

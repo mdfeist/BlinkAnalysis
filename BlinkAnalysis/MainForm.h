@@ -208,6 +208,10 @@ private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
 private: System::Windows::Forms::ListView^  visualMarkersListView;
 
 private: System::Windows::Forms::Label^  visualMarkersLabel;
+private: System::Windows::Forms::ContextMenuStrip^  rigidBodyToolContextMenu;
+
+private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStripMenuItem;
+
 
 
 
@@ -220,7 +224,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 		/// Required designer variable.
 		/// </summary>
 
-
+		
 #pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
@@ -228,6 +232,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			this->mainTabControl = (gcnew System::Windows::Forms::TabControl());
 			this->OptiTrackPage = (gcnew System::Windows::Forms::TabPage());
 			this->optiTrackMainSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
@@ -320,6 +325,8 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->defineCoordinatesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->addPlaneToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -348,6 +355,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 			this->visualSplitContainer->Panel2->SuspendLayout();
 			this->visualSplitContainer->SuspendLayout();
 			this->menuStrip->SuspendLayout();
+			this->rigidBodyToolContextMenu->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// mainTabControl
@@ -1389,6 +1397,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 			this->visualRigidBodyListView->TileSize = System::Drawing::Size(100, 20);
 			this->visualRigidBodyListView->UseCompatibleStateImageBehavior = false;
 			this->visualRigidBodyListView->View = System::Windows::Forms::View::SmallIcon;
+			this->visualRigidBodyListView->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::visualRigidBodyListView_MouseClick);
 			// 
 			// visualRBLabel
 			// 
@@ -1486,6 +1495,19 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 			this->addPlaneToolStripMenuItem->Text = L"Add Plane";
 			this->addPlaneToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addPlaneToolStripMenuItem_Click);
 			// 
+			// rigidBodyToolContextMenu
+			// 
+			this->rigidBodyToolContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->setAsRigidBodyToolToolStripMenuItem});
+			this->rigidBodyToolContextMenu->Name = L"contextMenuStrip1";
+			this->rigidBodyToolContextMenu->Size = System::Drawing::Size(192, 26);
+			// 
+			// setAsRigidBodyToolToolStripMenuItem
+			// 
+			this->setAsRigidBodyToolToolStripMenuItem->Name = L"setAsRigidBodyToolToolStripMenuItem";
+			this->setAsRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(191, 22);
+			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
+			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1540,6 +1562,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 			this->visualSplitContainer->ResumeLayout(false);
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
+			this->rigidBodyToolContextMenu->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -1554,6 +1577,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
 	private: std::vector<Marker*>* optiTrackLabeledMarkerVector;
 	private: SplitContainer^ currentMainSplitContainer;
 	private: SplitContainer^ currentSplitContainer;
+	private: int setRigidBodyTool;
 
 	// User Defined Functions
 	private: void getOptiTrackInfo() {
@@ -1728,6 +1752,7 @@ private: System::Windows::Forms::Label^  visualMarkersLabel;
  				 this->visualMarkersListView->Columns->Add("y", 50, HorizontalAlignment::Left ); 
  				 this->visualMarkersListView->Columns->Add("z", 50, HorizontalAlignment::Left ); 
 
+				 this->rigidBodyToolContextMenu->Close();
 			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::Windows::Forms::FormClosingEventArgs^ e) 
 			 {
@@ -2344,6 +2369,25 @@ private: System::Void markersListView_SelectedIndexChanged(System::Object^ sende
 				optiTrackLabeledMarkerVector->at(safe_cast<int>(num->Current))->select();
 			}
 		}
+private: System::Void visualRigidBodyListView_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 if (e->Button == ::MouseButtons::Right)
+			 {
+				 ListViewItem^ item = this->visualRigidBodyListView->GetItemAt(e->X, e->Y);
+				 if (item)
+				 {
+					this->rigidBodyToolContextMenu->Show(Cursor->Position);
+					setRigidBodyTool = Int32::Parse(item->Text);
+				 }
+			 }
+		 }
+private: System::Void setAsRigidBodyToolToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 ClientHandler* client = AppData::getInstance()->getClient();
+			 if (client)
+				 client->setRigidBodyTool(setRigidBodyTool);
+
+			 setRigidBodyTool = -1;
+			 this->rigidBodyToolContextMenu->Close();
+		 }
 };
 }
 

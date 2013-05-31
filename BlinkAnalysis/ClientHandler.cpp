@@ -26,6 +26,8 @@ ClientHandler::ClientHandler(void)
 		//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE, 
 		FALSE, 
 		NULL);
+
+	this->rigidBodyTool = -1;
 }
 
 // Cleans up the ClientHandler
