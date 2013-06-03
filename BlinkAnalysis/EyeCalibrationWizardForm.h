@@ -79,6 +79,9 @@ namespace BlinkAnalysis {
 	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint1;
 	private: Microsoft::VisualBasic::PowerPacks::RectangleShape^  screenShape;
 	private: System::Windows::Forms::TabPage^  calculatingPage;
+	private: System::Windows::Forms::TextBox^  calibrationOutputLogLabel;
+
+
 
 
 	private:
@@ -128,11 +131,13 @@ namespace BlinkAnalysis {
 			this->demoCalibrationPoint1 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
 			this->screenShape = (gcnew Microsoft::VisualBasic::PowerPacks::RectangleShape());
 			this->calculatingPage = (gcnew System::Windows::Forms::TabPage());
+			this->calibrationOutputLogLabel = (gcnew System::Windows::Forms::TextBox());
 			this->wizardPages->SuspendLayout();
 			this->introPage->SuspendLayout();
 			this->headSelectPage->SuspendLayout();
 			this->objectSelectPage->SuspendLayout();
 			this->calibrationPage->SuspendLayout();
+			this->calculatingPage->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// backBtn
@@ -467,6 +472,7 @@ namespace BlinkAnalysis {
 			// 
 			// calculatingPage
 			// 
+			this->calculatingPage->Controls->Add(this->calibrationOutputLogLabel);
 			this->calculatingPage->Location = System::Drawing::Point(4, 22);
 			this->calculatingPage->Name = L"calculatingPage";
 			this->calculatingPage->Padding = System::Windows::Forms::Padding(3);
@@ -474,6 +480,17 @@ namespace BlinkAnalysis {
 			this->calculatingPage->TabIndex = 4;
 			this->calculatingPage->Text = L"Calculating";
 			this->calculatingPage->UseVisualStyleBackColor = true;
+			// 
+			// calibrationOutputLogLabel
+			// 
+			this->calibrationOutputLogLabel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->calibrationOutputLogLabel->Location = System::Drawing::Point(3, 3);
+			this->calibrationOutputLogLabel->Multiline = true;
+			this->calibrationOutputLogLabel->Name = L"calibrationOutputLogLabel";
+			this->calibrationOutputLogLabel->ReadOnly = true;
+			this->calibrationOutputLogLabel->ScrollBars = System::Windows::Forms::ScrollBars::Both;
+			this->calibrationOutputLogLabel->Size = System::Drawing::Size(523, 289);
+			this->calibrationOutputLogLabel->TabIndex = 0;
 			// 
 			// EyeCalibrationWizardForm
 			// 
@@ -501,6 +518,8 @@ namespace BlinkAnalysis {
 			this->objectSelectPage->PerformLayout();
 			this->calibrationPage->ResumeLayout(false);
 			this->calibrationPage->PerformLayout();
+			this->calculatingPage->ResumeLayout(false);
+			this->calculatingPage->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
@@ -508,6 +527,8 @@ namespace BlinkAnalysis {
 //private: WizardPages^ wizardPages;
 private: EyeCalibration *eyeCalibration;
 private: int currentPage;
+		 // Abstract Delegate to change text
+	private: delegate void SetTextDelegate(String^ value);
 		// User Defined Functions
 private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -607,6 +628,10 @@ private: System::Void pageChanged(System::Object^  sender, System::EventArgs^  e
 				  this->nextBtn->Enabled = true;
 			 }
 
+			 // Calculate Calibration Points
+			 if (this->wizardPages->SelectedTab == this->calculatingPage)
+				 this->eyeCalibration->calibrate();
+
 			 // Done and change text in the next button to finished
 			 if (this->wizardPages->SelectedIndex == this->wizardPages->TabCount - 1)
 				 this->nextBtn->Text = "Finish";
@@ -673,5 +698,22 @@ private: System::Void selectAsObjectBtn_Click(System::Object^  sender, System::E
 		 }
 private: System::Void addCalibrationPointBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 		 }
+public: System::Void calibrationOutputLog(String^ value) {
+			if (this->calibrationOutputLogLabel->InvokeRequired)
+			{
+				SetTextDelegate^ d = gcnew SetTextDelegate(this, &BlinkAnalysis::EyeCalibrationWizardForm::calibrationOutputLog);
+				this->Invoke(d, gcnew array<Object^> { value });
+			} else {
+				// Update Value
+				// Determine if the text being appended to calibrationOutputLogLabel exceeds the MaxLength property.
+				if((unsigned int)(calibrationOutputLogLabel->TextLength + value->Length) > (unsigned int)calibrationOutputLogLabel->MaxLength)
+				{
+					int over = (calibrationOutputLogLabel->TextLength + value->Length) - calibrationOutputLogLabel->MaxLength;
+					calibrationOutputLogLabel->Text = calibrationOutputLogLabel->Text->Substring(over);
+				}
+				// Append the text
+				this->calibrationOutputLogLabel->AppendText(value->Replace("\n", Environment::NewLine));
+			}
+		}
 };
 }

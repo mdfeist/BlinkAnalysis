@@ -37,7 +37,7 @@ ClientHandler::ClientHandler(void)
 
 	this->dikablisEyeVectorArray = (float*) malloc(
 		sizeof(float) * 
-		((DikablisViewingWidth + 2*DikablisViewingMargin) *
+		3 * ((DikablisViewingWidth + 2*DikablisViewingMargin) *
 		(DikablisViewingHeight + 2*DikablisViewingMargin)));
 }
 

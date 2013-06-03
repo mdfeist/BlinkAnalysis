@@ -23,6 +23,10 @@ TCPClientListener *client;
 
 bool serverStarted = false;
 
+Dikablis::journal_struct dikablisJournal;
+
+Dikablis::journal_struct Dikablis::getJournal() { return dikablisJournal; }
+
 // Connect to the Dikablis Recorder
 void Dikablis::connectToDikablis(std::string ip, std::string p)
 {
@@ -91,6 +95,8 @@ void recieved(std::string msg) {
 		sscanf_s(split[15].c_str(), "%d", &journal.field_x);
 		sscanf_s(split[16].c_str(), "%d", &journal.field_y);
 	}
+
+	dikablisJournal = journal;
 
 	// Pass the journal information to the MainForm so it can be displayed
 	MainFormController::getInstance()->dikablisMessage(journal);

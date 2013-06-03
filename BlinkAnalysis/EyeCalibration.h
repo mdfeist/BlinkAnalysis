@@ -18,16 +18,6 @@ private:
 			this->ray = ray;
 		}
 
-		CalibrationPoint(int pixel_x, int pixel_y, 
-			osg::Vec3 from, osg::Vec3 to,
-			osg::Matrix head_inverse) {
-			this->pixel_x = pixel_x;
-			this->pixel_y = pixel_y;
-			this->ray = head_inverse*(to - from);
-			this->ray.normalize();
-			this->ray = this->ray/this->ray.z();
-		}
-
 		osg::Vec3 getRay() { return this->ray; }
 		int getX() { return this->pixel_x; }
 		int getY() { return this->pixel_y; }
@@ -51,4 +41,7 @@ public:
 	void setViewingObjectId(int id) { this->rbViewingObjectId = id; }
 	int getViewingObjectId() { return this->rbViewingObjectId; }
 	char* getViewingObjectName() { return getNameById(this->rbViewingObjectId); }
+
+	bool addPoint();
+	void calibrate();
 };

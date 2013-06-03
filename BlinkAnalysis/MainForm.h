@@ -18,7 +18,7 @@
 
 #include "Dikablis.h"
 #include "DikablisHelp.h"
-#include "EyeCalibrationWizardForm.h"
+#include "EyeCalibrationWizardFormController.h"
 #include "DefineCoordinateFrameForm.h"
 #include "AppData.h"
 #include "AppViewer.h"
@@ -2330,8 +2330,10 @@ private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System:
 	// Menu Items
 	/////////////////////
 private: System::Void eyeCalibrationToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
-			 calibrationForm->Show();
+			 //EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
+			 //calibrationForm->Show();
+
+			 EyeCalibrationWizardFormController::getInstance()->Show();
 		 }
 private: System::Void newToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->newProject();
