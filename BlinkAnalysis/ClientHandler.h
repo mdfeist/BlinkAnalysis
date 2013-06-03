@@ -50,6 +50,15 @@ private:
 
 	int iOptiTrackConnectionType;				// The Connection Type of the OptiTrack server
 
+	// Dikablis
+	// Width and Height of the Field of View for the Dikablis
+	static int DikablisViewingWidth;
+	static int DikablisViewingHeight;
+	static int DikablisViewingMargin;
+
+	// Used to store the calibrated eye vectors
+	float *dikablisEyeVectorArray;
+
 public:
 	ClientHandler(void);						// Constructor
 	~ClientHandler(void);						// Destructor
@@ -125,13 +134,20 @@ public:
 	// Updates the RigidBody's transformation based on it's id
 	void transformRigidBody(int id, osg::Vec3 pos, osg::Vec4 rot);
 
+	// Labeled Markers
 	bool addLabeledMarker(int id, Marker* marker);
 	Marker* getLabeledMarker(int id);
 	std::map<int, Marker*>* getLabeledMarkerMap();
 	void clearLabeledMarkers();
 	void clearStaleMarkers();
 
+	// Rigid Body Tool for defining objects
 	void setRigidBodyTool(int id) { rigidBodyTool = id; }
 	int getRigidBodyTool() { return rigidBodyTool; }
+
+	// Dikablis
+	static int getDikablisViewingWidth() { return DikablisViewingWidth; }
+	static int getDikablisViewingHeight() { return DikablisViewingHeight; }
+	static int getDikablisViewingMargin() { return DikablisViewingMargin; }
 };
 

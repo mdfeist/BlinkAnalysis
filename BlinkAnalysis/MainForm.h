@@ -2045,7 +2045,7 @@ _WATCH_MEMORY
 
 				isUpdating = true;
 
-				static float fps = (1000.f/30.f);
+				static float fps = (1000.f/10.f);
 				static float dwCurrentTime = 0.f;
 				static float dwElapsedTime = 0.f;
 				static float dwLastUpdateTime = 0.f;
