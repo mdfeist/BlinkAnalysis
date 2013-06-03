@@ -133,3 +133,4 @@ void ClientHandler::clearStaleMarkers()
 		}
 	}
 }
+

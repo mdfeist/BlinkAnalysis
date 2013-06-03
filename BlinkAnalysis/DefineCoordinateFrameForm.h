@@ -71,7 +71,16 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Label^  infoTitleLabel;
 	private: System::Windows::Forms::Label^  rigidBodyLabel;
 	private: System::Windows::Forms::Label^  rigidToolPositionLabel;
+	private: System::Windows::Forms::Button^  rigidGetDataButton;
+	private: System::Windows::Forms::Button^  coordinateSetButton2;
+	private: System::Windows::Forms::Button^  rigidYButton;
+	private: System::Windows::Forms::Button^  rigidXButton;
+	private: System::Windows::Forms::Button^  rigidOButton;
+	private: System::Windows::Forms::Label^  rigidYLabel;
+	private: System::Windows::Forms::Label^  rigidXLabel;
+	private: System::Windows::Forms::Label^  rigidOLabel;
 
+	private: System::String^ defaultDataText;
 
 
 
@@ -109,8 +118,16 @@ namespace BlinkAnalysis {
 			this->coordinateYTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->coordinateOTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->rigidPage = (gcnew System::Windows::Forms::TabPage());
-			this->rigidBodyLabel = (gcnew System::Windows::Forms::Label());
+			this->coordinateSetButton2 = (gcnew System::Windows::Forms::Button());
+			this->rigidGetDataButton = (gcnew System::Windows::Forms::Button());
 			this->rigidToolPositionLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidBodyLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidOLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidXLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidYLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidOButton = (gcnew System::Windows::Forms::Button());
+			this->rigidXButton = (gcnew System::Windows::Forms::Button());
+			this->rigidYButton = (gcnew System::Windows::Forms::Button());
 			this->CoordinateFramePages->SuspendLayout();
 			this->infoPage->SuspendLayout();
 			this->markerPage->SuspendLayout();
@@ -319,6 +336,14 @@ namespace BlinkAnalysis {
 			// rigidPage
 			// 
 			this->rigidPage->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->rigidPage->Controls->Add(this->rigidYButton);
+			this->rigidPage->Controls->Add(this->rigidXButton);
+			this->rigidPage->Controls->Add(this->rigidOButton);
+			this->rigidPage->Controls->Add(this->rigidYLabel);
+			this->rigidPage->Controls->Add(this->rigidXLabel);
+			this->rigidPage->Controls->Add(this->rigidOLabel);
+			this->rigidPage->Controls->Add(this->coordinateSetButton2);
+			this->rigidPage->Controls->Add(this->rigidGetDataButton);
 			this->rigidPage->Controls->Add(this->rigidToolPositionLabel);
 			this->rigidPage->Controls->Add(this->rigidBodyLabel);
 			this->rigidPage->Location = System::Drawing::Point(4, 22);
@@ -327,6 +352,38 @@ namespace BlinkAnalysis {
 			this->rigidPage->Size = System::Drawing::Size(416, 285);
 			this->rigidPage->TabIndex = 1;
 			this->rigidPage->Text = L"Rigid Body";
+			// 
+			// coordinateSetButton2
+			// 
+			this->coordinateSetButton2->Enabled = false;
+			this->coordinateSetButton2->Location = System::Drawing::Point(291, 241);
+			this->coordinateSetButton2->Name = L"coordinateSetButton2";
+			this->coordinateSetButton2->Size = System::Drawing::Size(103, 23);
+			this->coordinateSetButton2->TabIndex = 7;
+			this->coordinateSetButton2->Text = L"Set Coordinates";
+			this->coordinateSetButton2->UseVisualStyleBackColor = true;
+			this->coordinateSetButton2->Click += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::coordinateSetButton_Click);
+			// 
+			// rigidGetDataButton
+			// 
+			this->rigidGetDataButton->Location = System::Drawing::Point(36, 101);
+			this->rigidGetDataButton->Name = L"rigidGetDataButton";
+			this->rigidGetDataButton->Size = System::Drawing::Size(75, 23);
+			this->rigidGetDataButton->TabIndex = 2;
+			this->rigidGetDataButton->Text = L"Get Data";
+			this->rigidGetDataButton->UseVisualStyleBackColor = true;
+			this->rigidGetDataButton->Click += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::rigidGetDataButton_Click);
+			// 
+			// rigidToolPositionLabel
+			// 
+			this->rigidToolPositionLabel->AutoSize = true;
+			this->rigidToolPositionLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->rigidToolPositionLabel->Location = System::Drawing::Point(117, 104);
+			this->rigidToolPositionLabel->Name = L"rigidToolPositionLabel";
+			this->rigidToolPositionLabel->Size = System::Drawing::Size(92, 16);
+			this->rigidToolPositionLabel->TabIndex = 1;
+			this->rigidToolPositionLabel->Text = L"No data found";
 			// 
 			// rigidBodyLabel
 			// 
@@ -339,16 +396,78 @@ namespace BlinkAnalysis {
 			this->rigidBodyLabel->TabIndex = 0;
 			this->rigidBodyLabel->Text = L"Rigid Body Tool Position:";
 			// 
-			// rigidToolPositionLabel
+			// rigidOLabel
 			// 
-			this->rigidToolPositionLabel->AutoSize = true;
-			this->rigidToolPositionLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, 
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->rigidToolPositionLabel->Location = System::Drawing::Point(69, 105);
-			this->rigidToolPositionLabel->Name = L"rigidToolPositionLabel";
-			this->rigidToolPositionLabel->Size = System::Drawing::Size(92, 16);
-			this->rigidToolPositionLabel->TabIndex = 1;
-			this->rigidToolPositionLabel->Text = L"No data found";
+			this->rigidOLabel->AutoSize = true;
+			this->rigidOLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidOLabel->Location = System::Drawing::Point(166, 135);
+			this->rigidOLabel->Name = L"rigidOLabel";
+			this->rigidOLabel->Size = System::Drawing::Size(84, 15);
+			this->rigidOLabel->TabIndex = 8;
+			this->rigidOLabel->Text = L"No data found";
+			// 
+			// rigidXLabel
+			// 
+			this->rigidXLabel->AutoSize = true;
+			this->rigidXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidXLabel->Location = System::Drawing::Point(166, 166);
+			this->rigidXLabel->Name = L"rigidXLabel";
+			this->rigidXLabel->Size = System::Drawing::Size(84, 15);
+			this->rigidXLabel->TabIndex = 9;
+			this->rigidXLabel->Text = L"No data found";
+			// 
+			// rigidYLabel
+			// 
+			this->rigidYLabel->AutoSize = true;
+			this->rigidYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidYLabel->Location = System::Drawing::Point(166, 197);
+			this->rigidYLabel->Name = L"rigidYLabel";
+			this->rigidYLabel->Size = System::Drawing::Size(84, 15);
+			this->rigidYLabel->TabIndex = 10;
+			this->rigidYLabel->Text = L"No data found";
+			// 
+			// rigidOButton
+			// 
+			this->rigidOButton->BackColor = System::Drawing::SystemColors::ControlLightLight;
+			this->rigidOButton->Enabled = false;
+			this->rigidOButton->Location = System::Drawing::Point(85, 132);
+			this->rigidOButton->Name = L"rigidOButton";
+			this->rigidOButton->Size = System::Drawing::Size(75, 23);
+			this->rigidOButton->TabIndex = 11;
+			this->rigidOButton->Text = L"Origin";
+			this->rigidOButton->UseVisualStyleBackColor = true;
+			this->rigidOButton->Click += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::rigidSetDataButton_Click);
+			// 
+			// rigidXButton
+			// 
+			this->rigidXButton->BackColor = System::Drawing::SystemColors::ControlLightLight;
+			this->rigidXButton->Enabled = false;
+			this->rigidXButton->Location = System::Drawing::Point(85, 163);
+			this->rigidXButton->Name = L"rigidXButton";
+			this->rigidXButton->Size = System::Drawing::Size(75, 23);
+			this->rigidXButton->TabIndex = 12;
+			this->rigidXButton->Text = L"X-Axis";
+			this->rigidXButton->UseVisualStyleBackColor = true;
+			this->rigidXButton->Click += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::rigidSetDataButton_Click);
+			// 
+			// rigidYButton
+			// 
+			this->rigidYButton->BackColor = System::Drawing::SystemColors::ControlLightLight;
+			this->rigidYButton->Enabled = false;
+			this->rigidYButton->Location = System::Drawing::Point(85, 194);
+			this->rigidYButton->Name = L"rigidYButton";
+			this->rigidYButton->Size = System::Drawing::Size(75, 23);
+			this->rigidYButton->TabIndex = 13;
+			this->rigidYButton->Text = L"Y-Axis";
+			this->rigidYButton->UseVisualStyleBackColor = true;
+			this->rigidYButton->Click += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::rigidSetDataButton_Click);
+			//
+			// defaultDataText
+			//
+			this->defaultDataText = L"No data found";
 			// 
 			// DefineCoordinateFrameForm
 			// 
@@ -376,6 +495,7 @@ namespace BlinkAnalysis {
 	private: osg::Vec3* posO;
 	private: osg::Vec3* posX;
 	private: osg::Vec3* posY;
+	private: osg::Vec3* pos;
 
 	private: System::Void DefineCoordinateFrameForm_Load(System::Object^  sender, System::EventArgs^  e) {
 			 }
@@ -384,6 +504,7 @@ namespace BlinkAnalysis {
 				if (posO) delete posO;
 				if (posX) delete posX;
 				if (posY) delete posY;
+				if (pos) delete pos;
 			 }
 
 	private: System::Void coordinateGetButton_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -456,7 +577,7 @@ namespace BlinkAnalysis {
 				 }
 			 }
 	private: System::Void coordinate_setDefaultText(Label^ text) {
-				 text->Text = L"No data found";
+				 text->Text = defaultDataText;
 			 }
 	private: System::Void coordinate_setPoint(osg::Vec3* pos, Label^ text) {
 				String^ str = Convert::ToString(pos->x());
@@ -472,10 +593,6 @@ namespace BlinkAnalysis {
 				 if (world)
 					 world->setCoordinateFrame(CaptureObjectUtil::makeGlobalToLocalMatrix(*posO, *posX, *posY));
 				 
-				 delete posO;
-				 delete posX;
-				 delete posY;
-
 				 this->Close();
 			 }
 	private: System::Void coordinateResetButton_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -487,12 +604,79 @@ namespace BlinkAnalysis {
 					 world->setCoordinateFrame(m);
 				 }
 				 
-				 if (posO) delete posO;
-				 if (posX) delete posX;
-				 if (posY) delete posY;
-
 				 this->Close();
 			 }
 
+	private: System::Void rigidSetButtons(bool enable) {
+				 this->rigidOButton->Enabled = enable;
+				 this->rigidXButton->Enabled = enable;
+				 this->rigidYButton->Enabled = enable;
+			 }
+	private: System::Void rigidGetDataButton_Click(System::Object^  sender, System::EventArgs^  e) {
+				 ClientHandler* client = AppData::getInstance()->getClient();
+				 if (client)
+				 {
+					 RigidBody* body = client->getRigidBody(client->getRigidBodyTool());
+					 if (body)
+					 {
+						 if (!pos)
+							pos = new osg::Vec3(); 
+
+						 pos->set(body->getPosition().x(), 
+									body->getPosition().y(), 
+									body->getPosition().z());
+						 coordinate_setPoint(pos, rigidToolPositionLabel);
+						 rigidSetButtons(true);
+						 return;
+					 }
+				 }
+				 coordinate_setDefaultText(rigidToolPositionLabel);
+				 rigidSetButtons(false);
+			 }
+
+	private: System::Void rigidSetDataButton_Click(System::Object^ sender, System::EventArgs^ e) {
+				 if (sender == this->rigidOButton)
+				 {
+					 if (!posO)
+						 posO = new osg::Vec3();
+
+					 posO->set(pos->x(), pos->y(), pos->z());
+					 coordinate_setPoint(pos, rigidOLabel);
+					 
+					 if ( String::Compare(rigidXLabel->Text, defaultDataText) &&
+						  String::Compare(rigidYLabel->Text, defaultDataText) )
+						  coordinateSetButton2->Enabled = true;
+					 else
+						  coordinateSetButton2->Enabled = false;
+				 }
+				 else if (sender == this->rigidXButton)
+				 {
+					 if (!posX)
+						 posX = new osg::Vec3();
+
+					 posX->set(pos->x(), pos->y(), pos->z());
+					 coordinate_setPoint(pos, rigidXLabel);
+
+					 if ( String::Compare(rigidOLabel->Text, defaultDataText) &&
+						  String::Compare(rigidYLabel->Text, defaultDataText) )
+						  coordinateSetButton2->Enabled = true;
+					 else
+						  coordinateSetButton2->Enabled = false;
+				 }
+				 else if (sender == this->rigidYButton)
+				 {
+					 if (!posY)
+						 posY = new osg::Vec3();
+
+					 posY->set(pos->x(), pos->y(), pos->z());
+					 coordinate_setPoint(pos, rigidYLabel);
+
+					 if ( String::Compare(rigidOLabel->Text, defaultDataText) &&
+						  String::Compare(rigidXLabel->Text, defaultDataText) )
+						  coordinateSetButton2->Enabled = true;
+					 else
+						  coordinateSetButton2->Enabled = false;
+				 }
+			 }
 };
 }
