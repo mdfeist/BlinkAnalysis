@@ -105,5 +105,18 @@ osg::Group* CaptureWorld::getAsGroup()
 	return node;
 }
 
+void CaptureWorld::updateObjectsNode()
+{
+	if (node)
+	{
+		node->removeChild(0, node->getNumChildren());
+		for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
+		{
+			// TODO 
+			node->addChild(itr->second->getAsGeode());
+		}
+	}
+}
+
 
 

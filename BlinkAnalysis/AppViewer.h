@@ -16,4 +16,6 @@ namespace AppViewer {
 	void stopAppViewer();
 	// Pause rendering when not visible
 	void setVisible(bool bVisible);
+	// Updates list of objects
+	void redrawObjects();
 };

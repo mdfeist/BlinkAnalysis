@@ -30,11 +30,13 @@ osg::Group* rootNode;
 
 bool running = false;
 bool visible = false;
+bool redrawObj = false;
 
 float VIEWER_SCALE = 1;
 
 void AppViewer::stopAppViewer() { running = false; }
 void AppViewer::setVisible(bool bVisible) { visible = bVisible; }
+void AppViewer::redrawObjects() { redrawObj = true; }
 
 void render(void *) {
 	// Started Rendering
@@ -155,6 +157,16 @@ void render(void *) {
 					// End Create Points
 				}
 			}
+
+			if (redrawObj)
+			{
+				CaptureWorld *world = AppData::getInstance()->getWorld();
+				if (world)
+					world->updateObjectsNode();
+
+				redrawObj = false;
+			}
+			
 
 			// Add Node containing all the points to the scene
 			rootNode->addChild( node );

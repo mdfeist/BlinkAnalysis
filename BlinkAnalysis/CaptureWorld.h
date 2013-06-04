@@ -46,7 +46,7 @@ public:
 	int getNumberObjects();
 
 	osg::Group* getAsGroup();
-
+	void updateObjectsNode();
 };
 
 
