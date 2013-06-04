@@ -156,9 +156,6 @@
     <ClInclude Include="Marker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DefineCoordinateFrameForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AddObjectForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>

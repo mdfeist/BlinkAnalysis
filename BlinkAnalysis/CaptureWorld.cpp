@@ -9,33 +9,6 @@
 #include "CaptureWorld.h"
 
 
-double CaptureWorld::VIEWER_SCALE = 10;
-
-CaptureWorld::CaptureWorld(osg::Matrix* globToLoc)
-{
-	_globalToLocal = globToLoc;
-	_lastObjectID = 0;
-}
-
-void CaptureWorld::setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects, bool updateObjects)
-{
-	delete _globalToLocal;
-	_globalToLocal = globToLoc;
-
-	if (deleteObjects)
-	{
-		clearObjects();
-		return;
-	}
-	if (updateObjects)
-	{
-		//TODO
-	}
-
-	if (node)
-		node->setMatrix(getLocalToGlobalMatrix()*osg::Matrix::scale(VIEWER_SCALE, VIEWER_SCALE, VIEWER_SCALE));
-}
-
 int CaptureWorld::addObject(CaptureObject* obj)
 {
 	obj->setID(_lastObjectID);
@@ -117,15 +90,12 @@ CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3
 }
 
 
-osg::MatrixTransform* CaptureWorld::getAsGroup()
+osg::Group* CaptureWorld::getAsGroup()
 {
 	if (!node)
-	{
-		node = new osg::MatrixTransform();
-	}
+		node = new osg::Group();
 
 	node->removeChild(0, node->getNumChildren());
-	node->setMatrix(getLocalToGlobalMatrix()*osg::Matrix::scale(VIEWER_SCALE, VIEWER_SCALE, VIEWER_SCALE));
 	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
 	{
 		// TODO 

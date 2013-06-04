@@ -19,7 +19,6 @@
 #include "Dikablis.h"
 #include "DikablisHelp.h"
 #include "EyeCalibrationWizardForm.h"
-#include "DefineCoordinateFrameForm.h"
 #include "AddObjectForm.h"
 #include "AppData.h"
 #include "AppViewer.h"
@@ -205,7 +204,7 @@ private: System::Windows::Forms::Label^  visualObjectsLabel;
 private: System::Windows::Forms::ToolStripMenuItem^  objectToolStripMenuItem;
 
 
-private: System::Windows::Forms::ToolStripMenuItem^  defineCoordinatesToolStripMenuItem;
+
 private: System::Windows::Forms::ToolStripMenuItem^  addObjectToolStripMenuItem;
 
 private: System::Windows::Forms::ListView^  visualMarkersListView;
@@ -326,7 +325,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			this->calibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->eyeCalibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->objectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->defineCoordinatesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -1478,23 +1476,15 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			// 
 			// objectToolStripMenuItem
 			// 
-			this->objectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->defineCoordinatesToolStripMenuItem, 
-				this->addObjectToolStripMenuItem});
+			this->objectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->addObjectToolStripMenuItem});
 			this->objectToolStripMenuItem->Name = L"objectToolStripMenuItem";
 			this->objectToolStripMenuItem->Size = System::Drawing::Size(54, 20);
 			this->objectToolStripMenuItem->Text = L"Object";
 			// 
-			// defineCoordinatesToolStripMenuItem
-			// 
-			this->defineCoordinatesToolStripMenuItem->Name = L"defineCoordinatesToolStripMenuItem";
-			this->defineCoordinatesToolStripMenuItem->Size = System::Drawing::Size(175, 22);
-			this->defineCoordinatesToolStripMenuItem->Text = L"Define Coordinates";
-			this->defineCoordinatesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::defineCoordinatesToolStripMenuItem_Click);
-			// 
 			// addObjectToolStripMenuItem
 			// 
 			this->addObjectToolStripMenuItem->Name = L"addObjectToolStripMenuItem";
-			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->addObjectToolStripMenuItem->Text = L"Add Object";
 			this->addObjectToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addObjectToolStripMenuItem_Click);
 			// 
@@ -2347,10 +2337,6 @@ private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, Syste
 		 }
 private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->saveAsProject();
-		 }
-private: System::Void defineCoordinatesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 DefineCoordinateFrameForm^ coordinateForm = gcnew DefineCoordinateFrameForm();
-			 coordinateForm->Show();
 		 }
 private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			AddObjectForm^ objectForm = gcnew AddObjectForm();

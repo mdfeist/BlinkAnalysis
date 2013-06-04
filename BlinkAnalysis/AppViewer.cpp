@@ -27,10 +27,11 @@
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
-osg::MatrixTransform* worldNode;
 
 bool running = false;
 bool visible = false;
+
+float VIEWER_SCALE = 1;
 
 void AppViewer::stopAppViewer() { running = false; }
 void AppViewer::setVisible(bool bVisible) { visible = bVisible; }
@@ -95,7 +96,7 @@ void render(void *) {
 								osg::Vec3 pos = marker.getPosition();
 
 								// Add marker to the points array
-								points->push_back( pos );
+								points->push_back( pos * VIEWER_SCALE );
 								//points->push_back( pos / 100.f ); 
 
 								// Add colors
@@ -118,7 +119,7 @@ void render(void *) {
 						osg::Vec3 pos = marker->getPosition(); 
 
 						// Add marker to the points array
-						points->push_back( pos );
+						points->push_back( pos * VIEWER_SCALE );
 						//points->push_back( pos / 100.f );
 
 						// Add colors
@@ -156,13 +157,13 @@ void render(void *) {
 			}
 
 			// Add Node containing all the points to the scene
-			worldNode->addChild( node );
+			rootNode->addChild( node );
 			
 			// Render frame
 			viewer->frame();
 
 			// Remove points from the scene
-			worldNode->removeChild( node );
+			rootNode->removeChild( node );
 		} else {
 			// View not visible so Sleep for 1000 milliseconds
 			Sleep(1000);
@@ -187,10 +188,8 @@ void AppViewer::initAppViewer(HWND hwnd)
 	if (!rootNode)
 		rootNode = new osg::Group();
 	
-	// Add worldNode, a MatrixTransform node containing user defined
-	// ground plane coordinates
-	worldNode = AppData::getInstance()->getWorld()->getAsGroup();
-	rootNode->addChild(worldNode);
+	// Add world, a Group node containing captured objects
+	rootNode->addChild(AppData::getInstance()->getWorld()->getAsGroup());
 
 	// Set the traits for the rendering view
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits();

@@ -153,9 +153,6 @@
     <ClInclude Include="CaptureWorld.h" />
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="Debug.h" />
-    <ClInclude Include="DefineCoordinateFrameForm.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
     <ClInclude Include="Dikablis.h" />
     <ClInclude Include="DikablisHelp.h">
       <FileType>CppForm</FileType>
@@ -188,9 +185,6 @@
   <ItemGroup>
     <EmbeddedResource Include="AddObjectForm.resx">
       <DependentUpon>AddObjectForm.h</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DefineCoordinateFrameForm.resx">
-      <DependentUpon>DefineCoordinateFrameForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DikablisHelp.resx">
       <DependentUpon>DikablisHelp.h</DependentUpon>
