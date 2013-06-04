@@ -20,6 +20,7 @@
 #include "DikablisHelp.h"
 #include "EyeCalibrationWizardForm.h"
 #include "DefineCoordinateFrameForm.h"
+#include "AddObjectForm.h"
 #include "AppData.h"
 #include "AppViewer.h"
 
@@ -201,10 +202,12 @@ private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenu
 private: System::Windows::Forms::ListView^  visualObjectsListView;
 
 private: System::Windows::Forms::Label^  visualObjectsLabel;
+private: System::Windows::Forms::ToolStripMenuItem^  objectToolStripMenuItem;
 
-private: System::Windows::Forms::ToolStripMenuItem^  addObjectToolStripMenuItem;
+
 private: System::Windows::Forms::ToolStripMenuItem^  defineCoordinatesToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  addPlaneToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  addObjectToolStripMenuItem;
+
 private: System::Windows::Forms::ListView^  visualMarkersListView;
 
 private: System::Windows::Forms::Label^  visualMarkersLabel;
@@ -322,9 +325,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->calibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->eyeCalibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->objectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->defineCoordinatesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->addPlaneToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->mainTabControl->SuspendLayout();
@@ -1413,7 +1416,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			// menuStrip
 			// 
 			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->projectToolStripMenuItem, 
-				this->calibrationToolStripMenuItem, this->addObjectToolStripMenuItem});
+				this->calibrationToolStripMenuItem, this->objectToolStripMenuItem});
 			this->menuStrip->Location = System::Drawing::Point(0, 0);
 			this->menuStrip->Name = L"menuStrip";
 			this->menuStrip->Size = System::Drawing::Size(784, 24);
@@ -1473,13 +1476,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			this->eyeCalibrationToolStripMenuItem->Text = L"Eye Calibration";
 			this->eyeCalibrationToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::eyeCalibrationToolStripMenuItem_Click);
 			// 
-			// addObjectToolStripMenuItem
+			// objectToolStripMenuItem
 			// 
-			this->addObjectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->defineCoordinatesToolStripMenuItem, 
-				this->addPlaneToolStripMenuItem});
-			this->addObjectToolStripMenuItem->Name = L"addObjectToolStripMenuItem";
-			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(79, 20);
-			this->addObjectToolStripMenuItem->Text = L"Add Object";
+			this->objectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->defineCoordinatesToolStripMenuItem, 
+				this->addObjectToolStripMenuItem});
+			this->objectToolStripMenuItem->Name = L"objectToolStripMenuItem";
+			this->objectToolStripMenuItem->Size = System::Drawing::Size(54, 20);
+			this->objectToolStripMenuItem->Text = L"Object";
 			// 
 			// defineCoordinatesToolStripMenuItem
 			// 
@@ -1488,12 +1491,12 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			this->defineCoordinatesToolStripMenuItem->Text = L"Define Coordinates";
 			this->defineCoordinatesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::defineCoordinatesToolStripMenuItem_Click);
 			// 
-			// addPlaneToolStripMenuItem
+			// addObjectToolStripMenuItem
 			// 
-			this->addPlaneToolStripMenuItem->Name = L"addPlaneToolStripMenuItem";
-			this->addPlaneToolStripMenuItem->Size = System::Drawing::Size(175, 22);
-			this->addPlaneToolStripMenuItem->Text = L"Add Plane";
-			this->addPlaneToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addPlaneToolStripMenuItem_Click);
+			this->addObjectToolStripMenuItem->Name = L"addObjectToolStripMenuItem";
+			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->addObjectToolStripMenuItem->Text = L"Add Object";
+			this->addObjectToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addObjectToolStripMenuItem_Click);
 			// 
 			// rigidBodyToolContextMenu
 			// 
@@ -2349,8 +2352,29 @@ private: System::Void defineCoordinatesToolStripMenuItem_Click(System::Object^  
 			 DefineCoordinateFrameForm^ coordinateForm = gcnew DefineCoordinateFrameForm();
 			 coordinateForm->Show();
 		 }
-private: System::Void addPlaneToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			// TODO add plane
+private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			AddObjectForm^ objectForm = gcnew AddObjectForm();
+			objectForm->UpdateObject += gcnew System::EventHandler(this, &MainForm::AddObjectForm_UpdateObject);
+			objectForm->Show();
+		 }
+private: System::Void AddObjectForm_UpdateObject(System::Object^  sender, System::EventArgs^  e) {
+			CaptureWorld* world = AppData::getInstance()->getWorld();
+			if (world)
+			{
+				std::map<int, CaptureObject*> objectMap = world->getObjects();
+									
+				this->visualObjectsListView->Items->Clear();
+				
+				for (objects_iterator it = objectMap.begin(); it != objectMap.end(); it++)
+				{
+					// Add Capture Object to list
+					String^ objectID = Convert::ToString(it->second->getID());
+					String^ objectName = gcnew String(it->second->getName().c_str());
+					ListViewItem^ listViewItem = gcnew ListViewItem(objectID); 
+					listViewItem->SubItems->Add(objectName);
+					this->visualObjectsListView->Items->Add(listViewItem);
+				}
+			}
 		 }
 private: System::Void objectsListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }

@@ -58,7 +58,7 @@ public:
 	// choose to delete objects with change, or update them w.r.t. new transformation
 	void setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects=false, bool updateObjects=false);
 
-	int addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
+	CaptureObject* addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
 
 	bool removeObject(int id);
 

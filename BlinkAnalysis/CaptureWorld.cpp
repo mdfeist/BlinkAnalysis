@@ -51,7 +51,7 @@ int CaptureWorld::addObject(CaptureObject* obj)
 	std::pair<objects_iterator, bool> ret;
 	ret = _objects.insert(std::pair<int, CaptureObject*>(_lastObjectID, obj));
 
-	return (ret.second == false) ? false : _lastObjectID++;
+	return (ret.second == false) ? -1 : _lastObjectID++;
 }
 
 	
@@ -83,7 +83,7 @@ int CaptureWorld::getNumberObjects()
 }
 
 // TODO: assumed static for now
-int CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name)
+CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name)
 {
 	CaptureObject* obj = new CaptureObject();
 	// if name is empty string, one will be generated in addObject
@@ -107,7 +107,13 @@ int CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::
 	face->push_back(3);
 	obj->addFace(face);
 
-	return addObject(obj);
+	if (addObject(obj) < 0)
+	{
+		delete obj;
+		obj = NULL;
+	}
+
+	return obj;
 }
 
 
