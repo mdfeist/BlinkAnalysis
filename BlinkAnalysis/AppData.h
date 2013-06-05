@@ -57,7 +57,6 @@ private:
 	char fileName[1024];
 	char filePath[1024];
 	char error[1024];
-
 };
 
 

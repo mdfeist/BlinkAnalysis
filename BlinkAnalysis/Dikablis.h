@@ -31,6 +31,8 @@ namespace Dikablis {
 		int field_y;			// Range 0 to 576 | Vertical position of the focal point in field camera
 	} journal_struct;
 
+	journal_struct getJournal();
+
 	// Set the Ip Address of the machine running Dikablis Recorder
 	void setIPAddress(std::string ip);
 	// Set the slave port of the machine running Dikablis Recorder

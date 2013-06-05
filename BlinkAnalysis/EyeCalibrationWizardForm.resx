@@ -141,4 +141,12 @@ to see if any data is being streamed.</value>
   <data name="objectSelectionInstructionsLabel.Text" xml:space="preserve">
     <value>Please select a Rigid Body from the list of Rigid Body's to be the object the subject looks at while calibrating. If no Rigid Body's are shown then make sure you are connected to the OptiTrack system and are streaming data. You can use the OptiTrack view on the main tab bar to see if any data is being streamed.</value>
   </data>
+  <data name="calibrationPointInstructionsLabel.Text" xml:space="preserve">
+    <value>To calibrate the eye, hold the viewing object away from the subjects head. You should calculate a minimuim of four points, one for each corner of the field of view.
+
+1: Hold the object about the same distance away as when you calibrated the Dikablis Recorder
+2: Have the subject look at the object with minimial head movements
+3: Press the "Add Point" button to add the point
+4: Repeat until you have at least 4 points but 9 points is the recomended</value>
+  </data>
 </root>

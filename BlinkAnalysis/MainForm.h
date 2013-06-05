@@ -18,8 +18,8 @@
 
 #include "Dikablis.h"
 #include "DikablisHelp.h"
-#include "EyeCalibrationWizardForm.h"
 #include "AddObjectForm.h"
+#include "EyeCalibrationWizardFormController.h"
 #include "AppData.h"
 #include "AppViewer.h"
 
@@ -1727,7 +1727,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 				 this->optiTrackDataGridView->VirtualMode = true;
 
 				 // Visual
-				 AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
+				 //AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
 
 				 this->visualRigidBodyListView->View = View::Details;
 				 this->visualRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
@@ -2038,7 +2038,7 @@ _WATCH_MEMORY
 
 				isUpdating = true;
 
-				static float fps = (1000.f/30.f);
+				static float fps = (1000.f/10.f);
 				static float dwCurrentTime = 0.f;
 				static float dwElapsedTime = 0.f;
 				static float dwLastUpdateTime = 0.f;
@@ -2323,8 +2323,10 @@ private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System:
 	// Menu Items
 	/////////////////////
 private: System::Void eyeCalibrationToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
-			 calibrationForm->Show();
+			 //EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
+			 //calibrationForm->Show();
+
+			 EyeCalibrationWizardFormController::getInstance()->Show();
 		 }
 private: System::Void newToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->newProject();

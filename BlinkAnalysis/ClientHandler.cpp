@@ -7,6 +7,12 @@
 
 #include <string.h>
 
+// Dikablis
+int ClientHandler::DikablisViewingWidth = 768;
+int ClientHandler::DikablisViewingHeight = 576;
+
+int ClientHandler::DikablisViewingMargin = 100;
+
 // Constructor: Sets the default values for the ClientHandler
 ClientHandler::ClientHandler(void)
 { 
@@ -28,6 +34,11 @@ ClientHandler::ClientHandler(void)
 		NULL);
 
 	this->rigidBodyTool = -1;
+
+	this->dikablisEyeVectorArray = (float*) malloc(
+		sizeof(float) * 
+		3 * ((DikablisViewingWidth + 2*DikablisViewingMargin) *
+		(DikablisViewingHeight + 2*DikablisViewingMargin)));
 }
 
 // Cleans up the ClientHandler
@@ -35,6 +46,9 @@ ClientHandler::~ClientHandler(void)
 {
 	// Free the mutex
 	CloseHandle(this->g_hMutex);
+
+	if (this->dikablisEyeVectorArray != NULL)
+		free(this->dikablisEyeVectorArray);
 }
 
 // Add a Rigid Body to the ClientHandler

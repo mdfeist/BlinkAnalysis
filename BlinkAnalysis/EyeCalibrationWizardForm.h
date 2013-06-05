@@ -63,6 +63,26 @@ namespace BlinkAnalysis {
 
 	private: System::Windows::Forms::ListView^  objectRigidBodyListView;
 	private: System::Windows::Forms::TabPage^  calibrationPage;
+	private: System::Windows::Forms::Button^  addCalibrationPointBtn;
+
+	private: System::Windows::Forms::Label^  calibrationPointInstructionsLabel;
+	private: System::Windows::Forms::Label^  calibrationExampleLabel;
+	private: Microsoft::VisualBasic::PowerPacks::ShapeContainer^  shapeContainer1;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint7;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint8;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint9;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint6;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint5;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint4;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint2;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint3;
+	private: Microsoft::VisualBasic::PowerPacks::OvalShape^  demoCalibrationPoint1;
+	private: Microsoft::VisualBasic::PowerPacks::RectangleShape^  screenShape;
+	private: System::Windows::Forms::TabPage^  calculatingPage;
+	private: System::Windows::Forms::TextBox^  calibrationOutputLogLabel;
+
+
+
 
 	private:
 		/// <summary>
@@ -96,10 +116,28 @@ namespace BlinkAnalysis {
 			this->objectSelectionInstructionsLabel = (gcnew System::Windows::Forms::Label());
 			this->objectRigidBodyListView = (gcnew System::Windows::Forms::ListView());
 			this->calibrationPage = (gcnew System::Windows::Forms::TabPage());
+			this->calibrationExampleLabel = (gcnew System::Windows::Forms::Label());
+			this->addCalibrationPointBtn = (gcnew System::Windows::Forms::Button());
+			this->calibrationPointInstructionsLabel = (gcnew System::Windows::Forms::Label());
+			this->shapeContainer1 = (gcnew Microsoft::VisualBasic::PowerPacks::ShapeContainer());
+			this->demoCalibrationPoint7 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint8 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint9 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint6 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint5 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint4 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint2 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint3 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->demoCalibrationPoint1 = (gcnew Microsoft::VisualBasic::PowerPacks::OvalShape());
+			this->screenShape = (gcnew Microsoft::VisualBasic::PowerPacks::RectangleShape());
+			this->calculatingPage = (gcnew System::Windows::Forms::TabPage());
+			this->calibrationOutputLogLabel = (gcnew System::Windows::Forms::TextBox());
 			this->wizardPages->SuspendLayout();
 			this->introPage->SuspendLayout();
 			this->headSelectPage->SuspendLayout();
 			this->objectSelectPage->SuspendLayout();
+			this->calibrationPage->SuspendLayout();
+			this->calculatingPage->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// backBtn
@@ -145,6 +183,7 @@ namespace BlinkAnalysis {
 			this->wizardPages->Controls->Add(this->headSelectPage);
 			this->wizardPages->Controls->Add(this->objectSelectPage);
 			this->wizardPages->Controls->Add(this->calibrationPage);
+			this->wizardPages->Controls->Add(this->calculatingPage);
 			this->wizardPages->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->wizardPages->Location = System::Drawing::Point(0, 0);
@@ -315,6 +354,10 @@ namespace BlinkAnalysis {
 			// 
 			// calibrationPage
 			// 
+			this->calibrationPage->Controls->Add(this->calibrationExampleLabel);
+			this->calibrationPage->Controls->Add(this->addCalibrationPointBtn);
+			this->calibrationPage->Controls->Add(this->calibrationPointInstructionsLabel);
+			this->calibrationPage->Controls->Add(this->shapeContainer1);
 			this->calibrationPage->Location = System::Drawing::Point(4, 22);
 			this->calibrationPage->Name = L"calibrationPage";
 			this->calibrationPage->Padding = System::Windows::Forms::Padding(3);
@@ -322,6 +365,132 @@ namespace BlinkAnalysis {
 			this->calibrationPage->TabIndex = 3;
 			this->calibrationPage->Text = L"Calibration";
 			this->calibrationPage->UseVisualStyleBackColor = true;
+			// 
+			// calibrationExampleLabel
+			// 
+			this->calibrationExampleLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->calibrationExampleLabel->Location = System::Drawing::Point(14, 190);
+			this->calibrationExampleLabel->Name = L"calibrationExampleLabel";
+			this->calibrationExampleLabel->Size = System::Drawing::Size(143, 102);
+			this->calibrationExampleLabel->TabIndex = 12;
+			this->calibrationExampleLabel->Text = L"For best calibration results try to follow the pattern to the left.";
+			// 
+			// addCalibrationPointBtn
+			// 
+			this->addCalibrationPointBtn->Anchor = System::Windows::Forms::AnchorStyles::Top;
+			this->addCalibrationPointBtn->Location = System::Drawing::Point(379, 231);
+			this->addCalibrationPointBtn->Name = L"addCalibrationPointBtn";
+			this->addCalibrationPointBtn->Size = System::Drawing::Size(109, 23);
+			this->addCalibrationPointBtn->TabIndex = 10;
+			this->addCalibrationPointBtn->Text = L"Add Point";
+			this->addCalibrationPointBtn->UseVisualStyleBackColor = true;
+			this->addCalibrationPointBtn->Click += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::addCalibrationPointBtn_Click);
+			// 
+			// calibrationPointInstructionsLabel
+			// 
+			this->calibrationPointInstructionsLabel->AutoSize = true;
+			this->calibrationPointInstructionsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 10));
+			this->calibrationPointInstructionsLabel->Location = System::Drawing::Point(13, 7);
+			this->calibrationPointInstructionsLabel->MaximumSize = System::Drawing::Size(500, 300);
+			this->calibrationPointInstructionsLabel->Name = L"calibrationPointInstructionsLabel";
+			this->calibrationPointInstructionsLabel->Size = System::Drawing::Size(491, 171);
+			this->calibrationPointInstructionsLabel->TabIndex = 9;
+			this->calibrationPointInstructionsLabel->Text = resources->GetString(L"calibrationPointInstructionsLabel.Text");
+			// 
+			// shapeContainer1
+			// 
+			this->shapeContainer1->Location = System::Drawing::Point(3, 3);
+			this->shapeContainer1->Margin = System::Windows::Forms::Padding(0);
+			this->shapeContainer1->Name = L"shapeContainer1";
+			this->shapeContainer1->Shapes->AddRange(gcnew cli::array< Microsoft::VisualBasic::PowerPacks::Shape^  >(10) {this->demoCalibrationPoint7, 
+				this->demoCalibrationPoint8, this->demoCalibrationPoint9, this->demoCalibrationPoint6, this->demoCalibrationPoint5, this->demoCalibrationPoint4, 
+				this->demoCalibrationPoint2, this->demoCalibrationPoint3, this->demoCalibrationPoint1, this->screenShape});
+			this->shapeContainer1->Size = System::Drawing::Size(523, 289);
+			this->shapeContainer1->TabIndex = 11;
+			this->shapeContainer1->TabStop = false;
+			// 
+			// demoCalibrationPoint7
+			// 
+			this->demoCalibrationPoint7->Location = System::Drawing::Point(167, 262);
+			this->demoCalibrationPoint7->Name = L"demoCalibrationPoint7";
+			this->demoCalibrationPoint7->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint8
+			// 
+			this->demoCalibrationPoint8->Location = System::Drawing::Point(238, 262);
+			this->demoCalibrationPoint8->Name = L"demoCalibrationPoint8";
+			this->demoCalibrationPoint8->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint9
+			// 
+			this->demoCalibrationPoint9->Location = System::Drawing::Point(310, 262);
+			this->demoCalibrationPoint9->Name = L"demoCalibrationPoint9";
+			this->demoCalibrationPoint9->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint6
+			// 
+			this->demoCalibrationPoint6->Location = System::Drawing::Point(310, 228);
+			this->demoCalibrationPoint6->Name = L"demoCalibrationPoint6";
+			this->demoCalibrationPoint6->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint5
+			// 
+			this->demoCalibrationPoint5->Location = System::Drawing::Point(238, 228);
+			this->demoCalibrationPoint5->Name = L"demoCalibrationPoint5";
+			this->demoCalibrationPoint5->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint4
+			// 
+			this->demoCalibrationPoint4->Location = System::Drawing::Point(167, 228);
+			this->demoCalibrationPoint4->Name = L"demoCalibrationPoint4";
+			this->demoCalibrationPoint4->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint2
+			// 
+			this->demoCalibrationPoint2->Location = System::Drawing::Point(238, 191);
+			this->demoCalibrationPoint2->Name = L"demoCalibrationPoint2";
+			this->demoCalibrationPoint2->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint3
+			// 
+			this->demoCalibrationPoint3->Location = System::Drawing::Point(310, 191);
+			this->demoCalibrationPoint3->Name = L"demoCalibrationPoint3";
+			this->demoCalibrationPoint3->Size = System::Drawing::Size(20, 20);
+			// 
+			// demoCalibrationPoint1
+			// 
+			this->demoCalibrationPoint1->Location = System::Drawing::Point(167, 191);
+			this->demoCalibrationPoint1->Name = L"demoCalibrationPoint1";
+			this->demoCalibrationPoint1->Size = System::Drawing::Size(20, 20);
+			// 
+			// screenShape
+			// 
+			this->screenShape->Location = System::Drawing::Point(156, 187);
+			this->screenShape->Name = L"screenShape";
+			this->screenShape->Size = System::Drawing::Size(183, 100);
+			// 
+			// calculatingPage
+			// 
+			this->calculatingPage->Controls->Add(this->calibrationOutputLogLabel);
+			this->calculatingPage->Location = System::Drawing::Point(4, 22);
+			this->calculatingPage->Name = L"calculatingPage";
+			this->calculatingPage->Padding = System::Windows::Forms::Padding(3);
+			this->calculatingPage->Size = System::Drawing::Size(529, 295);
+			this->calculatingPage->TabIndex = 4;
+			this->calculatingPage->Text = L"Calculating";
+			this->calculatingPage->UseVisualStyleBackColor = true;
+			// 
+			// calibrationOutputLogLabel
+			// 
+			this->calibrationOutputLogLabel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->calibrationOutputLogLabel->Location = System::Drawing::Point(3, 3);
+			this->calibrationOutputLogLabel->Multiline = true;
+			this->calibrationOutputLogLabel->Name = L"calibrationOutputLogLabel";
+			this->calibrationOutputLogLabel->ReadOnly = true;
+			this->calibrationOutputLogLabel->ScrollBars = System::Windows::Forms::ScrollBars::Both;
+			this->calibrationOutputLogLabel->Size = System::Drawing::Size(523, 289);
+			this->calibrationOutputLogLabel->TabIndex = 0;
 			// 
 			// EyeCalibrationWizardForm
 			// 
@@ -347,6 +516,10 @@ namespace BlinkAnalysis {
 			this->headSelectPage->PerformLayout();
 			this->objectSelectPage->ResumeLayout(false);
 			this->objectSelectPage->PerformLayout();
+			this->calibrationPage->ResumeLayout(false);
+			this->calibrationPage->PerformLayout();
+			this->calculatingPage->ResumeLayout(false);
+			this->calculatingPage->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
@@ -354,6 +527,8 @@ namespace BlinkAnalysis {
 //private: WizardPages^ wizardPages;
 private: EyeCalibration *eyeCalibration;
 private: int currentPage;
+		 // Abstract Delegate to change text
+	private: delegate void SetTextDelegate(String^ value);
 		// User Defined Functions
 private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -453,6 +628,10 @@ private: System::Void pageChanged(System::Object^  sender, System::EventArgs^  e
 				  this->nextBtn->Enabled = true;
 			 }
 
+			 // Calculate Calibration Points
+			 if (this->wizardPages->SelectedTab == this->calculatingPage)
+				 this->eyeCalibration->calibrate();
+
 			 // Done and change text in the next button to finished
 			 if (this->wizardPages->SelectedIndex == this->wizardPages->TabCount - 1)
 				 this->nextBtn->Text = "Finish";
@@ -517,5 +696,24 @@ private: System::Void selectAsObjectBtn_Click(System::Object^  sender, System::E
 				 this->selectedObjectLabel->Text = "No Rigid Body is selected to be the viewing object.";
 			 }
 		 }
+private: System::Void addCalibrationPointBtn_Click(System::Object^  sender, System::EventArgs^  e) {
+		 }
+public: System::Void calibrationOutputLog(String^ value) {
+			if (this->calibrationOutputLogLabel->InvokeRequired)
+			{
+				SetTextDelegate^ d = gcnew SetTextDelegate(this, &BlinkAnalysis::EyeCalibrationWizardForm::calibrationOutputLog);
+				this->Invoke(d, gcnew array<Object^> { value });
+			} else {
+				// Update Value
+				// Determine if the text being appended to calibrationOutputLogLabel exceeds the MaxLength property.
+				if((unsigned int)(calibrationOutputLogLabel->TextLength + value->Length) > (unsigned int)calibrationOutputLogLabel->MaxLength)
+				{
+					int over = (calibrationOutputLogLabel->TextLength + value->Length) - calibrationOutputLogLabel->MaxLength;
+					calibrationOutputLogLabel->Text = calibrationOutputLogLabel->Text->Substring(over);
+				}
+				// Append the text
+				this->calibrationOutputLogLabel->AppendText(value->Replace("\n", Environment::NewLine));
+			}
+		}
 };
 }

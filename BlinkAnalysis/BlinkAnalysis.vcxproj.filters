@@ -159,6 +159,9 @@
     <ClInclude Include="AddObjectForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EyeCalibrationWizardFormController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
