@@ -168,6 +168,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="EyeCalibrationWizardFormController.h" />
+    <ClInclude Include="FormController.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
