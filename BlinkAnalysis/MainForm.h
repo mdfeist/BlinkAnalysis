@@ -2266,8 +2266,7 @@ private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System:
 				helpForm->Show();
 			}
 	private: System::Void dikablisCalibrationBtn_Click(System::Object^  sender, System::EventArgs^  e) {
-				EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
-				calibrationForm->Show();
+				EyeCalibrationWizardFormController::getInstance()->Show();
 		 }
 	//////////////////////
 	// Split Container Updates
@@ -2323,9 +2322,6 @@ private: System::Void optiTrackDisConnect_Click(System::Object^  sender, System:
 	// Menu Items
 	/////////////////////
 private: System::Void eyeCalibrationToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 //EyeCalibrationWizardForm^ calibrationForm = gcnew EyeCalibrationWizardForm();
-			 //calibrationForm->Show();
-
 			 EyeCalibrationWizardFormController::getInstance()->Show();
 		 }
 private: System::Void newToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
