@@ -22,6 +22,15 @@ public:
 		return m_pInstance;
 	}
 
+	// Creates a form if not already created
+	FormType createForm() {
+		if (!form || form->IsDisposed) {
+			form = gcnew FormType();
+		}
+
+		return form;
+	}
+
 	// Create a instance of the Form if 
 	// it doesn't already exist and show it
 	void Show() { 

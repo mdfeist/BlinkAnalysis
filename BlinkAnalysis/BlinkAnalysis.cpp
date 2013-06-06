@@ -14,10 +14,9 @@ int main(array<System::String ^> ^args)
 	// Enabling Windows XP visual effects before any controls are created
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false); 
-	
-	// Create the Main Form and attach it to MainFormController
-	MainForm ^mainForm = gcnew MainForm();
-	MainFormController::getInstance()->attachMainForm(mainForm);
+
+	// Create the MainForm using MainFormController
+	MainForm^ mainForm = MainFormController::getInstance()->createForm();
 
 	// Create the ClientHandler and attach it to the global App Data
 	ClientHandler* client = new ClientHandler();
@@ -36,7 +35,7 @@ int main(array<System::String ^> ^args)
 			MessageBox::Show(gcnew String(AppData::getInstance()->getLastError()));
 
 		Marshal::FreeHGlobal((IntPtr)fileName);
-	} 
+	}
 
 	// Create the main window and run it
 	Application::Run(mainForm);

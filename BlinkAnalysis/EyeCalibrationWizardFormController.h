@@ -11,7 +11,7 @@
 
 using namespace System;
 
-public ref class EyeCalibrationWizardFormController : 
+public ref class EyeCalibrationWizardFormController sealed : 
 	public FormController<EyeCalibrationWizardFormController^ volatile, BlinkAnalysis::EyeCalibrationWizardForm^>
 {
 public:
