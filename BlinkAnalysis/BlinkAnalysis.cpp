@@ -23,7 +23,8 @@ int main(array<System::String ^> ^args)
 	ClientHandler* client = new ClientHandler();
 	AppData::getInstance()->setClient(client);
 	CaptureWorld* world = new CaptureWorld();
-	AppData::getInstance()->setWorld(world);
+	world->setName("default");
+	AppData::getInstance()->addWorld(world);
 	//TODO TESTING
 	world->addPlane(osg::Vec3(0, 0, 0.5), osg::Vec3(1, 0, 0.5), osg::Vec3(0, 1, 0.5), "");
 

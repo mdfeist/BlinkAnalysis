@@ -39,6 +39,9 @@ public:
 	// Initiate the OptiTrack view
 	void optiTrackInitDataView() { this->mainForm->optiTrackInitDataView(); }
 
+	// Update world list
+	void worldUpdateData() { this->mainForm->worldUpdateData(); }
+
 	// Attach a instance of the MainForm to the controller
 	void attachMainForm(BlinkAnalysis::MainForm ^form) { this->mainForm = form; }
 protected:
