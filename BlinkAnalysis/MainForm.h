@@ -1727,7 +1727,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 				 this->optiTrackDataGridView->VirtualMode = true;
 
 				 // Visual
-				 //AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
+				 AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
 
 				 this->visualRigidBodyListView->View = View::Details;
 				 this->visualRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
