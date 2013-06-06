@@ -55,6 +55,31 @@ private:
 	bool isEdge(std::vector<CalibrationPoint> processingPoints, Segment edge);
 	int isLeft(Segment segment, CalibrationPoint r);
 
+	struct ComparePoints : std::binary_function<CalibrationPoint, CalibrationPoint, bool> {
+		ComparePoints(EyeCalibration * cal) : _cal(cal) {}
+		bool operator() (CalibrationPoint a, CalibrationPoint b) const {
+			return _cal->isLess(a, b);
+		}
+
+		EyeCalibration * _cal;
+	};
+
+	struct ComparePointsDistanceFrom : std::binary_function<CalibrationPoint, CalibrationPoint, bool> {
+		ComparePointsDistanceFrom(EyeCalibration * cal, CalibrationPoint point) : _cal(cal), _point(point) {}
+		bool operator() (CalibrationPoint a, CalibrationPoint b) {
+			float distanceA = sqrtf(_point.x()*a.x() + _point.y()*a.y());
+			float distanceB = sqrtf(_point.x()*b.x() + _point.y()*b.y());
+
+			if (distanceA < distanceB)
+				return true;
+
+			return false;
+		}
+
+		EyeCalibration * _cal;
+		CalibrationPoint _point;
+	};
+
 public:
 	EyeCalibration(void);
 	~EyeCalibration(void) {};
@@ -70,10 +95,6 @@ public:
 	bool addPoint();
 	bool calibrate();
 	bool pointInPolygon(CalibrationPoint point);
-
-	bool operator()(CalibrationPoint a, CalibrationPoint b) {
-		return isLess(a, b);
-	}
 
 	void testPointInPolygon(CalibrationPoint point);
 	void createTestData();

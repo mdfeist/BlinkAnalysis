@@ -204,7 +204,7 @@ bool EyeCalibration::calibrate() {
 
 	// Sort Points
 	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Ordering Points ...\n");
-	std::sort (orderedPoints.begin(), orderedPoints.end(), *this);
+	std::sort (orderedPoints.begin(), orderedPoints.end(), ComparePoints(this));
 	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Ordered Points\n");
 
 	// Clearing previous segments
@@ -276,6 +276,8 @@ bool EyeCalibration::calibrate() {
 	// Group Points
 	std::vector<CalibrationPoint> convexHullPoints;
 	std::vector<CalibrationPoint> innerPoints;
+	std::vector<CalibrationPoint> innerUnknownPoints;
+	std::vector<CalibrationPoint> outerUnknownPoints;
 
 	for (unsigned int i = 0; i < orderedPoints.size(); i++) {
 		CalibrationPoint point = orderedPoints.at(i);
@@ -290,7 +292,7 @@ bool EyeCalibration::calibrate() {
 	for (unsigned int i = 0; i < innerPoints.size(); i++) {
 		CalibrationPoint point = innerPoints.at(i);
 
-		sprintf_s(buf, "Inner Point %d: (%d, %d))\n", 
+		sprintf_s(buf, "Inner Point %d: (%d, %d)\n", 
 			i + 1,
 			point.x(), point.y());
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
@@ -300,17 +302,53 @@ bool EyeCalibration::calibrate() {
 	for (unsigned int i = 0; i < convexHullPoints.size(); i++) {
 		CalibrationPoint point = convexHullPoints.at(i);
 
-		sprintf_s(buf, "Convex Hull Point %d: (%d, %d))\n", 
+		sprintf_s(buf, "Convex Hull Point %d: (%d, %d)\n", 
 			i + 1,
 			point.x(), point.y());
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
 	}
 
-	CalibrationPoint pointIn(740, 320, osg::Vec3(0.f, 0.f, 0.f));
-	testPointInPolygon(pointIn);
+	unsigned int margin =  + 2*ClientHandler::getDikablisViewingMargin();
+	for (unsigned int j = 0; j < ClientHandler::getDikablisViewingHeight() + margin; j++) {
+		for (unsigned int i = 0; i < ClientHandler::getDikablisViewingWidth() + margin; i++) {
+			int x = i - ClientHandler::getDikablisViewingMargin();
+			int y = j - ClientHandler::getDikablisViewingMargin();
 
-	CalibrationPoint pointOut(232, 2, osg::Vec3(0.f, 0.f, 0.f));
-	testPointInPolygon(pointOut);
+			// Create point
+			CalibrationPoint point(x, y, osg::Vec3(0.f, 0.f, 0.f));
+
+			// Check if point has an already known ray
+			bool alreadyKnown = false;
+			for (unsigned int i = 0; i < orderedPoints.size(); i++) {
+				CalibrationPoint knownPoint = orderedPoints.at(i);
+
+				if ((knownPoint.x() == point.x()) &&
+					(knownPoint.y() == point.y())) {
+						alreadyKnown = true;
+						break;
+				}
+			}
+
+			if (!alreadyKnown) {
+				// Check if point is inside the convex hull
+				if (pointInPolygon(point)) {
+					innerUnknownPoints.push_back(point);
+				} else {
+					outerUnknownPoints.push_back(point);
+				}
+			}
+		}
+	}
+
+	// Calculate Inner Interpolation
+	for (unsigned int i = 0; i < innerUnknownPoints.size(); i++) {
+		CalibrationPoint point = innerUnknownPoints.at(i);
+
+		std::vector<CalibrationPoint> knowPoints(orderedPoints);
+		std::sort (knowPoints.begin(), knowPoints.end(), ComparePointsDistanceFrom(this, point));
+	}
+
+	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Done\n");
 
 	return true;
 }
