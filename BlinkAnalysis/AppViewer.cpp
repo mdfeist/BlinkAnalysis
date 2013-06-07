@@ -160,9 +160,12 @@ void render(void *) {
 
 			if (redrawObj)
 			{
-				CaptureWorld *world = AppData::getInstance()->getWorld();
-				if (world)
-					world->updateObjectsNode();
+				std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
+				for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
+				{
+					itr->second->updateObjectsNode();
+					// TODO handle new worlds being added?
+				}
 
 				redrawObj = false;
 			}
@@ -201,7 +204,11 @@ void AppViewer::initAppViewer(HWND hwnd)
 		rootNode = new osg::Group();
 	
 	// Add world, a Group node containing captured objects
-	rootNode->addChild(AppData::getInstance()->getWorld()->getAsGroup());
+	std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
+	for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
+	{
+		rootNode->addChild(itr->second->getAsGroup());
+	}
 
 	// Set the traits for the rendering view
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits();

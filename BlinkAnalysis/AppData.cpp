@@ -173,3 +173,57 @@ bool AppData::saveFile() {
 
 	return true;
 }
+
+bool AppData::addWorld(CaptureWorld *world)
+{
+	int id = world->getID();
+
+	std::pair<worlds_iterator, bool> ret;
+	ret = worlds.insert(std::pair<int, CaptureWorld*>(id, world));
+
+	MainFormController::getInstance()->worldUpdateData();
+
+	return (ret.second == false) ? true : false;
+}
+
+CaptureWorld* AppData::getWorld(int id)
+{
+	worlds_iterator itr = worlds.find(id);
+	
+	if (itr == worlds.end())
+		return NULL;
+
+	return itr->second;
+}
+
+int AppData::getNumberWorlds()
+{
+	return worlds.size();
+}
+
+std::map<int, CaptureWorld*> AppData::getWorlds()
+{
+	return worlds;
+}
+
+bool AppData::removeWorld(int id)
+{
+	worlds_iterator itr = worlds.find(id);
+	
+	if (itr == worlds.end())
+		return false;
+
+	delete itr->second;
+	worlds.erase(id);
+	return true;
+}
+
+void AppData::clearWorlds()
+{
+	for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
+	{
+		delete itr->second;
+	}
+	worlds.clear();
+}
+

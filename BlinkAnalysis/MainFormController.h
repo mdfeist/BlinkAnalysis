@@ -35,5 +35,7 @@ public:
 	void optiTrackUpdateData() { this->form->optiTrackUpdateData(); }
 	// Initiate the OptiTrack view
 	void optiTrackInitDataView() { this->form->optiTrackInitDataView(); }
+	// Update world list
+	void worldUpdateData() { this->form->worldUpdateData(); }
 };
 

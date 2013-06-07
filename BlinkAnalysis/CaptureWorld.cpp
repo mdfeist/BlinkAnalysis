@@ -9,6 +9,83 @@
 #include "CaptureWorld.h"
 
 
+int CaptureWorld::_lastWorldID = 0;
+
+CaptureWorld::CaptureWorld()
+{
+	_lastObjectID = 0;
+	id = _lastWorldID++;
+
+	std::stringstream sstr;
+	sstr << "World";
+	sstr << id;
+	name = sstr.str();
+
+	_globalToLocal = new osg::Matrix();
+	_globalToLocal->makeIdentity();
+}
+
+CaptureWorld::CaptureWorld(std::string name)
+{
+	_lastObjectID = 0;
+	id = _lastWorldID++;
+
+	if (!name.empty())
+	{
+		this->name = name;
+	}
+	else
+	{
+		std::stringstream sstr;
+		sstr << "World";
+		sstr << id;
+		this->name = sstr.str();
+	}
+
+	_globalToLocal = new osg::Matrix();
+	_globalToLocal->makeIdentity();
+}
+
+CaptureWorld::CaptureWorld(std::string name, osg::Matrix* globToLoc)
+{
+	_lastObjectID = 0;
+	id = _lastWorldID++;
+
+	if (!name.empty())
+	{
+		this->name = name;
+	}
+	else
+	{
+		std::stringstream sstr;
+		sstr << "World";
+		sstr << id;
+		this->name = sstr.str();
+	}
+
+	_globalToLocal = globToLoc;
+}
+
+
+void CaptureWorld::setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects, bool updateObjects)
+{
+	delete _globalToLocal;
+	_globalToLocal = globToLoc;
+
+	if (deleteObjects)
+	{
+		clearObjects();
+		return;
+	}
+	if (updateObjects)
+	{
+		//TODO
+	}
+
+	if (node)
+		node->setMatrix(getLocalToGlobalMatrix());
+}
+
 int CaptureWorld::addObject(CaptureObject* obj)
 {
 	obj->setID(_lastObjectID);
@@ -55,12 +132,29 @@ int CaptureWorld::getNumberObjects()
 	return _objects.size();
 }
 
+CaptureObject* CaptureWorld::getObject(int id)
+{
+	objects_iterator itr = _objects.find(id);
+	
+	if (itr == _objects.end())
+		return NULL;
+
+	return itr->second;
+}
+
 // TODO: assumed static for now
 CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name)
 {
 	CaptureObject* obj = new CaptureObject();
 	// if name is empty string, one will be generated in addObject
 	obj->setName(name);
+
+	if (objectsRelative)
+	{
+		corner = corner * *_globalToLocal;
+		pt1 = pt1 * *_globalToLocal;
+		pt2 = pt2 * *_globalToLocal;
+	}
 
 	// set up plane vertices
 	osg::Vec3 opposite = pt1 + pt2 - corner;
@@ -90,10 +184,15 @@ CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3
 }
 
 
-osg::Group* CaptureWorld::getAsGroup()
+osg::MatrixTransform* CaptureWorld::getAsGroup()
 {
 	if (!node)
-		node = new osg::Group();
+		node = new osg::MatrixTransform();
+
+	if (objectsRelative)
+		node->setMatrix(getLocalToGlobalMatrix());
+	else
+		node->setMatrix(osg::Matrix::identity());
 
 	node->removeChild(0, node->getNumChildren());
 	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)

@@ -18,7 +18,7 @@
 
 #include "Dikablis.h"
 #include "DikablisHelp.h"
-#include "AddObjectForm.h"
+//#include "AddObjectForm.h"
 #include "EyeCalibrationWizardFormController.h"
 #include "AppData.h"
 #include "AppViewer.h"
@@ -177,7 +177,7 @@ private: System::Windows::Forms::SplitContainer^  visualMainSplitContainer;
 private: System::Windows::Forms::SplitContainer^  visualSplitContainer;
 private: System::Windows::Forms::TextBox^  visualOutputLogTextBox;
 private: System::Windows::Forms::Label^  visualOutputLogLabel;
-private: System::Windows::Forms::Label^  visualRBLabel;
+
 
 
 
@@ -198,21 +198,26 @@ private: System::Windows::Forms::ListView^  visualRigidBodyListView;
 private: System::Windows::Forms::Button^  dikablisCalibrationBtn;
 private: System::Windows::Forms::ToolStripMenuItem^  calibrationToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  eyeCalibrationToolStripMenuItem;
-private: System::Windows::Forms::ListView^  visualObjectsListView;
 
-private: System::Windows::Forms::Label^  visualObjectsLabel;
+
+
 private: System::Windows::Forms::ToolStripMenuItem^  objectToolStripMenuItem;
 
 
 
 private: System::Windows::Forms::ToolStripMenuItem^  addObjectToolStripMenuItem;
 
-private: System::Windows::Forms::ListView^  visualMarkersListView;
 
-private: System::Windows::Forms::Label^  visualMarkersLabel;
+
+
 private: System::Windows::Forms::ContextMenuStrip^  rigidBodyToolContextMenu;
 
 private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStripMenuItem;
+private: System::Windows::Forms::TabControl^  tabControl1;
+private: System::Windows::Forms::TabPage^  rigidBodyTabPage;
+private: System::Windows::Forms::TabPage^  worldTabPage;
+private: System::Windows::Forms::TabPage^  objectTabPage;
+private: System::Windows::Forms::ComboBox^  worldComboBox;
 
 
 
@@ -310,12 +315,12 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			this->visualSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->visualOutputLogTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->visualOutputLogLabel = (gcnew System::Windows::Forms::Label());
-			this->visualMarkersListView = (gcnew System::Windows::Forms::ListView());
-			this->visualMarkersLabel = (gcnew System::Windows::Forms::Label());
-			this->visualObjectsListView = (gcnew System::Windows::Forms::ListView());
-			this->visualObjectsLabel = (gcnew System::Windows::Forms::Label());
+			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
+			this->rigidBodyTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualRigidBodyListView = (gcnew System::Windows::Forms::ListView());
-			this->visualRBLabel = (gcnew System::Windows::Forms::Label());
+			this->worldTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
+			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -355,6 +360,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->BeginInit();
 			this->visualSplitContainer->Panel2->SuspendLayout();
 			this->visualSplitContainer->SuspendLayout();
+			this->tabControl1->SuspendLayout();
+			this->rigidBodyTabPage->SuspendLayout();
+			this->worldTabPage->SuspendLayout();
 			this->menuStrip->SuspendLayout();
 			this->rigidBodyToolContextMenu->SuspendLayout();
 			this->SuspendLayout();
@@ -1267,12 +1275,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			// visualMainSplitContainer.Panel2
 			// 
 			this->visualMainSplitContainer->Panel2->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualMarkersListView);
-			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualMarkersLabel);
-			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualObjectsListView);
-			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualObjectsLabel);
-			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualRigidBodyListView);
-			this->visualMainSplitContainer->Panel2->Controls->Add(this->visualRBLabel);
+			this->visualMainSplitContainer->Panel2->Controls->Add(this->tabControl1);
 			this->visualMainSplitContainer->Panel2MinSize = 250;
 			this->visualMainSplitContainer->Size = System::Drawing::Size(770, 503);
 			this->visualMainSplitContainer->SplitterDistance = 493;
@@ -1327,61 +1330,27 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			this->visualOutputLogLabel->TabIndex = 0;
 			this->visualOutputLogLabel->Text = L"Output Log";
 			// 
-			// visualMarkersListView
+			// tabControl1
 			// 
-			this->visualMarkersListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
-			this->visualMarkersListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->visualMarkersListView->FullRowSelect = true;
-			this->visualMarkersListView->LabelWrap = false;
-			this->visualMarkersListView->Location = System::Drawing::Point(6, 408);
-			this->visualMarkersListView->MultiSelect = false;
-			this->visualMarkersListView->Name = L"visualMarkersListView";
-			this->visualMarkersListView->Size = System::Drawing::Size(262, 89);
-			this->visualMarkersListView->TabIndex = 5;
-			this->visualMarkersListView->TileSize = System::Drawing::Size(100, 20);
-			this->visualMarkersListView->UseCompatibleStateImageBehavior = false;
-			this->visualMarkersListView->View = System::Windows::Forms::View::SmallIcon;
-			this->visualMarkersListView->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::markersListView_SelectedIndexChanged);
+			this->tabControl1->Controls->Add(this->rigidBodyTabPage);
+			this->tabControl1->Controls->Add(this->worldTabPage);
+			this->tabControl1->Controls->Add(this->objectTabPage);
+			this->tabControl1->Location = System::Drawing::Point(3, 3);
+			this->tabControl1->Name = L"tabControl1";
+			this->tabControl1->SelectedIndex = 0;
+			this->tabControl1->Size = System::Drawing::Size(270, 500);
+			this->tabControl1->TabIndex = 6;
 			// 
-			// visualMarkersLabel
+			// rigidBodyTabPage
 			// 
-			this->visualMarkersLabel->AutoSize = true;
-			this->visualMarkersLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->visualMarkersLabel->Location = System::Drawing::Point(3, 376);
-			this->visualMarkersLabel->Name = L"visualMarkersLabel";
-			this->visualMarkersLabel->Size = System::Drawing::Size(109, 17);
-			this->visualMarkersLabel->TabIndex = 4;
-			this->visualMarkersLabel->Text = L"Labeled Markers";
-			// 
-			// visualObjectsListView
-			// 
-			this->visualObjectsListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
-			this->visualObjectsListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->visualObjectsListView->FullRowSelect = true;
-			this->visualObjectsListView->LabelWrap = false;
-			this->visualObjectsListView->Location = System::Drawing::Point(6, 269);
-			this->visualObjectsListView->MultiSelect = false;
-			this->visualObjectsListView->Name = L"visualObjectsListView";
-			this->visualObjectsListView->Size = System::Drawing::Size(262, 85);
-			this->visualObjectsListView->TabIndex = 3;
-			this->visualObjectsListView->TileSize = System::Drawing::Size(100, 20);
-			this->visualObjectsListView->UseCompatibleStateImageBehavior = false;
-			this->visualObjectsListView->View = System::Windows::Forms::View::SmallIcon;
-			this->visualObjectsListView->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::objectsListView_SelectedIndexChanged);
-			// 
-			// visualObjectsLabel
-			// 
-			this->visualObjectsLabel->AutoSize = true;
-			this->visualObjectsLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->visualObjectsLabel->Location = System::Drawing::Point(3, 239);
-			this->visualObjectsLabel->Name = L"visualObjectsLabel";
-			this->visualObjectsLabel->Size = System::Drawing::Size(114, 17);
-			this->visualObjectsLabel->TabIndex = 2;
-			this->visualObjectsLabel->Text = L"Captured Objects";
+			this->rigidBodyTabPage->Controls->Add(this->visualRigidBodyListView);
+			this->rigidBodyTabPage->Location = System::Drawing::Point(4, 22);
+			this->rigidBodyTabPage->Name = L"rigidBodyTabPage";
+			this->rigidBodyTabPage->Padding = System::Windows::Forms::Padding(3);
+			this->rigidBodyTabPage->Size = System::Drawing::Size(262, 474);
+			this->rigidBodyTabPage->TabIndex = 0;
+			this->rigidBodyTabPage->Text = L"Rigid Body";
+			this->rigidBodyTabPage->UseVisualStyleBackColor = true;
 			// 
 			// visualRigidBodyListView
 			// 
@@ -1390,26 +1359,46 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->visualRigidBodyListView->FullRowSelect = true;
 			this->visualRigidBodyListView->LabelWrap = false;
-			this->visualRigidBodyListView->Location = System::Drawing::Point(6, 48);
+			this->visualRigidBodyListView->Location = System::Drawing::Point(6, 6);
 			this->visualRigidBodyListView->MultiSelect = false;
 			this->visualRigidBodyListView->Name = L"visualRigidBodyListView";
-			this->visualRigidBodyListView->Size = System::Drawing::Size(262, 172);
+			this->visualRigidBodyListView->Size = System::Drawing::Size(250, 435);
 			this->visualRigidBodyListView->TabIndex = 1;
 			this->visualRigidBodyListView->TileSize = System::Drawing::Size(100, 20);
 			this->visualRigidBodyListView->UseCompatibleStateImageBehavior = false;
 			this->visualRigidBodyListView->View = System::Windows::Forms::View::SmallIcon;
 			this->visualRigidBodyListView->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::visualRigidBodyListView_MouseClick);
 			// 
-			// visualRBLabel
+			// worldTabPage
 			// 
-			this->visualRBLabel->AutoSize = true;
-			this->visualRBLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->visualRBLabel->Location = System::Drawing::Point(3, 9);
-			this->visualRBLabel->Name = L"visualRBLabel";
-			this->visualRBLabel->Size = System::Drawing::Size(85, 17);
-			this->visualRBLabel->TabIndex = 0;
-			this->visualRBLabel->Text = L"Rigid Bodies";
+			this->worldTabPage->Controls->Add(this->worldComboBox);
+			this->worldTabPage->Location = System::Drawing::Point(4, 22);
+			this->worldTabPage->Name = L"worldTabPage";
+			this->worldTabPage->Padding = System::Windows::Forms::Padding(3);
+			this->worldTabPage->Size = System::Drawing::Size(262, 474);
+			this->worldTabPage->TabIndex = 1;
+			this->worldTabPage->Text = L"World";
+			this->worldTabPage->UseVisualStyleBackColor = true;
+			// 
+			// worldComboBox
+			// 
+			this->worldComboBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->worldComboBox->ForeColor = System::Drawing::SystemColors::InfoText;
+			this->worldComboBox->FormattingEnabled = true;
+			this->worldComboBox->Location = System::Drawing::Point(6, 6);
+			this->worldComboBox->Name = L"worldComboBox";
+			this->worldComboBox->Size = System::Drawing::Size(198, 21);
+			this->worldComboBox->TabIndex = 0;
+			// 
+			// objectTabPage
+			// 
+			this->objectTabPage->Location = System::Drawing::Point(4, 22);
+			this->objectTabPage->Name = L"objectTabPage";
+			this->objectTabPage->Padding = System::Windows::Forms::Padding(3);
+			this->objectTabPage->Size = System::Drawing::Size(262, 474);
+			this->objectTabPage->TabIndex = 2;
+			this->objectTabPage->Text = L"Object";
+			this->objectTabPage->UseVisualStyleBackColor = true;
 			// 
 			// menuStrip
 			// 
@@ -1484,7 +1473,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			// addObjectToolStripMenuItem
 			// 
 			this->addObjectToolStripMenuItem->Name = L"addObjectToolStripMenuItem";
-			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(134, 22);
 			this->addObjectToolStripMenuItem->Text = L"Add Object";
 			this->addObjectToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addObjectToolStripMenuItem_Click);
 			// 
@@ -1546,13 +1535,15 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 			this->visualTabPage->ResumeLayout(false);
 			this->visualMainSplitContainer->Panel1->ResumeLayout(false);
 			this->visualMainSplitContainer->Panel2->ResumeLayout(false);
-			this->visualMainSplitContainer->Panel2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualMainSplitContainer))->EndInit();
 			this->visualMainSplitContainer->ResumeLayout(false);
 			this->visualSplitContainer->Panel2->ResumeLayout(false);
 			this->visualSplitContainer->Panel2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->EndInit();
 			this->visualSplitContainer->ResumeLayout(false);
+			this->tabControl1->ResumeLayout(false);
+			this->rigidBodyTabPage->ResumeLayout(false);
+			this->worldTabPage->ResumeLayout(false);
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
 			this->rigidBodyToolContextMenu->ResumeLayout(false);
@@ -1732,18 +1723,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  setAsRigidBodyToolToolStrip
 				 this->visualRigidBodyListView->View = View::Details;
 				 this->visualRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
 				 this->visualRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
-
-				 this->visualObjectsListView->View = View::Details;
-				 this->visualObjectsListView->Columns->Add("ID", 50, HorizontalAlignment::Left ); 
-				 this->visualObjectsListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
-
-				 this->visualMarkersListView->VirtualMode = true;
-				 this->visualMarkersListView->RetrieveVirtualItem += gcnew RetrieveVirtualItemEventHandler(this, &MainForm::markersListView_RetrieveVitualItem);
-				 this->visualMarkersListView->View = View::Details;
-				 this->visualMarkersListView->Columns->Add("ID", 50, HorizontalAlignment::Left ); 
-				 this->visualMarkersListView->Columns->Add("x", 50, HorizontalAlignment::Left ); 
- 				 this->visualMarkersListView->Columns->Add("y", 50, HorizontalAlignment::Left ); 
- 				 this->visualMarkersListView->Columns->Add("z", 50, HorizontalAlignment::Left ); 
 
 				 this->rigidBodyToolContextMenu->Close();
 			 }
@@ -2001,32 +1980,9 @@ _WATCH_MEMORY
 					// labeled markers
 					std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
 
-					this->visualMarkersListView->VirtualListSize = (unsigned int) markerMap->size();
-
-					//this->markersListView->Items->Clear();
-
 					for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
 					{
 						this->optiTrackLabeledMarkerVector->push_back(it->second);
-
-					}
-				}
-
-				CaptureWorld* world = AppData::getInstance()->getWorld();
-				if (world)
-				{
-					std::map<int, CaptureObject*> objectMap = world->getObjects();
-
-					this->visualObjectsListView->Items->Clear();
-					
-					for (objects_iterator it = objectMap.begin(); it != objectMap.end(); it++)
-					{
-						// Add Capture Object to list
-						String^ objectID = Convert::ToString(it->second->getID());
-						String^ objectName = gcnew String(it->second->getName().c_str());
-						ListViewItem^ listViewItem = gcnew ListViewItem(objectID); 
-						listViewItem->SubItems->Add(objectName);
-						this->visualObjectsListView->Items->Add(listViewItem);
 					}
 				}
 			}
@@ -2098,43 +2054,26 @@ _WATCH_MEMORY
 					} else if (this->mainTabControl->SelectedIndex == 2) { // Visual tab
 						// Check if the ListView needs invoke.
 						// If not then update the view.
-						if (this->visualMarkersListView->InvokeRequired) {
-							SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::optiTrackUpdateData);
-							BeginInvoke(d, nullptr);
-						} else {
-							// Get client form the AppData
-							ClientHandler* client = AppData::getInstance()->getClient();
+						// Get client form the AppData
+						ClientHandler* client = AppData::getInstance()->getClient();
 
-							// Check if the client is created and not NULL
-							if (client)
+						// Check if the client is created and not NULL
+						if (client)
+						{
+							// Lock the client
+							if (!client->lock())
+								return;
+
+							// update the vector list
+							std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
+							this->optiTrackLabeledMarkerVector->clear();
+							for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
 							{
-								// Lock the client
-								if (!client->lock())
-									return;
-
-								// update the vector list
-								std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
-								this->visualMarkersListView->VirtualListSize = (unsigned int) markerMap->size();
-								this->optiTrackLabeledMarkerVector->clear();
-								for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
-								{
-									this->optiTrackLabeledMarkerVector->push_back(it->second);
-								}
-
-								// Try to update the view
-								try {
-									this->visualMarkersListView->SuspendLayout();
-									this->visualMarkersListView->Invalidate();
-									this->visualMarkersListView->ResumeLayout();
-								}
-								catch(Exception^) {
-									Debug::WriteLine("Error: Exception when trying to redraw the labeled markers ListView.");
-								}
-
-								// Unlock client
-								client->unlock();
+								this->optiTrackLabeledMarkerVector->push_back(it->second);
 							}
 
+							// Unlock client
+							client->unlock();
 						}
 					}
 				} // End of update
@@ -2337,12 +2276,12 @@ private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, Sys
 			 this->saveAsProject();
 		 }
 private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			AddObjectForm^ objectForm = gcnew AddObjectForm();
+/*			AddObjectForm^ objectForm = gcnew AddObjectForm();
 			objectForm->UpdateObject += gcnew System::EventHandler(this, &MainForm::AddObjectForm_UpdateObject);
-			objectForm->Show();
+			objectForm->Show();*/
 		 }
 private: System::Void AddObjectForm_UpdateObject(System::Object^  sender, System::EventArgs^  e) {
-			CaptureWorld* world = AppData::getInstance()->getWorld();
+			/*CaptureWorld* world = AppData::getInstance()->getWorld();
 			if (world)
 			{
 				std::map<int, CaptureObject*> objectMap = world->getObjects();
@@ -2358,11 +2297,11 @@ private: System::Void AddObjectForm_UpdateObject(System::Object^  sender, System
 					listViewItem->SubItems->Add(objectName);
 					this->visualObjectsListView->Items->Add(listViewItem);
 				}
-			}
+			}*/
 		 }
 private: System::Void objectsListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
-private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+/*private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 			int toggled = -1;
 
 			for (std::vector<Marker*>::iterator itr = optiTrackLabeledMarkerVector->begin();
@@ -2376,7 +2315,7 @@ private: System::Void markersListView_SelectedIndexChanged(System::Object^ sende
 			{
 				optiTrackLabeledMarkerVector->at(safe_cast<int>(num->Current))->select();
 			}
-		}
+		}*/
 private: System::Void visualRigidBodyListView_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 if (e->Button == ::MouseButtons::Right)
 			 {
@@ -2396,6 +2335,53 @@ private: System::Void setAsRigidBodyToolToolStripMenuItem_Click(System::Object^ 
 			 setRigidBodyTool = -1;
 			 this->rigidBodyToolContextMenu->Close();
 		 }
+
+	//////////////////////
+	// Capture World and Objects
+	/////////////////////
+public: System::Void worldUpdateData() {
+			static bool isUpdatingWorlds = false;
+				
+			if (isUpdatingWorlds)
+				return;
+
+			isUpdatingWorlds = true;
+
+			// Start update
+			// Check if the main tab control needs invoke.
+			// If not then check to see if the visual tab
+			// is selected.
+			if (this->mainTabControl->InvokeRequired) 
+			{
+				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::worldUpdateData);
+				BeginInvoke(d, nullptr);
+			} 
+			else 
+			{
+				if (this->worldComboBox->InvokeRequired) 
+				{
+					SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::worldUpdateData);
+					BeginInvoke(d, nullptr);
+				} 
+				else 
+				{
+					this->worldComboBox->Items->Clear();
+					std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
+					for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
+					{
+						String^ worldName = gcnew String(itr->second->getName().c_str());
+						worldName += " (";
+						worldName += itr->first.ToString();
+						worldName += ")";
+						this->worldComboBox->Items->Add(worldName);
+					}
+				}
+			}
+
+			// End of update
+			isUpdatingWorlds = false;
+		}
+
 };
 }
 
