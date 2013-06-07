@@ -72,8 +72,8 @@ private:
 	struct ComparePointsDistanceFrom : std::binary_function<CalibrationPoint, CalibrationPoint, bool> {
 		ComparePointsDistanceFrom(EyeCalibration * cal, CalibrationPoint point) : _cal(cal), _point(point) {}
 		bool operator() (CalibrationPoint a, CalibrationPoint b) {
-			float distanceA = sqrtf(_point.x()*a.x() + _point.y()*a.y());
-			float distanceB = sqrtf(_point.x()*b.x() + _point.y()*b.y());
+			float distanceA = (_point.x()-a.x())*(_point.x()-a.x()) + (_point.y()-a.y())*(_point.y()-a.y());
+			float distanceB = (_point.x()-b.x())*(_point.x()-b.x()) + (_point.y()-b.y())*(_point.y()-b.y());
 
 			if (distanceA < distanceB)
 				return true;
@@ -99,7 +99,7 @@ public:
 
 	bool addPoint();
 	bool calibrate();
-	bool pointInPolygon(std::vector<Segment> hull, CalibrationPoint point);
+	int pointInPolygon(std::vector<Segment> hull, CalibrationPoint point);
 
 	void testPointInPolygon(CalibrationPoint point);
 	void createTestData();

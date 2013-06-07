@@ -288,7 +288,7 @@ bool EyeCalibration::calibrate() {
 	for (unsigned int i = 0; i < orderedPoints.size(); i++) {
 		CalibrationPoint point = orderedPoints.at(i);
 
-		if (pointInPolygon(convexHull, point))
+		if (pointInPolygon(convexHull, point) < 0)
 			innerPoints.push_back(point);
 		else
 			convexHullPoints.push_back(point);
@@ -337,7 +337,7 @@ bool EyeCalibration::calibrate() {
 
 			if (!alreadyKnown) {
 				// Check if point is inside the convex hull
-				if (pointInPolygon(convexHull, point)) {
+				if (pointInPolygon(convexHull, point) <= 0) {
 					innerUnknownPoints.push_back(point);
 				} else {
 					outerUnknownPoints.push_back(point);
@@ -346,12 +346,101 @@ bool EyeCalibration::calibrate() {
 		}
 	}
 
+	// Print Convex Hull
+	for (unsigned int j = 0; j < ClientHandler::getDikablisViewingHeight() + margin; j+=20) {
+		for (unsigned int i = 0; i < ClientHandler::getDikablisViewingWidth() + margin; i+=20) {
+			int x = i - ClientHandler::getDikablisViewingMargin();
+			int y = j - ClientHandler::getDikablisViewingMargin();
+
+			// Create point
+			CalibrationPoint point(x, y, osg::Vec3(0.f, 0.f, 0.f));
+
+			// Check if point is inside the convex hull
+			if (pointInPolygon(convexHull, point) <= 0) {
+				EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("1");
+			} else {
+				EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("0");
+			}
+		}
+		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("\n");
+	}
+
 	// Calculate Inner Interpolation
+	std::vector<CalibrationPoint> boundingPoints;
+	std::vector<Segment> subHull;
 	for (unsigned int i = 0; i < innerUnknownPoints.size(); i++) {
 		CalibrationPoint point = innerUnknownPoints.at(i);
 
-		std::vector<CalibrationPoint> knowPoints(orderedPoints);
-		std::sort (knowPoints.begin(), knowPoints.end(), ComparePointsDistanceFrom(this, point));
+		bool foundBoundingHull = false;
+
+		if (boundingPoints.size() >= 4 && subHull.size() != 0) {
+			if (pointInPolygon(subHull, point) <= 0) {
+				foundBoundingHull = true;
+			}
+		}
+
+		if (!foundBoundingHull) {
+			std::vector<CalibrationPoint> possibleBoundingPoints(orderedPoints);
+			std::sort (possibleBoundingPoints.begin(), possibleBoundingPoints.end(), ComparePointsDistanceFrom(this, point));
+
+			unsigned int pi = 0;
+			while (pi < 4) {
+				CalibrationPoint boundingPoint = possibleBoundingPoints.at(pi);
+				boundingPoints.push_back(boundingPoint);
+
+				pi++;
+			}
+
+			while (!foundBoundingHull) {
+				subHull = calculateConvexHull(boundingPoints);
+				if (pointInPolygon(subHull, point) <= 0) {
+					foundBoundingHull = true;
+				} else {
+
+					for (int _times = 0; _times < 2; _times++) {
+
+						for (int _rm = boundingPoints.size() - 1; _rm >= 0; _rm--) {
+							if (pointInPolygon(convexHull, boundingPoints.at(_rm)) < 0) {
+								boundingPoints.erase(boundingPoints.begin() + _rm);
+								break;
+							}
+						}
+					}
+
+					if (boundingPoints.size() >= 4) {
+						sprintf_s(buf, "Point %d: (%d, %d) pi %d\n", 
+							i + 1,
+							point.x(), point.y(), pi + 1);
+						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
+
+						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Failed: Unable to create bounding box for point.\n");
+						break;
+					}
+
+					while (pi < possibleBoundingPoints.size() && boundingPoints.size() < 4) {
+						boundingPoints.push_back(possibleBoundingPoints.at(pi));
+						pi++;
+					}
+
+					if (boundingPoints.size() < 4) {
+					
+						sprintf_s(buf, "Point %d: (%d, %d) pi %d\n", 
+							i + 1,
+							point.x(), point.y(), pi + 1);
+						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
+
+
+						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Unable to create bounding box for point.\n");
+						break;
+					}
+				}
+			}
+		}
+		
+		
+
+		if (!foundBoundingHull)
+			continue;
 	}
 
 	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Done\n");
@@ -359,7 +448,7 @@ bool EyeCalibration::calibrate() {
 	return true;
 }
 
-bool EyeCalibration::pointInPolygon(std::vector<Segment> hull, CalibrationPoint point) {
+int EyeCalibration::pointInPolygon(std::vector<Segment> hull, CalibrationPoint point) {
 
 	unsigned int n = hull.size();
 
@@ -371,17 +460,18 @@ bool EyeCalibration::pointInPolygon(std::vector<Segment> hull, CalibrationPoint 
 	{ 
 		Segment segment = hull.at(i);
 
-		if(isLeft(segment, point) >= 0)
-			return false;
+		int left = isLeft(segment, point);
+		if(left >= 0)
+			return left;
 	}
 
-	return true;
+	return -1;
 }
 
 void EyeCalibration::testPointInPolygon(CalibrationPoint point) {
 	char buf[512];
 
-	if (pointInPolygon(convexHull, point)) {
+	if (pointInPolygon(convexHull, point) < 0) {
 		sprintf_s(buf, "Point (%d, %d) is inside.\n", point.x(), point.y()); 
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
 	} else {
