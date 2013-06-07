@@ -37,6 +37,13 @@ namespace BlinkAnalysis {
 	using namespace System::Reflection;
 	using namespace msclr::interop;
 
+	enum class worldProperty 
+	{ 
+		ID = 0,
+		NAME = 1,
+		OBJECTS = 2,
+	};
+
 	/// <summary>
 	/// Summary for MainForm
 	/// </summary>
@@ -218,6 +225,15 @@ private: System::Windows::Forms::TabPage^  rigidBodyTabPage;
 private: System::Windows::Forms::TabPage^  worldTabPage;
 private: System::Windows::Forms::TabPage^  objectTabPage;
 private: System::Windows::Forms::ComboBox^  worldComboBox;
+private: System::Windows::Forms::Button^  worldAddButton;
+
+private: System::Windows::Forms::DataGridView^  worldGridView;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldPropertyColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
+
+
+
+
 
 
 
@@ -319,6 +335,10 @@ private: System::Windows::Forms::ComboBox^  worldComboBox;
 			this->rigidBodyTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualRigidBodyListView = (gcnew System::Windows::Forms::ListView());
 			this->worldTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->worldGridView = (gcnew System::Windows::Forms::DataGridView());
+			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->worldAddButton = (gcnew System::Windows::Forms::Button());
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
@@ -363,6 +383,7 @@ private: System::Windows::Forms::ComboBox^  worldComboBox;
 			this->tabControl1->SuspendLayout();
 			this->rigidBodyTabPage->SuspendLayout();
 			this->worldTabPage->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->worldGridView))->BeginInit();
 			this->menuStrip->SuspendLayout();
 			this->rigidBodyToolContextMenu->SuspendLayout();
 			this->SuspendLayout();
@@ -1371,6 +1392,8 @@ private: System::Windows::Forms::ComboBox^  worldComboBox;
 			// 
 			// worldTabPage
 			// 
+			this->worldTabPage->Controls->Add(this->worldGridView);
+			this->worldTabPage->Controls->Add(this->worldAddButton);
 			this->worldTabPage->Controls->Add(this->worldComboBox);
 			this->worldTabPage->Location = System::Drawing::Point(4, 22);
 			this->worldTabPage->Name = L"worldTabPage";
@@ -1380,15 +1403,49 @@ private: System::Windows::Forms::ComboBox^  worldComboBox;
 			this->worldTabPage->Text = L"World";
 			this->worldTabPage->UseVisualStyleBackColor = true;
 			// 
+			// worldGridView
+			// 
+			this->worldGridView->AllowUserToAddRows = false;
+			this->worldGridView->AllowUserToDeleteRows = false;
+			this->worldGridView->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->worldGridView->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->worldGridView->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->worldPropertyColumn, 
+				this->worldValueColumn});
+			this->worldGridView->Location = System::Drawing::Point(6, 45);
+			this->worldGridView->Name = L"worldGridView";
+			this->worldGridView->Size = System::Drawing::Size(250, 423);
+			this->worldGridView->TabIndex = 3;
+			// 
+			// worldPropertyColumn
+			// 
+			this->worldPropertyColumn->HeaderText = L"Property";
+			this->worldPropertyColumn->Name = L"worldPropertyColumn";
+			this->worldPropertyColumn->ReadOnly = true;
+			// 
+			// worldValueColumn
+			// 
+			this->worldValueColumn->HeaderText = L"Value";
+			this->worldValueColumn->Name = L"worldValueColumn";
+			// 
+			// worldAddButton
+			// 
+			this->worldAddButton->Location = System::Drawing::Point(200, 6);
+			this->worldAddButton->Name = L"worldAddButton";
+			this->worldAddButton->Size = System::Drawing::Size(56, 23);
+			this->worldAddButton->TabIndex = 2;
+			this->worldAddButton->Text = L"Add";
+			this->worldAddButton->UseVisualStyleBackColor = true;
+			// 
 			// worldComboBox
 			// 
 			this->worldComboBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->worldComboBox->ForeColor = System::Drawing::SystemColors::InfoText;
 			this->worldComboBox->FormattingEnabled = true;
-			this->worldComboBox->Location = System::Drawing::Point(6, 6);
+			this->worldComboBox->Location = System::Drawing::Point(6, 8);
 			this->worldComboBox->Name = L"worldComboBox";
-			this->worldComboBox->Size = System::Drawing::Size(198, 21);
+			this->worldComboBox->Size = System::Drawing::Size(188, 21);
 			this->worldComboBox->TabIndex = 0;
+			this->worldComboBox->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::worldComboBox_SelectedIndexChanged);
 			// 
 			// objectTabPage
 			// 
@@ -1544,6 +1601,7 @@ private: System::Windows::Forms::ComboBox^  worldComboBox;
 			this->tabControl1->ResumeLayout(false);
 			this->rigidBodyTabPage->ResumeLayout(false);
 			this->worldTabPage->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->worldGridView))->EndInit();
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
 			this->rigidBodyToolContextMenu->ResumeLayout(false);
@@ -2381,7 +2439,55 @@ public: System::Void worldUpdateData() {
 			// End of update
 			isUpdatingWorlds = false;
 		}
+private: System::Void worldGridView_displayWorld(CaptureWorld* world) {
+			 if (!world) return;
 
+			 this->worldGridView->Rows->Clear();
+			 array<String^>^ row;
+
+			 // NOTE: this has to match the order in the enum worldProperty
+			 row = gcnew array<String^> { "ID", world->getID().ToString() };
+			 worldGridView->Rows->Add(row);
+
+			 row = gcnew array<String^> { "Name", gcnew String(world->getName().c_str()) };
+			 worldGridView->Rows->Add(row);
+
+			 row = gcnew array<String^> { "Objects", world->getNumberObjects().ToString() };
+			 worldGridView->Rows->Add(row);
+
+			 worldGridView->Rows[(int)worldProperty::ID]->ReadOnly = true;
+			 worldGridView->Rows[(int)worldProperty::OBJECTS]->ReadOnly = true;
+
+			 // if default world
+			 if (world->getID() == 0)
+			 {
+				 worldGridView->Rows[(int)worldProperty::NAME]->ReadOnly = true;				 
+			 }
+		 }
+private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (!worldComboBox->SelectedItem)
+				 return;
+
+			 String^ text = worldComboBox->SelectedItem->ToString();
+			 int id = worldExtractID(text);
+			 if (id >= 0)
+			 {
+				 CaptureWorld* world = AppData::getInstance()->getWorld(id);
+				 if (world)
+					 worldGridView_displayWorld(world);
+			 }
+		 }
+
+private: int worldExtractID(String^ str) {
+			 array<String^>^ split = str->Split(gcnew array<wchar_t> {'(', ')'});
+
+			 int result;
+			 // id contained in second to last element
+			 if (Int32::TryParse(split[split->Length - 2], result))
+				 return result;
+			 else
+				 return -1;
+		 }
 };
 }
 
