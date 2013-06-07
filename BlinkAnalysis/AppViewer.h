@@ -8,6 +8,7 @@
 #pragma once
 #include "stdafx.h"
 #include <Windows.h>
+#include <osg/Node>
 
 namespace AppViewer {
 	// Creates a new OSG view in the given windows view
@@ -16,6 +17,7 @@ namespace AppViewer {
 	void stopAppViewer();
 	// Pause rendering when not visible
 	void setVisible(bool bVisible);
-	// Updates list of objects
-	void redrawObjects();
+	// Add/remove nodes from scene
+	bool addNodeToViewer(osg::Node* node);
+	bool removeNodeFromViewer(osg::Node* node);
 };
