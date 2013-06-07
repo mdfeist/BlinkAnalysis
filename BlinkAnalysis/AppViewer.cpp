@@ -158,6 +158,7 @@ void render(void *) {
 				}
 			}
 
+			// TODO change this look at the Google Doc
 			if (redrawObj)
 			{
 				std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
