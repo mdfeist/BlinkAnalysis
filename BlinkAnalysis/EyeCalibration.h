@@ -26,18 +26,21 @@ private:
 
 	class Segment {
 	private:
-		CalibrationPoint p1, p2;
+		CalibrationPoint _p1, _p2;
 	public:
 		Segment() {}
 		Segment(CalibrationPoint from, CalibrationPoint to) {
-			this->p1 = from;
-			this->p2 = to;
+			_p1 = from;
+			_p2 = to;
 		}
 
-		int x1() { return this->p1.x(); }
-		int y1() { return this->p1.y(); }
-		int x2() { return this->p2.x(); }
-		int y2() { return this->p2.y(); }
+		CalibrationPoint p1() { return _p1; }
+		CalibrationPoint p2() { return _p2; }
+
+		int x1() { return _p1.x(); }
+		int y1() { return _p1.y(); }
+		int x2() { return _p2.x(); }
+		int y2() { return _p2.y(); }
 	};
 
 	int rbHeadId;
@@ -47,13 +50,15 @@ private:
 	char* getNameById(int id);
 
 	std::vector<CalibrationPoint> calibrationPoints;
-	std::vector<Segment> segments;
+	std::vector<Segment> convexHull;
 
 	int center_x, center_y;
 
 	bool isLess(CalibrationPoint a, CalibrationPoint b);
 	bool isEdge(std::vector<CalibrationPoint> processingPoints, Segment edge);
 	int isLeft(Segment segment, CalibrationPoint r);
+
+	std::vector<Segment> calculateConvexHull(std::vector<CalibrationPoint> processingPoints);
 
 	struct ComparePoints : std::binary_function<CalibrationPoint, CalibrationPoint, bool> {
 		ComparePoints(EyeCalibration * cal) : _cal(cal) {}
@@ -94,7 +99,7 @@ public:
 
 	bool addPoint();
 	bool calibrate();
-	bool pointInPolygon(CalibrationPoint point);
+	bool pointInPolygon(std::vector<Segment> hull, CalibrationPoint point);
 
 	void testPointInPolygon(CalibrationPoint point);
 	void createTestData();

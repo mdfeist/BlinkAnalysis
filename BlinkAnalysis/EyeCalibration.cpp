@@ -127,6 +127,68 @@ int EyeCalibration::isLeft(Segment segment, CalibrationPoint r) {
 		return 0;
 }
 
+std::vector<EyeCalibration::Segment> EyeCalibration::calculateConvexHull(std::vector<CalibrationPoint> processingPoints) {
+	// Edges
+	std::vector<Segment> segments;
+
+	// Ordered Point
+	std::vector<CalibrationPoint> orderedPoints(processingPoints);
+
+	// Sort Points
+	std::sort (orderedPoints.begin(), orderedPoints.end(), ComparePoints(this));
+
+	// Create segments
+	for (unsigned int i = 0; i < orderedPoints.size(); i++) {
+		CalibrationPoint from = orderedPoints.at(i);
+
+		for (unsigned int k = 0; k < orderedPoints.size(); k++) {
+			if (i == k)
+				continue;
+
+			CalibrationPoint to = orderedPoints.at(k);
+
+			Segment segment(from, to);
+			segments.push_back(segment);
+		}
+	}
+
+	unsigned int i = 0;
+	unsigned int j = 0;
+	while ( i < segments.size() )
+	{
+		//ProcessingPoints will be the points that are not in  the current segment
+		std::vector<CalibrationPoint> processingPoints(orderedPoints);
+		Segment segment = segments.at(i);
+
+		//this loop prepares the ProcessingPoints list for each segment
+		while ( j < processingPoints.size() )
+		{
+			CalibrationPoint point = processingPoints.at(j);
+			if((segment.x1() == point.x() && segment.y1() == point.y()) ||
+				(segment.x2() == point.x() && segment.y2() == point.y()))
+			{
+				//eliminating the points that are already in the current segment...
+				//we don't need them
+				processingPoints.erase(processingPoints.begin()+j);
+				j = 0;
+			} else {
+				j++;
+			}
+		}
+
+		//checking if the current segment is an edge or notBy calling isEdge function
+		if( !isEdge(processingPoints, segments.at(i)) )
+		{
+			segments.erase(segments.begin()+i);
+			i = 0;
+		} else {
+			i++;
+		} 
+	}
+
+	return segments;
+}
+
 bool EyeCalibration::calibrate() {
 	char buf[512];
 
@@ -201,71 +263,15 @@ bool EyeCalibration::calibrate() {
 
 	// Ordered Point
 	std::vector<CalibrationPoint> orderedPoints(calibrationPoints);
-
 	// Sort Points
-	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Ordering Points ...\n");
 	std::sort (orderedPoints.begin(), orderedPoints.end(), ComparePoints(this));
-	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Ordered Points\n");
 
-	// Clearing previous segments
-	segments.clear();
-	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Cleared Previous Convex Hull\n");
-
-	// Create segments
-	for (unsigned int i = 0; i < orderedPoints.size(); i++) {
-		CalibrationPoint from = orderedPoints.at(i);
-
-		for (unsigned int k = 0; k < orderedPoints.size(); k++) {
-			if (i == k)
-				continue;
-
-			CalibrationPoint to = orderedPoints.at(k);
-
-			Segment segment(from, to);
-			segments.push_back(segment);
-		}
-	}
-	
 	// Calculate Convex Hull
-	{
-		unsigned int i = 0;
-		unsigned int j = 0;
-		while ( i < segments.size() )
-		{
-			//ProcessingPoints will be the points that are not in  the current segment
-			std::vector<CalibrationPoint> processingPoints(orderedPoints);
-			Segment segment = segments.at(i);
-
-			//this loop prepares the ProcessingPoints list for each segment
-			while ( j < processingPoints.size() )
-			{
-				CalibrationPoint point = processingPoints.at(j);
-				if((segment.x1() == point.x() && segment.y1() == point.y()) ||
-					(segment.x2() == point.x() && segment.y2() == point.y()))
-				{
-					//eliminating the points that are already in the current segment...
-					//we don't need them
-					processingPoints.erase(processingPoints.begin()+j);
-					j = 0;
-				} else {
-					j++;
-				}
-			}
-
-			//checking if the current segment is an edge or notBy calling isEdge function
-			if( !isEdge(processingPoints, segments.at(i)) )
-			{
-				segments.erase(segments.begin()+i);
-				i = 0;
-			} else {
-				i++;
-			} 
-		}
-	}
+	this->convexHull = calculateConvexHull(calibrationPoints);
 
 	// Print each segment information
-	for (unsigned int i = 0; i < segments.size(); i++) {
-		Segment segment = segments.at(i);
+	for (unsigned int i = 0; i < convexHull.size(); i++) {
+		Segment segment = convexHull.at(i);
 		sprintf_s(buf, "Edge %d: From (%d, %d) to (%d, %d)\n", 
 			i + 1,
 			segment.x1(), segment.y1(),
@@ -282,7 +288,7 @@ bool EyeCalibration::calibrate() {
 	for (unsigned int i = 0; i < orderedPoints.size(); i++) {
 		CalibrationPoint point = orderedPoints.at(i);
 
-		if (pointInPolygon(point))
+		if (pointInPolygon(convexHull, point))
 			innerPoints.push_back(point);
 		else
 			convexHullPoints.push_back(point);
@@ -331,7 +337,7 @@ bool EyeCalibration::calibrate() {
 
 			if (!alreadyKnown) {
 				// Check if point is inside the convex hull
-				if (pointInPolygon(point)) {
+				if (pointInPolygon(convexHull, point)) {
 					innerUnknownPoints.push_back(point);
 				} else {
 					outerUnknownPoints.push_back(point);
@@ -353,9 +359,9 @@ bool EyeCalibration::calibrate() {
 	return true;
 }
 
-bool EyeCalibration::pointInPolygon(CalibrationPoint point) {
+bool EyeCalibration::pointInPolygon(std::vector<Segment> hull, CalibrationPoint point) {
 
-	unsigned int n = segments.size();
+	unsigned int n = hull.size();
 
 	if (n < 3)
 		false;
@@ -363,7 +369,7 @@ bool EyeCalibration::pointInPolygon(CalibrationPoint point) {
 	// loop through all edges of the polygon
 	for (unsigned int i = 0; i < n; i++)
 	{ 
-		Segment segment = segments.at(i);
+		Segment segment = hull.at(i);
 
 		if(isLeft(segment, point) >= 0)
 			return false;
@@ -375,7 +381,7 @@ bool EyeCalibration::pointInPolygon(CalibrationPoint point) {
 void EyeCalibration::testPointInPolygon(CalibrationPoint point) {
 	char buf[512];
 
-	if (pointInPolygon(point)) {
+	if (pointInPolygon(convexHull, point)) {
 		sprintf_s(buf, "Point (%d, %d) is inside.\n", point.x(), point.y()); 
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
 	} else {
