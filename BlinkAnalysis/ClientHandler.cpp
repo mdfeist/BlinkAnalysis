@@ -13,6 +13,8 @@ int ClientHandler::DikablisViewingHeight = 576;
 
 int ClientHandler::DikablisViewingMargin = 100;
 
+int ClientHandler::DikablisViewingSize = 3 * ((DikablisViewingWidth + 2*DikablisViewingMargin) * (DikablisViewingHeight + 2*DikablisViewingMargin));
+
 // Constructor: Sets the default values for the ClientHandler
 ClientHandler::ClientHandler(void)
 { 
@@ -35,10 +37,7 @@ ClientHandler::ClientHandler(void)
 
 	this->rigidBodyTool = -1;
 
-	this->dikablisEyeVectorArray = (float*) malloc(
-		sizeof(float) * 
-		3 * ((DikablisViewingWidth + 2*DikablisViewingMargin) *
-		(DikablisViewingHeight + 2*DikablisViewingMargin)));
+	this->dikablisEyeVectorArray = (float*) malloc(sizeof(float) * ClientHandler::DikablisViewingSize);
 }
 
 // Cleans up the ClientHandler

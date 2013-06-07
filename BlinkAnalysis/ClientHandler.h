@@ -55,10 +55,11 @@ private:
 	static int DikablisViewingWidth;
 	static int DikablisViewingHeight;
 	static int DikablisViewingMargin;
+	static int DikablisViewingSize;
 
 	// Used to store the calibrated eye vectors
 	float *dikablisEyeVectorArray;
-
+	
 public:
 	ClientHandler(void);						// Constructor
 	~ClientHandler(void);						// Destructor
@@ -149,5 +150,6 @@ public:
 	static int getDikablisViewingWidth() { return DikablisViewingWidth; }
 	static int getDikablisViewingHeight() { return DikablisViewingHeight; }
 	static int getDikablisViewingMargin() { return DikablisViewingMargin; }
+	static int getDikablisViewingSize() { return DikablisViewingSize; }
 };
 

@@ -697,6 +697,8 @@ private: System::Void selectAsObjectBtn_Click(System::Object^  sender, System::E
 			 }
 		 }
 private: System::Void addCalibrationPointBtn_Click(System::Object^  sender, System::EventArgs^  e) {
+			  //this->eyeCalibration->addPoint();
+			  this->eyeCalibration->createTestData();
 		 }
 public: System::Void calibrationOutputLog(String^ value) {
 			if (this->calibrationOutputLogLabel->InvokeRequired)
