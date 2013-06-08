@@ -5,6 +5,9 @@
 #include "EyeCalibrationWizardFormController.h"
 
 #include <algorithm>    // std::sort
+#include <iostream>
+#include <fstream>
+
 #include <osg/Matrix>
 
 EyeCalibration::EyeCalibration(void) { 
@@ -365,87 +368,286 @@ bool EyeCalibration::calibrate() {
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("\n");
 	}
 
+	// Save calibrarion
+	/*
+	bool fileOpen = false;
+	std::ofstream myfile ("C:\\Users\\mdfeist\\Desktop\\segments.txt");
+	if (myfile.is_open())
+	{
+		fileOpen = true;
+	}
+	*/
+
 	// Calculate Inner Interpolation
-	std::vector<CalibrationPoint> boundingPoints;
-	std::vector<Segment> subHull;
-	for (unsigned int i = 0; i < innerUnknownPoints.size(); i++) {
-		CalibrationPoint point = innerUnknownPoints.at(i);
+	for (int innerPointIndex = innerUnknownPoints.size() - 1; innerPointIndex >= 0; innerPointIndex--) {
+		CalibrationPoint innerPoint = innerUnknownPoints.at(innerPointIndex);
+
+		std::vector<CalibrationPoint> boundingPoints;
+		std::vector<Segment> boundingEdges;
+
+		std::vector<CalibrationPoint> possibleBoundingPoints(calibrationPoints);
+		std::sort (possibleBoundingPoints.begin(), possibleBoundingPoints.end(), ComparePointsDistanceFrom(this, innerPoint));
+		
+		for (unsigned int boundingIndex = 0; boundingIndex < 4; boundingIndex++) {
+			boundingPoints.push_back(possibleBoundingPoints.back());
+			possibleBoundingPoints.pop_back();
+		}
 
 		bool foundBoundingHull = false;
+		while (!foundBoundingHull) {
+			if (boundingPoints.size() != 4) {
+				break;
+			}
 
-		if (boundingPoints.size() >= 4 && subHull.size() != 0) {
-			if (pointInPolygon(subHull, point) <= 0) {
+			// Get min and max
+			CalibrationPoint 
+				minX = boundingPoints.at(0), 
+				minY = boundingPoints.at(0), 
+				maxX = boundingPoints.at(0), 
+				maxY = boundingPoints.at(0);
+
+			for (unsigned int boundingIndex = 0; boundingIndex < boundingPoints.size(); boundingIndex++) {
+				CalibrationPoint point = boundingPoints.at(boundingIndex);
+
+				if (minX.x() > point.x())
+					minX = point;
+
+				if (minY.y() > point.y())
+					minY = point;
+
+				if (maxX.x() < point.x())
+					maxX = point;
+
+				if (maxY.y() < point.y())
+					maxY = point;
+			}
+
+			// Get center of bounding polygon
+			int boundingCenterX = (maxX.x() - minX.x())/2;
+			int boundingCenterY = (maxY.y() - minY.y())/2;
+
+			// Calculate Ray through center
+			int ray_x = innerPoint.x() - boundingCenterX;
+			int ray_y = innerPoint.y() - boundingCenterY;
+
+			ray_x *= 1000;
+			ray_y *= 1000;
+
+			CalibrationPoint pointRayEnd(ray_x, ray_y, osg::Vec3(0.f, 0.f, 0.f));
+			Segment ray(innerPoint, pointRayEnd);
+		
+			// Get bounding edges
+			std::sort (boundingPoints.begin(), boundingPoints.end(), ComparePoints(this));
+			boundingEdges.clear();
+
+			for (unsigned int i = 0; i < boundingPoints.size(); i++) {
+				if (i < boundingPoints.size() - 1) {
+					boundingEdges.push_back( Segment(boundingPoints.at(i), boundingPoints.at(i + 1)) );
+				} else {
+					boundingEdges.push_back( Segment(boundingPoints.at(i), boundingPoints.at(0)) );
+				}
+			}
+
+			// Used to check and see if point is contained in bounding points
+			unsigned int collisionCount = 0;
+			for (unsigned int i = 0; i < boundingEdges.size(); i++) {
+				if ( getLineIntersection(ray, boundingEdges.at(i)) )
+					collisionCount++;
+			}
+
+			// Print
+			/*
+			myfile << "Point (" << innerPoint.x() << ", " << innerPoint.y() << ")";
+			if (collisionCount % 2 == 1) {
+				myfile << " Bounded By ";
+			} else {
+				myfile << " Not Bounded By ";
+			}
+
+			for (unsigned int i = 0; i < boundingPoints.size(); i++) {
+				CalibrationPoint point = boundingPoints.at(i);
+				myfile << " (" << point.x() << ", " << point.y() << ")";
+			}
+
+			myfile << "\n";
+			*/
+			if (collisionCount % 2 == 1) {
 				foundBoundingHull = true;
+			} else {
+				int closestEdge = -1;
+				float closestDistance = -1.f;
+				for (unsigned int i = 0; i < boundingEdges.size(); i++) {
+					Segment edge = boundingEdges.at(i);
+					CalibrationPoint closest = getClosestPoint(edge.p1(), edge.p2(), innerPoint, true);
+
+					if (!(closest.x() == edge.x1() && closest.y() == edge.y1()) && 
+						!(closest.x() == edge.x2() && closest.y() == edge.y2())) {
+						float dif_x = closest.x()-innerPoint.x();
+						float dif_y = closest.y()-innerPoint.y();
+
+						float distance = (dif_x)*(dif_x) + (dif_y)*(dif_y);
+						if (closestDistance < 0.f || closestDistance > distance) {
+							closestDistance = distance;
+							closestEdge = i;
+						}
+					}
+				}
+
+				if (closestEdge != -1) {
+					Segment edge = boundingEdges.at(closestEdge);
+
+					for (int i = boundingPoints.size() - 1; i >= 0; i--) {
+						CalibrationPoint point = boundingPoints.at(i);
+
+						if (!(point.x() == edge.x1() && point.y() == edge.y1()) && 
+						!(point.x() == edge.x2() && point.y() == edge.y2())) {
+							boundingPoints.erase(boundingPoints.begin()+i);
+						}
+					}
+
+					if (possibleBoundingPoints.size() >= 2) {
+						boundingPoints.push_back(possibleBoundingPoints.back());
+						possibleBoundingPoints.pop_back();
+						boundingPoints.push_back(possibleBoundingPoints.back());
+						possibleBoundingPoints.pop_back();
+					} else {
+						break;
+					}
+				} else {
+					break;
+				}
 			}
 		}
 
 		if (!foundBoundingHull) {
-			std::vector<CalibrationPoint> possibleBoundingPoints(orderedPoints);
-			std::sort (possibleBoundingPoints.begin(), possibleBoundingPoints.end(), ComparePointsDistanceFrom(this, point));
-
-			unsigned int pi = 0;
-			while (pi < 4) {
-				CalibrationPoint boundingPoint = possibleBoundingPoints.at(pi);
-				boundingPoints.push_back(boundingPoint);
-
-				pi++;
+			outerUnknownPoints.push_back(innerPoint);
+			innerUnknownPoints.erase(innerUnknownPoints.begin()+innerPointIndex);
+		} else {
+			CalibrationPoint closestPoints[4];
+			for (unsigned int i = 0; i < boundingEdges.size(); i++) {
+				Segment edge = boundingEdges.at(i);
+				closestPoints[i] = getClosestPoint(edge.p1(), edge.p2(), innerPoint, true);
 			}
 
-			while (!foundBoundingHull) {
-				subHull = calculateConvexHull(boundingPoints);
-				if (pointInPolygon(subHull, point) <= 0) {
-					foundBoundingHull = true;
-				} else {
+			CalibrationPoint 
+				minX = closestPoints[0], 
+				minY = closestPoints[0], 
+				maxX = closestPoints[0], 
+				maxY = closestPoints[0];
 
-					for (int _times = 0; _times < 2; _times++) {
+			for (unsigned int i = 0; i < boundingEdges.size(); i++) {
+				if (minX.x() > closestPoints[i].x())
+					minX = closestPoints[i];
 
-						for (int _rm = boundingPoints.size() - 1; _rm >= 0; _rm--) {
-							if (pointInPolygon(convexHull, boundingPoints.at(_rm)) < 0) {
-								boundingPoints.erase(boundingPoints.begin() + _rm);
-								break;
-							}
-						}
-					}
+				if (minY.y() > closestPoints[i].y())
+					minY = closestPoints[i];
 
-					if (boundingPoints.size() >= 4) {
-						sprintf_s(buf, "Point %d: (%d, %d) pi %d\n", 
-							i + 1,
-							point.x(), point.y(), pi + 1);
-						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
+				if (maxX.x() < closestPoints[i].x())
+					maxX = closestPoints[i];
 
-						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Failed: Unable to create bounding box for point.\n");
-						break;
-					}
+				if (maxY.y() < closestPoints[i].y())
+					maxY = closestPoints[i];
+			}
 
-					while (pi < possibleBoundingPoints.size() && boundingPoints.size() < 4) {
-						boundingPoints.push_back(possibleBoundingPoints.at(pi));
-						pi++;
-					}
+			float t;
+			t = (innerPoint.x() - minX.x()) / (maxX.x() - minX.x());
+			osg::Vec3 ray_x = minX.getRay() + (maxX.getRay() - minX.getRay()) * t;
 
-					if (boundingPoints.size() < 4) {
-					
-						sprintf_s(buf, "Point %d: (%d, %d) pi %d\n", 
-							i + 1,
-							point.x(), point.y(), pi + 1);
-						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
+			t = (innerPoint.y() - minY.y()) / (maxY.y() - minY.y());
+			osg::Vec3 ray_y = minY.getRay() + (maxY.getRay() - minY.getRay()) * t;
 
+			osg::Vec3 ray = (ray_x + ray_y) / 2.f;
 
-						EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Unable to create bounding box for point.\n");
-						break;
-					}
-				}
+			ClientHandler* client = AppData::getInstance()->getClient();
+
+			if (client) {
+				client->setRay(ray, innerPoint.x(), innerPoint.y());
 			}
 		}
-		
-		
+	}
 
-		if (!foundBoundingHull)
-			continue;
+	//myfile.close();
+
+	ClientHandler* client = AppData::getInstance()->getClient();
+
+	if (client) {
+		client->save();
 	}
 
 	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Done\n");
 
 	return true;
+}
+
+std::vector<EyeCalibration::Segment> EyeCalibration::getEdges(std::vector<CalibrationPoint> processingPoints) {
+	std::vector<Segment> edges;
+	for (unsigned int i = 0; i < processingPoints.size(); i++) {
+		for (unsigned int j = i + 1; j < processingPoints.size(); j++) {
+			edges.push_back( Segment(processingPoints.at(i), processingPoints.at(j)) );
+		}
+	}
+
+	return edges;
+}
+
+// Returns 1 if the lines intersect, otherwise 0. 
+int EyeCalibration::getLineIntersection(Segment edge1, Segment edge2)
+{
+	int p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y;
+	// Edge 1
+	p0_x = edge1.x1();
+	p0_y = edge1.y1();
+	p1_x = edge1.x2();
+	p1_y = edge1.y2();
+
+	// Edge 2
+	p2_x = edge2.x1();
+	p2_y = edge2.y1();
+	p3_x = edge2.x2();
+	p3_y = edge2.y2();
+
+    float s1_x, s1_y, s2_x, s2_y;
+    s1_x = p1_x - p0_x;     s1_y = p1_y - p0_y;
+    s2_x = p3_x - p2_x;     s2_y = p3_y - p2_y;
+
+    float s, t;
+    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
+    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+    if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+    {
+        // Collision detected
+        return 1;
+    }
+
+    return 0; // No collision
+}
+
+EyeCalibration::CalibrationPoint EyeCalibration::getClosestPoint(CalibrationPoint a, CalibrationPoint b, CalibrationPoint point, bool segmentClamp) {
+	int ap_x = point.x() - a.x();
+	int ap_y = point.y() - a.y();
+
+	int ab_x = b.x() - a.x();
+	int ab_y = b.y() - a.y();
+
+	float ab2 = ab_x*ab_x + ab_y*ab_y;
+	float ap_ab = ap_x*ab_x + ap_y*ab_y;
+
+	float t = ap_ab / ab2;
+
+	if (segmentClamp) {
+		if (t < 0.f) t = 0.f;
+		else if (t > 1.f) t = 1.f;
+	}
+
+	int closest_x = a.x() + ab_x * t;
+	int closest_y = a.y() + ab_y * t;
+
+	osg::Vec3 ab_ray = b.getRay() - a.getRay();
+	osg::Vec3 ray = a.getRay() + ab_ray * t;
+
+	CalibrationPoint closest(closest_x, closest_y, ray);
+	return closest;
 }
 
 int EyeCalibration::pointInPolygon(std::vector<Segment> hull, CalibrationPoint point) {

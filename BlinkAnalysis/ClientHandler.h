@@ -151,5 +151,9 @@ public:
 	static int getDikablisViewingHeight() { return DikablisViewingHeight; }
 	static int getDikablisViewingMargin() { return DikablisViewingMargin; }
 	static int getDikablisViewingSize() { return DikablisViewingSize; }
+
+	void setRay(osg::Vec3 ray, int x, int y);
+	osg::Vec3 getRay(int x, int y);
+	void save();
 };
 

@@ -59,6 +59,9 @@ private:
 	int isLeft(Segment segment, CalibrationPoint r);
 
 	std::vector<Segment> calculateConvexHull(std::vector<CalibrationPoint> processingPoints);
+	std::vector<Segment> getEdges(std::vector<CalibrationPoint> processingPoints);
+	int getLineIntersection(Segment edge1, Segment edge2);
+	CalibrationPoint getClosestPoint(CalibrationPoint a, CalibrationPoint b, CalibrationPoint point, bool segmentClamp);
 
 	struct ComparePoints : std::binary_function<CalibrationPoint, CalibrationPoint, bool> {
 		ComparePoints(EyeCalibration * cal) : _cal(cal) {}
@@ -75,7 +78,7 @@ private:
 			float distanceA = (_point.x()-a.x())*(_point.x()-a.x()) + (_point.y()-a.y())*(_point.y()-a.y());
 			float distanceB = (_point.x()-b.x())*(_point.x()-b.x()) + (_point.y()-b.y())*(_point.y()-b.y());
 
-			if (distanceA < distanceB)
+			if (distanceA > distanceB)
 				return true;
 
 			return false;
