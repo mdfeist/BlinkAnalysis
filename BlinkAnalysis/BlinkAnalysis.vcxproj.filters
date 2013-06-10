@@ -82,6 +82,9 @@
     <ClCompile Include="CaptureWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DefineCoordinateFrameForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -163,6 +166,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FormController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineCoordinateFrameFormController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddWorldForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineCoordinateFrameForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

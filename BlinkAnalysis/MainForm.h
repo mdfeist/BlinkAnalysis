@@ -19,6 +19,8 @@
 #include "Dikablis.h"
 #include "DikablisHelp.h"
 //#include "AddObjectForm.h"
+#include "AddWorldForm.h" // TODO need to add controller?
+#include "DefineCoordinateFrameFormController.h"
 #include "EyeCalibrationWizardFormController.h"
 #include "AppData.h"
 #include "AppViewer.h"
@@ -42,6 +44,7 @@ namespace BlinkAnalysis {
 		ID = 0,
 		NAME = 1,
 		OBJECTS = 2,
+		MATRIX = 3
 	};
 
 	/// <summary>
@@ -1415,6 +1418,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->worldGridView->Name = L"worldGridView";
 			this->worldGridView->Size = System::Drawing::Size(250, 423);
 			this->worldGridView->TabIndex = 3;
+			this->worldGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellDoubleClick);
 			// 
 			// worldPropertyColumn
 			// 
@@ -1435,6 +1439,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->worldAddButton->TabIndex = 2;
 			this->worldAddButton->Text = L"Add";
 			this->worldAddButton->UseVisualStyleBackColor = true;
+			this->worldAddButton->Click += gcnew System::EventHandler(this, &MainForm::worldAddButton_Click);
 			// 
 			// worldComboBox
 			// 
@@ -1620,6 +1625,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 	private: SplitContainer^ currentMainSplitContainer;
 	private: SplitContainer^ currentSplitContainer;
 	private: int setRigidBodyTool;
+	private: int displayWorld;
 
 	// User Defined Functions
 	private: void getOptiTrackInfo() {
@@ -2397,7 +2403,7 @@ private: System::Void setAsRigidBodyToolToolStripMenuItem_Click(System::Object^ 
 	//////////////////////
 	// Capture World and Objects
 	/////////////////////
-public: System::Void worldUpdateData() {
+public: System::Void worldUpdateList() {
 			static bool isUpdatingWorlds = false;
 				
 			if (isUpdatingWorlds)
@@ -2405,64 +2411,77 @@ public: System::Void worldUpdateData() {
 
 			isUpdatingWorlds = true;
 
-			// Start update
-			// Check if the main tab control needs invoke.
-			// If not then check to see if the visual tab
-			// is selected.
-			if (this->mainTabControl->InvokeRequired) 
+			if (this->worldComboBox->InvokeRequired) 
 			{
-				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::worldUpdateData);
+				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::worldUpdateList);
 				BeginInvoke(d, nullptr);
 			} 
 			else 
 			{
-				if (this->worldComboBox->InvokeRequired) 
+				this->worldComboBox->Items->Clear();
+				std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
+				for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 				{
-					SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::worldUpdateData);
-					BeginInvoke(d, nullptr);
-				} 
-				else 
-				{
-					this->worldComboBox->Items->Clear();
-					std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
-					for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
-					{
-						String^ worldName = gcnew String(itr->second->getName().c_str());
-						worldName += " (";
-						worldName += itr->first.ToString();
-						worldName += ")";
-						this->worldComboBox->Items->Add(worldName);
-					}
+					String^ worldName = gcnew String(itr->second->getName().c_str());
+					worldName += " (";
+					worldName += itr->first.ToString();
+					worldName += ")";
+					this->worldComboBox->Items->Add(worldName);
 				}
 			}
-
-			// End of update
+			
 			isUpdatingWorlds = false;
 		}
-private: System::Void worldGridView_displayWorld(CaptureWorld* world) {
-			 if (!world) return;
+public: System::Void worldUpdateGridView() {
+			worldGridView_displayWorld();
+		}
+private: System::Void worldGridView_displayWorld() {
+			 static bool isUpdatingWorlds = false;
+				
+			 if (isUpdatingWorlds)
+				 return;
 
-			 this->worldGridView->Rows->Clear();
-			 array<String^>^ row;
-
-			 // NOTE: this has to match the order in the enum worldProperty
-			 row = gcnew array<String^> { "ID", world->getID().ToString() };
-			 worldGridView->Rows->Add(row);
-
-			 row = gcnew array<String^> { "Name", gcnew String(world->getName().c_str()) };
-			 worldGridView->Rows->Add(row);
-
-			 row = gcnew array<String^> { "Objects", world->getNumberObjects().ToString() };
-			 worldGridView->Rows->Add(row);
-
-			 worldGridView->Rows[(int)worldProperty::ID]->ReadOnly = true;
-			 worldGridView->Rows[(int)worldProperty::OBJECTS]->ReadOnly = true;
-
-			 // if default world
-			 if (world->getID() == 0)
+			 isUpdatingWorlds = true;
+			 
+			 if (this->worldGridView->InvokeRequired)
 			 {
-				 worldGridView->Rows[(int)worldProperty::NAME]->ReadOnly = true;				 
+				 SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::worldGridView_displayWorld);
+				 BeginInvoke(d, nullptr);
 			 }
+			 else
+			 {
+				 this->worldGridView->Rows->Clear();
+				 CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
+				 if (!world) return;
+				 
+				 array<String^>^ row;
+
+				 // NOTE: this has to match the order in the enum worldProperty
+				 row = gcnew array<String^> { "ID", world->getID().ToString() };
+				 worldGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Name", gcnew String(world->getName().c_str()) };
+				 worldGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Objects", world->getNumberObjects().ToString() };
+				 worldGridView->Rows->Add(row);
+
+				 String^ iden = (world->getGlobalToLocalMatrix().isIdentity()) ? "false" : "true";
+				 row = gcnew array<String^> { "Transformation", iden };
+				 worldGridView->Rows->Add(row);
+
+				 worldGridView->Rows[(int)worldProperty::ID]->ReadOnly = true;
+				 worldGridView->Rows[(int)worldProperty::OBJECTS]->ReadOnly = true;
+				 worldGridView->Rows[(int)worldProperty::MATRIX]->ReadOnly = true;
+
+				 // if default world
+				 if (world->getID() == 0)
+				 {
+					 worldGridView->Rows[(int)worldProperty::NAME]->ReadOnly = true;				 
+				 }
+			 }
+
+			 isUpdatingWorlds = false;
 		 }
 private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (!worldComboBox->SelectedItem)
@@ -2472,9 +2491,8 @@ private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender
 			 int id = worldExtractID(text);
 			 if (id >= 0)
 			 {
-				 CaptureWorld* world = AppData::getInstance()->getWorld(id);
-				 if (world)
-					 worldGridView_displayWorld(world);
+				 displayWorld = id;
+				 worldGridView_displayWorld();
 			 }
 		 }
 
@@ -2487,6 +2505,28 @@ private: int worldExtractID(String^ str) {
 				 return result;
 			 else
 				 return -1;
+		 }
+private: System::Void worldAddButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 AddWorldForm^ addWorldForm = gcnew AddWorldForm();
+			 addWorldForm->Show();
+		 }
+		 // TODO: allow wider use case?
+		 // this is only for defining coordinate frame of a world
+private: System::Void worldGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
+			 if (e->RowIndex != (int)worldProperty::MATRIX ||
+				 e->ColumnIndex != 1 || // Value
+				 displayWorld == 0) // default world, cannot change coordinates
+				 return;
+
+			 try{
+			 DefineCoordinateFrameFormController ^control = DefineCoordinateFrameFormController::getInstance();
+			 control->createForm();
+			 control->setDisplayWorld(displayWorld);
+			 control->Show();
+			 } catch (Exception^ ex)
+			 {
+				 Console::WriteLine("Inner Exception: {0}", ex->InnerException);
+			 }
 		 }
 };
 }

@@ -130,6 +130,7 @@
     <ClCompile Include="CaptureObjectUtil.cpp" />
     <ClCompile Include="CaptureWorld.cpp" />
     <ClCompile Include="ClientHandler.cpp" />
+    <ClCompile Include="DefineCoordinateFrameForm.cpp" />
     <ClCompile Include="Dikablis.cpp" />
     <ClCompile Include="DikablisHelp.cpp" />
     <ClCompile Include="EyeCalibration.cpp" />
@@ -154,11 +155,18 @@
     <ClInclude Include="AddObjectForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AddWorldForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AppViewer.h" />
     <ClInclude Include="CaptureObjectUtil.h" />
     <ClInclude Include="CaptureWorld.h" />
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DefineCoordinateFrameForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="DefineCoordinateFrameFormController.h" />
     <ClInclude Include="Dikablis.h" />
     <ClInclude Include="DikablisHelp.h">
       <FileType>CppForm</FileType>
@@ -193,6 +201,12 @@
   <ItemGroup>
     <EmbeddedResource Include="AddObjectForm.resx">
       <DependentUpon>AddObjectForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddWorldForm.resx">
+      <DependentUpon>AddWorldForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DefineCoordinateFrameForm.resx">
+      <DependentUpon>DefineCoordinateFrameForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DikablisHelp.resx">
       <DependentUpon>DikablisHelp.h</DependentUpon>
