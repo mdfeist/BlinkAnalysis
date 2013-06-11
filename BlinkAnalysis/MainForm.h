@@ -39,12 +39,23 @@ namespace BlinkAnalysis {
 	using namespace System::Reflection;
 	using namespace msclr::interop;
 
+	// enums used to help define ordering of values
+	// in the grid view of world or object properties
+	// Make sure to follow this order when adding rows to GridView
 	enum class worldProperty 
 	{ 
 		ID = 0,
 		NAME = 1,
 		OBJECTS = 2,
 		MATRIX = 3
+	};
+	enum class objectProperty 
+	{ 
+		ID = 0,
+		NAME = 1,
+		RIGID = 2, 
+		FACES = 3,
+		VERTICES = 4 
 	};
 
 	/// <summary>
@@ -233,6 +244,19 @@ private: System::Windows::Forms::Button^  worldAddButton;
 private: System::Windows::Forms::DataGridView^  worldGridView;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldPropertyColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
+private: System::Windows::Forms::Label^  worldListLabel;
+private: System::Windows::Forms::Label^  objectLabel;
+
+private: System::Windows::Forms::Label^  objectWLabel;
+private: System::Windows::Forms::ComboBox^  objectWComboBox;
+private: System::Windows::Forms::Button^  objectAddButton;
+private: System::Windows::Forms::ComboBox^  objectComboBox;
+private: System::Windows::Forms::DataGridView^  objectGridView;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectPropertyColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
+
+
+
 
 
 
@@ -338,12 +362,19 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->rigidBodyTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualRigidBodyListView = (gcnew System::Windows::Forms::ListView());
 			this->worldTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->worldListLabel = (gcnew System::Windows::Forms::Label());
 			this->worldGridView = (gcnew System::Windows::Forms::DataGridView());
 			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->worldAddButton = (gcnew System::Windows::Forms::Button());
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->objectLabel = (gcnew System::Windows::Forms::Label());
+			this->objectWLabel = (gcnew System::Windows::Forms::Label());
+			this->objectWComboBox = (gcnew System::Windows::Forms::ComboBox());
+			this->objectAddButton = (gcnew System::Windows::Forms::Button());
+			this->objectComboBox = (gcnew System::Windows::Forms::ComboBox());
+			this->objectGridView = (gcnew System::Windows::Forms::DataGridView());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -356,6 +387,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -387,6 +420,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->rigidBodyTabPage->SuspendLayout();
 			this->worldTabPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->worldGridView))->BeginInit();
+			this->objectTabPage->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->objectGridView))->BeginInit();
 			this->menuStrip->SuspendLayout();
 			this->rigidBodyToolContextMenu->SuspendLayout();
 			this->SuspendLayout();
@@ -1395,6 +1430,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			// 
 			// worldTabPage
 			// 
+			this->worldTabPage->Controls->Add(this->worldListLabel);
 			this->worldTabPage->Controls->Add(this->worldGridView);
 			this->worldTabPage->Controls->Add(this->worldAddButton);
 			this->worldTabPage->Controls->Add(this->worldComboBox);
@@ -1406,6 +1442,15 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->worldTabPage->Text = L"World";
 			this->worldTabPage->UseVisualStyleBackColor = true;
 			// 
+			// worldListLabel
+			// 
+			this->worldListLabel->AutoSize = true;
+			this->worldListLabel->Location = System::Drawing::Point(3, 3);
+			this->worldListLabel->Name = L"worldListLabel";
+			this->worldListLabel->Size = System::Drawing::Size(39, 13);
+			this->worldListLabel->TabIndex = 4;
+			this->worldListLabel->Text = L"World";
+			// 
 			// worldGridView
 			// 
 			this->worldGridView->AllowUserToAddRows = false;
@@ -1414,9 +1459,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->worldGridView->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->worldGridView->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->worldPropertyColumn, 
 				this->worldValueColumn});
-			this->worldGridView->Location = System::Drawing::Point(6, 45);
+			this->worldGridView->Location = System::Drawing::Point(6, 46);
 			this->worldGridView->Name = L"worldGridView";
-			this->worldGridView->Size = System::Drawing::Size(250, 423);
+			this->worldGridView->Size = System::Drawing::Size(250, 422);
 			this->worldGridView->TabIndex = 3;
 			this->worldGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellDoubleClick);
 			this->worldGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellValueChanged);
@@ -1434,7 +1479,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			// 
 			// worldAddButton
 			// 
-			this->worldAddButton->Location = System::Drawing::Point(200, 6);
+			this->worldAddButton->Location = System::Drawing::Point(200, 17);
 			this->worldAddButton->Name = L"worldAddButton";
 			this->worldAddButton->Size = System::Drawing::Size(56, 23);
 			this->worldAddButton->TabIndex = 2;
@@ -1447,7 +1492,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->worldComboBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->worldComboBox->ForeColor = System::Drawing::SystemColors::InfoText;
 			this->worldComboBox->FormattingEnabled = true;
-			this->worldComboBox->Location = System::Drawing::Point(6, 8);
+			this->worldComboBox->Location = System::Drawing::Point(6, 19);
 			this->worldComboBox->Name = L"worldComboBox";
 			this->worldComboBox->Size = System::Drawing::Size(188, 21);
 			this->worldComboBox->TabIndex = 0;
@@ -1455,6 +1500,12 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			// 
 			// objectTabPage
 			// 
+			this->objectTabPage->Controls->Add(this->objectLabel);
+			this->objectTabPage->Controls->Add(this->objectWLabel);
+			this->objectTabPage->Controls->Add(this->objectWComboBox);
+			this->objectTabPage->Controls->Add(this->objectAddButton);
+			this->objectTabPage->Controls->Add(this->objectComboBox);
+			this->objectTabPage->Controls->Add(this->objectGridView);
 			this->objectTabPage->Location = System::Drawing::Point(4, 22);
 			this->objectTabPage->Name = L"objectTabPage";
 			this->objectTabPage->Padding = System::Windows::Forms::Padding(3);
@@ -1462,6 +1513,68 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->objectTabPage->TabIndex = 2;
 			this->objectTabPage->Text = L"Object";
 			this->objectTabPage->UseVisualStyleBackColor = true;
+			// 
+			// objectLabel
+			// 
+			this->objectLabel->AutoSize = true;
+			this->objectLabel->Location = System::Drawing::Point(3, 43);
+			this->objectLabel->Name = L"objectLabel";
+			this->objectLabel->Size = System::Drawing::Size(41, 13);
+			this->objectLabel->TabIndex = 12;
+			this->objectLabel->Text = L"Object";
+			// 
+			// objectWLabel
+			// 
+			this->objectWLabel->AutoSize = true;
+			this->objectWLabel->Location = System::Drawing::Point(3, 3);
+			this->objectWLabel->Name = L"objectWLabel";
+			this->objectWLabel->Size = System::Drawing::Size(39, 13);
+			this->objectWLabel->TabIndex = 11;
+			this->objectWLabel->Text = L"World";
+			// 
+			// objectWComboBox
+			// 
+			this->objectWComboBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->objectWComboBox->ForeColor = System::Drawing::SystemColors::InfoText;
+			this->objectWComboBox->FormattingEnabled = true;
+			this->objectWComboBox->Location = System::Drawing::Point(6, 19);
+			this->objectWComboBox->Name = L"objectWComboBox";
+			this->objectWComboBox->Size = System::Drawing::Size(188, 21);
+			this->objectWComboBox->TabIndex = 9;
+			this->objectWComboBox->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::objectWComboBox_SelectedIndexChanged);
+			// 
+			// objectAddButton
+			// 
+			this->objectAddButton->Location = System::Drawing::Point(200, 57);
+			this->objectAddButton->Name = L"objectAddButton";
+			this->objectAddButton->Size = System::Drawing::Size(56, 23);
+			this->objectAddButton->TabIndex = 8;
+			this->objectAddButton->Text = L"Add";
+			this->objectAddButton->UseVisualStyleBackColor = true;
+			// 
+			// objectComboBox
+			// 
+			this->objectComboBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->objectComboBox->ForeColor = System::Drawing::SystemColors::InfoText;
+			this->objectComboBox->FormattingEnabled = true;
+			this->objectComboBox->Location = System::Drawing::Point(6, 59);
+			this->objectComboBox->Name = L"objectComboBox";
+			this->objectComboBox->Size = System::Drawing::Size(188, 21);
+			this->objectComboBox->TabIndex = 7;
+			this->objectComboBox->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::objectComboBox_SelectedIndexChanged);
+			// 
+			// objectGridView
+			// 
+			this->objectGridView->AllowUserToAddRows = false;
+			this->objectGridView->AllowUserToDeleteRows = false;
+			this->objectGridView->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->objectGridView->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->objectGridView->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->objectPropertyColumn, 
+				this->objectValueColumn});
+			this->objectGridView->Location = System::Drawing::Point(6, 86);
+			this->objectGridView->Name = L"objectGridView";
+			this->objectGridView->Size = System::Drawing::Size(250, 382);
+			this->objectGridView->TabIndex = 6;
 			// 
 			// menuStrip
 			// 
@@ -1553,6 +1666,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
 			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
 			// 
+			// objectPropertyColumn
+			// 
+			this->objectPropertyColumn->HeaderText = L"Property";
+			this->objectPropertyColumn->Name = L"objectPropertyColumn";
+			this->objectPropertyColumn->ReadOnly = true;
+			// 
+			// objectValueColumn
+			// 
+			this->objectValueColumn->HeaderText = L"Value";
+			this->objectValueColumn->Name = L"objectValueColumn";
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1607,7 +1731,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->tabControl1->ResumeLayout(false);
 			this->rigidBodyTabPage->ResumeLayout(false);
 			this->worldTabPage->ResumeLayout(false);
+			this->worldTabPage->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->worldGridView))->EndInit();
+			this->objectTabPage->ResumeLayout(false);
+			this->objectTabPage->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->objectGridView))->EndInit();
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
 			this->rigidBodyToolContextMenu->ResumeLayout(false);
@@ -1625,8 +1753,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 	private: std::vector<Marker*>* optiTrackLabeledMarkerVector;
 	private: SplitContainer^ currentMainSplitContainer;
 	private: SplitContainer^ currentSplitContainer;
-	private: int setRigidBodyTool;
-	private: int displayWorld;
+	private: int setRigidBodyTool;		// ID of rigid body to use as pointing tool
+	private: int displayWorld;			// ID of world displayed in World tab
+	private: int displayObjectWorld;	// ID of world of object displayed in Object tab
+	private: int displayObject;			// ID of object displayed in Object tab
 
 	// User Defined Functions
 	private: void getOptiTrackInfo() {
@@ -2404,6 +2534,8 @@ private: System::Void setAsRigidBodyToolToolStripMenuItem_Click(System::Object^ 
 	//////////////////////
 	// Capture World and Objects
 	/////////////////////
+
+		 // update list of worlds in both World and Object tab
 public: System::Void worldUpdateList() {
 			static bool isUpdatingWorlds = false;
 				
@@ -2420,6 +2552,7 @@ public: System::Void worldUpdateList() {
 			else 
 			{
 				this->worldComboBox->Items->Clear();
+				this->objectWComboBox->Items->Clear();
 				std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
 				for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 				{
@@ -2428,6 +2561,7 @@ public: System::Void worldUpdateList() {
 					worldName += itr->first.ToString();
 					worldName += ")";
 					this->worldComboBox->Items->Add(worldName);
+					this->objectWComboBox->Items->Add(worldName);
 				}
 			}
 			
@@ -2436,14 +2570,8 @@ public: System::Void worldUpdateList() {
 public: System::Void worldUpdateGridView() {
 			worldGridView_displayWorld();
 		}
+		// populates the world GridView based on selected value from world ComboBox
 private: System::Void worldGridView_displayWorld() {
-			 static bool isUpdatingWorlds = false;
-				
-			 if (isUpdatingWorlds)
-				 return;
-
-			 isUpdatingWorlds = true;
-			 
 			 if (this->worldGridView->InvokeRequired)
 			 {
 				 SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::worldGridView_displayWorld);
@@ -2457,38 +2585,39 @@ private: System::Void worldGridView_displayWorld() {
 				 
 				 array<String^>^ row;
 
+				 // populate values
 				 // NOTE: this has to match the order in the enum worldProperty
 				 row = gcnew array<String^> { "ID", world->getID().ToString() };
-				 worldGridView->Rows->Add(row);
+				 this->worldGridView->Rows->Add(row);
 
 				 row = gcnew array<String^> { "Name", gcnew String(world->getName().c_str()) };
-				 worldGridView->Rows->Add(row);
+				 this->worldGridView->Rows->Add(row);
 
 				 row = gcnew array<String^> { "Objects", world->getNumberObjects().ToString() };
-				 worldGridView->Rows->Add(row);
+				 this->worldGridView->Rows->Add(row);
 
 				 String^ iden = (world->getGlobalToLocalMatrix().isIdentity()) ? "false" : "true";
 				 row = gcnew array<String^> { "Transformation", iden };
-				 worldGridView->Rows->Add(row);
+				 this->worldGridView->Rows->Add(row);
 
-				 worldGridView->Rows[(int)worldProperty::ID]->ReadOnly = true;
-				 worldGridView->Rows[(int)worldProperty::OBJECTS]->ReadOnly = true;
-				 worldGridView->Rows[(int)worldProperty::MATRIX]->ReadOnly = true;
+				 // set certain rows to read only
+				 this->worldGridView->Rows[(int)worldProperty::ID]->ReadOnly = true;
+				 this->worldGridView->Rows[(int)worldProperty::OBJECTS]->ReadOnly = true;
+				 this->worldGridView->Rows[(int)worldProperty::MATRIX]->ReadOnly = true;
 
 				 // if default world
 				 if (world->getID() == 0)
 				 {
-					 worldGridView->Rows[(int)worldProperty::NAME]->ReadOnly = true;				 
+					 this->worldGridView->Rows[(int)worldProperty::NAME]->ReadOnly = true;				 
 				 }
 			 }
-
-			 isUpdatingWorlds = false;
 		 }
+		 // update world display if drop down list value changes
 private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-			 if (!worldComboBox->SelectedItem)
+			 if (!this->worldComboBox->SelectedItem)
 				 return;
 
-			 String^ text = worldComboBox->SelectedItem->ToString();
+			 String^ text = this->worldComboBox->SelectedItem->ToString();
 			 int id = worldExtractID(text);
 			 if (id >= 0)
 			 {
@@ -2496,7 +2625,91 @@ private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender
 				 worldGridView_displayWorld();
 			 }
 		 }
+		 // update list of objects if drop down list value changes
+private: System::Void objectWComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (!this->objectWComboBox->SelectedItem)
+				 return;
 
+			 String^ text = this->objectWComboBox->SelectedItem->ToString();
+			 int id = worldExtractID(text);
+			 if (id >= 0)
+			 {
+				 objectComboBox_updateList(id);
+			 }
+		 }
+		 // populate list of objects based on worldID
+private: System::Void objectComboBox_updateList(int worldID) {
+			 this->objectComboBox->Items->Clear();
+			 CaptureWorld* world = AppData::getInstance()->getWorld(worldID);
+			 if (world)
+			 {
+				 std::map<int, CaptureObject*> objects = world->getObjects();
+				 for (objects_iterator itr = objects.begin(); itr != objects.end(); itr++)
+				 {
+					String^ objectName = gcnew String(itr->second->getName().c_str());
+					objectName += " (";
+					objectName += itr->first.ToString();
+					objectName += ")";
+					this->objectComboBox->Items->Add(objectName);
+				 }
+			 }
+		 }
+		 // update object display if drop down list value changes
+private: System::Void objectComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (!this->objectComboBox->SelectedItem)
+				 return;
+
+			 String^ text = this->objectComboBox->SelectedItem->ToString();
+			 int id = worldExtractID(text);
+			 if (id >= 0)
+			 {
+				 displayObject = id;
+				 displayObjectWorld = worldExtractID(this->objectWComboBox->SelectedItem->ToString());
+				 objectGridView_displayObject();
+			 }
+		 }
+		// populates the object GridView based on selected value from world and object ComboBoxes
+private: System::Void objectGridView_displayObject() {
+			 if (this->objectGridView->InvokeRequired)
+			 {
+				 SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::objectGridView_displayObject);
+				 BeginInvoke(d, nullptr);
+			 }
+			 else
+			 {
+				 this->objectGridView->Rows->Clear();
+				 CaptureWorld* world = AppData::getInstance()->getWorld(displayObjectWorld);
+				 if (!world) return;
+				 CaptureObject* object = world->getObject(displayObject);
+				 if (!object) return;
+
+				 array<String^>^ row;
+
+				 // populate values
+				 // NOTE: this has to match the order in the enum objectProperty
+				 row = gcnew array<String^> { "ID", object->getID().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Name", gcnew String(object->getName().c_str()) };
+				 this->objectGridView->Rows->Add(row);
+
+				 String^ iden = (object->getRigidBody() < 0) ? "none" : object->getRigidBody().ToString();
+				 row = gcnew array<String^> { "Rigid Body ID", iden };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Faces", object->getNumFaces().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Vertices", object->getNumVertices().ToString() };
+				 this->objectGridView->Rows->Add(row);
+				 
+				 // set certain rows to read only
+				 this->objectGridView->Rows[(int)objectProperty::ID]->ReadOnly = true;
+				 this->objectGridView->Rows[(int)objectProperty::FACES]->ReadOnly = true;
+				 this->objectGridView->Rows[(int)objectProperty::VERTICES]->ReadOnly = true;
+			 }
+		 }
+		 // extracts ID from text format "Name (##)"
 private: int worldExtractID(String^ str) {
 			 array<String^>^ split = str->Split(gcnew array<wchar_t> {'(', ')'});
 
@@ -2507,12 +2720,13 @@ private: int worldExtractID(String^ str) {
 			 else
 				 return -1;
 		 }
+		 // add a new world (name only)
 private: System::Void worldAddButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			 AddWorldForm^ addWorldForm = gcnew AddWorldForm();
 			 addWorldForm->Show();
 		 }
 		 // TODO: allow wider use case?
-		 // this is only for defining coordinate frame of a world
+		 // this is only for editing coordinate frame of a world
 private: System::Void worldGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 			 if (e->RowIndex != (int)worldProperty::MATRIX ||
 				 e->ColumnIndex != 1 || // Value
