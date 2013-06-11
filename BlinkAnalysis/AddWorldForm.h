@@ -40,8 +40,6 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::TextBox^  nameTextBox;
 	private: System::Windows::Forms::Button^  nameButton;
 
-	//public: event EventHandler^ UpdateWorldList;
-
 	private:
 		/// <summary>
 		/// Required designer variable.
@@ -77,6 +75,7 @@ namespace BlinkAnalysis {
 			this->nameTextBox->Name = L"nameTextBox";
 			this->nameTextBox->Size = System::Drawing::Size(213, 20);
 			this->nameTextBox->TabIndex = 1;
+			this->nameTextBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &AddWorldForm::nameTextBox_KeyPress);
 			// 
 			// nameButton
 			// 
@@ -109,8 +108,18 @@ namespace BlinkAnalysis {
 					 );
 				 CaptureWorld* world = new CaptureWorld(*name);
 				 AppData::getInstance()->addWorld(world);
-				 //UpdateWorldList(this, gcnew EventArgs());
 				 Close();
+			 }
+	private: System::Void nameTextBox_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+				 if (e->KeyChar == '\r')
+				 {
+					 std::string *name = new std::string( 
+						 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->nameTextBox->Text)).ToPointer()
+						 );
+					 CaptureWorld* world = new CaptureWorld(*name);
+					 AppData::getInstance()->addWorld(world);
+					 Close();
+				 }
 			 }
 	};
 }

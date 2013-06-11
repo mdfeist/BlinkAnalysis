@@ -24,12 +24,6 @@ public:
 			return form->getDisplayWorld();
 		return -1;
 	}
-	/*
-	void updateWorldViewHandler(System::EventHandler^ handler)
-	{
-		if (form && !form->IsDisposed)
-			form->UpdateWorldView += handler;		
-	}*/
 
 };
 

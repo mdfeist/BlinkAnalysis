@@ -1419,6 +1419,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 			this->worldGridView->Size = System::Drawing::Size(250, 423);
 			this->worldGridView->TabIndex = 3;
 			this->worldGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellDoubleClick);
+			this->worldGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellValueChanged);
 			// 
 			// worldPropertyColumn
 			// 
@@ -2518,14 +2519,34 @@ private: System::Void worldGridView_CellDoubleClick(System::Object^  sender, Sys
 				 displayWorld == 0) // default world, cannot change coordinates
 				 return;
 
-			 try{
 			 DefineCoordinateFrameFormController ^control = DefineCoordinateFrameFormController::getInstance();
 			 control->createForm();
 			 control->setDisplayWorld(displayWorld);
 			 control->Show();
-			 } catch (Exception^ ex)
+		 }
+		 // user edits property value for world
+private: System::Void worldGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
+			 if (e->RowIndex == (int) worldProperty::NAME)
 			 {
-				 Console::WriteLine("Inner Exception: {0}", ex->InnerException);
+				 int id;
+				 bool result = Int32::TryParse((String^)this->worldGridView->Rows[(int)worldProperty::ID]->Cells[1]->Value->ToString(), id);
+				 if (result)
+				 {
+					 CaptureWorld* world = AppData::getInstance()->getWorld(id);
+					 if (world)
+					 {
+						 std::string* str = new std::string(
+							 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(
+								(String^)this->worldGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value)
+							 ).ToPointer()
+						 );
+						 world->setName(*str);
+						 int idx = this->worldComboBox->SelectedIndex;
+						 worldUpdateList();
+						 this->worldComboBox->SelectedIndex = idx;
+					 }
+				 }
+
 			 }
 		 }
 };

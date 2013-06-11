@@ -117,4 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="infoLabel.Text" xml:space="preserve">
+    <value>Use this tool to define the ground plane for the objects being captured.
+
+Markers
+      Define the axes using three labeled markers.
+
+Rigid Body
+      Define the axes using the Rigid Body Tool.
+      Please ensure a rigid body has been set before using this form.
+
+
+Click "Reset Coordinates" below to revert to the original coordinates.</value>
+  </data>
 </root>
