@@ -509,6 +509,7 @@ namespace BlinkAnalysis {
 	private: osg::Vec3* pos;
 
 	private: System::Void DefineCoordinateFrameForm_Load(System::Object^  sender, System::EventArgs^  e) {
+				this->defaultDataText = L"No data found";
 			 }
  	private: System::Void DefineCoordinateFrameForm_Closed( Object^ /*sender*/, System::EventArgs ^ e )
 			{

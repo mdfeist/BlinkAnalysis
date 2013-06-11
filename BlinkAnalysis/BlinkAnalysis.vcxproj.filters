@@ -85,7 +85,7 @@
     <ClCompile Include="DefineCoordinateFrameForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AddObjectFormController.cpp">
+    <ClCompile Include="SetObjectRigidBodyForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -181,6 +181,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AddObjectFormController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SetObjectRigidBodyForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SetObjectRigidBodyFormController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

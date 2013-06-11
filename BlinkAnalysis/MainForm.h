@@ -22,6 +22,7 @@
 #include "AddWorldForm.h" // TODO need to add controller?
 #include "DefineCoordinateFrameFormController.h"
 #include "EyeCalibrationWizardFormController.h"
+#include "SetObjectRigidBodyFormController.h"
 #include "AppData.h"
 #include "AppViewer.h"
 
@@ -1577,6 +1578,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->objectGridView->Name = L"objectGridView";
 			this->objectGridView->Size = System::Drawing::Size(250, 382);
 			this->objectGridView->TabIndex = 6;
+			this->objectGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellDoubleClick);
+			this->objectGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellValueChanged);
 			// 
 			// objectPropertyColumn
 			// 
@@ -2747,25 +2750,42 @@ private: System::Void worldGridView_CellDoubleClick(System::Object^  sender, Sys
 private: System::Void worldGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 			 if (e->RowIndex == (int) worldProperty::NAME)
 			 {
-				 int id;
-				 bool result = Int32::TryParse((String^)this->worldGridView->Rows[(int)worldProperty::ID]->Cells[1]->Value->ToString(), id);
-				 if (result)
-				 {
-					 CaptureWorld* world = AppData::getInstance()->getWorld(id);
-					 if (world)
-					 {
-						 std::string* str = new std::string(
-							 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(
-								(String^)this->worldGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value)
-							 ).ToPointer()
-						 );
-						 world->setName(*str);
-						 int idx = this->worldComboBox->SelectedIndex;
-						 worldUpdateList();
-						 this->worldComboBox->SelectedIndex = idx;
-					 }
-				 }
-
+				CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
+				if (world)
+				{
+					std::string* str = new std::string(
+						(const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(
+						(String^)this->worldGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value)
+						).ToPointer()
+					);
+					world->setName(*str);
+					int idx = this->worldComboBox->SelectedIndex;
+					worldUpdateList();
+					this->worldComboBox->SelectedIndex = idx;
+				}
+			 }
+		 }
+		 		 // user edits property value for object
+private: System::Void objectGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
+			 if (e->RowIndex == (int) objectProperty::NAME)
+			 {
+				CaptureWorld* world = AppData::getInstance()->getWorld(displayObjectWorld);
+				if (world)
+				{
+					CaptureObject* object = world->getObject(displayObject);
+					if (object)
+					{
+						std::string* str = new std::string(
+							(const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(
+							(String^)this->objectGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value)
+							).ToPointer()
+						);
+						object->setName(*str);
+						int idx = this->objectComboBox->SelectedIndex;
+						objectComboBox_updateList();
+						this->objectComboBox->SelectedIndex = idx;
+					}
+				}
 			 }
 		 }
 private: System::Void objectAddButton_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -2800,7 +2820,19 @@ private: System::Void resetWorldGridView() {
 				this->objectAddButton->Enabled = false;
 			}
 		 }
+private: System::Void objectGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
+			 if (e->RowIndex != (int)objectProperty::RIGID ||
+				 e->ColumnIndex != 1) // Value
+				 return;
 
+			 SetObjectRigidBodyFormController ^control = SetObjectRigidBodyFormController::getInstance();
+			 control->createForm();
+			 control->setRigidBodyVector(this->optiTrackRigidBodyVector);
+			 control->setWorldAndObject(displayObjectWorld, displayObject);
+			 int rb = String::Compare((String^)this->objectGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value, "none");
+			 control->setHasRigidBody(rb != 0);
+			 control->Show();
+		 }
 };
 }
 
