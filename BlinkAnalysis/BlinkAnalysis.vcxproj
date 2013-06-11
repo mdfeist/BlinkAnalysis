@@ -124,6 +124,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddObjectFormController.cpp" />
     <ClCompile Include="AppViewer.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlinkAnalysis.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="AddObjectForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AddObjectFormController.h" />
     <ClInclude Include="AddWorldForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

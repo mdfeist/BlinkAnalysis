@@ -18,7 +18,7 @@
 
 #include "Dikablis.h"
 #include "DikablisHelp.h"
-//#include "AddObjectForm.h"
+#include "AddObjectFormController.h"
 #include "AddWorldForm.h" // TODO need to add controller?
 #include "DefineCoordinateFrameFormController.h"
 #include "EyeCalibrationWizardFormController.h"
@@ -375,6 +375,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->objectAddButton = (gcnew System::Windows::Forms::Button());
 			this->objectComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectGridView = (gcnew System::Windows::Forms::DataGridView());
+			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -387,8 +389,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1545,12 +1545,14 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			// 
 			// objectAddButton
 			// 
+			this->objectAddButton->Enabled = false;
 			this->objectAddButton->Location = System::Drawing::Point(200, 57);
 			this->objectAddButton->Name = L"objectAddButton";
 			this->objectAddButton->Size = System::Drawing::Size(56, 23);
 			this->objectAddButton->TabIndex = 8;
 			this->objectAddButton->Text = L"Add";
 			this->objectAddButton->UseVisualStyleBackColor = true;
+			this->objectAddButton->Click += gcnew System::EventHandler(this, &MainForm::objectAddButton_Click);
 			// 
 			// objectComboBox
 			// 
@@ -1575,6 +1577,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->objectGridView->Name = L"objectGridView";
 			this->objectGridView->Size = System::Drawing::Size(250, 382);
 			this->objectGridView->TabIndex = 6;
+			// 
+			// objectPropertyColumn
+			// 
+			this->objectPropertyColumn->HeaderText = L"Property";
+			this->objectPropertyColumn->Name = L"objectPropertyColumn";
+			this->objectPropertyColumn->ReadOnly = true;
+			// 
+			// objectValueColumn
+			// 
+			this->objectValueColumn->HeaderText = L"Value";
+			this->objectValueColumn->Name = L"objectValueColumn";
 			// 
 			// menuStrip
 			// 
@@ -1665,17 +1678,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->setAsRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(191, 22);
 			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
 			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
-			// 
-			// objectPropertyColumn
-			// 
-			this->objectPropertyColumn->HeaderText = L"Property";
-			this->objectPropertyColumn->Name = L"objectPropertyColumn";
-			this->objectPropertyColumn->ReadOnly = true;
-			// 
-			// objectValueColumn
-			// 
-			this->objectValueColumn->HeaderText = L"Value";
-			this->objectValueColumn->Name = L"objectValueColumn";
 			// 
 			// MainForm
 			// 
@@ -2471,30 +2473,6 @@ private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, Sys
 			 this->saveAsProject();
 		 }
 private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-/*			AddObjectForm^ objectForm = gcnew AddObjectForm();
-			objectForm->UpdateObject += gcnew System::EventHandler(this, &MainForm::AddObjectForm_UpdateObject);
-			objectForm->Show();*/
-		 }
-private: System::Void AddObjectForm_UpdateObject(System::Object^  sender, System::EventArgs^  e) {
-			/*CaptureWorld* world = AppData::getInstance()->getWorld();
-			if (world)
-			{
-				std::map<int, CaptureObject*> objectMap = world->getObjects();
-									
-				this->visualObjectsListView->Items->Clear();
-				
-				for (objects_iterator it = objectMap.begin(); it != objectMap.end(); it++)
-				{
-					// Add Capture Object to list
-					String^ objectID = Convert::ToString(it->second->getID());
-					String^ objectName = gcnew String(it->second->getName().c_str());
-					ListViewItem^ listViewItem = gcnew ListViewItem(objectID); 
-					listViewItem->SubItems->Add(objectName);
-					this->visualObjectsListView->Items->Add(listViewItem);
-				}
-			}*/
-		 }
-private: System::Void objectsListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 /*private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 			int toggled = -1;
@@ -2553,7 +2531,12 @@ public: System::Void worldUpdateList() {
 			{
 				this->worldComboBox->Items->Clear();
 				this->objectWComboBox->Items->Clear();
+				this->objectComboBox->Items->Clear();
+				resetWorldGridView();
+				resetObjectGridView();
+
 				std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
+				int idx = 0;
 				for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 				{
 					String^ worldName = gcnew String(itr->second->getName().c_str());
@@ -2564,7 +2547,7 @@ public: System::Void worldUpdateList() {
 					this->objectWComboBox->Items->Add(worldName);
 				}
 			}
-			
+
 			isUpdatingWorlds = false;
 		}
 public: System::Void worldUpdateGridView() {
@@ -2615,7 +2598,10 @@ private: System::Void worldGridView_displayWorld() {
 		 // update world display if drop down list value changes
 private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (!this->worldComboBox->SelectedItem)
+			 {
+				 resetWorldGridView();
 				 return;
+			 }
 
 			 String^ text = this->worldComboBox->SelectedItem->ToString();
 			 int id = worldExtractID(text);
@@ -2629,45 +2615,64 @@ private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender
 private: System::Void objectWComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (!this->objectWComboBox->SelectedItem)
 				 return;
+			 
+			 this->objectAddButton->Enabled = true;
 
 			 String^ text = this->objectWComboBox->SelectedItem->ToString();
 			 int id = worldExtractID(text);
 			 if (id >= 0)
 			 {
-				 objectComboBox_updateList(id);
+				 displayObjectWorld = id;
+				 objectComboBox_updateList();
 			 }
 		 }
-		 // populate list of objects based on worldID
-private: System::Void objectComboBox_updateList(int worldID) {
-			 this->objectComboBox->Items->Clear();
-			 CaptureWorld* world = AppData::getInstance()->getWorld(worldID);
-			 if (world)
-			 {
-				 std::map<int, CaptureObject*> objects = world->getObjects();
-				 for (objects_iterator itr = objects.begin(); itr != objects.end(); itr++)
+		 // populate list of objects based on displayObjectWorld
+public: System::Void objectComboBox_updateList() {
+			if (this->objectComboBox->InvokeRequired) 
+			{
+				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::objectComboBox_updateList);
+				BeginInvoke(d, nullptr);
+			} 
+			else 
+			{
+				 this->objectComboBox->Items->Clear();
+				 resetObjectGridView();
+
+				 CaptureWorld* world = AppData::getInstance()->getWorld(displayObjectWorld);
+				 int idx = 0;
+				 if (world)
 				 {
-					String^ objectName = gcnew String(itr->second->getName().c_str());
-					objectName += " (";
-					objectName += itr->first.ToString();
-					objectName += ")";
-					this->objectComboBox->Items->Add(objectName);
+					 std::map<int, CaptureObject*> objects = world->getObjects();
+					 for (objects_iterator itr = objects.begin(); itr != objects.end(); itr++)
+					 {
+						String^ objectName = gcnew String(itr->second->getName().c_str());
+						objectName += " (";
+						objectName += itr->first.ToString();
+						objectName += ")";
+						this->objectComboBox->Items->Add(objectName);
+					 }
 				 }
-			 }
+			}
 		 }
 		 // update object display if drop down list value changes
 private: System::Void objectComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (!this->objectComboBox->SelectedItem)
+			 {
+				 resetObjectGridView();
 				 return;
+			 }
 
 			 String^ text = this->objectComboBox->SelectedItem->ToString();
 			 int id = worldExtractID(text);
 			 if (id >= 0)
 			 {
 				 displayObject = id;
-				 displayObjectWorld = worldExtractID(this->objectWComboBox->SelectedItem->ToString());
 				 objectGridView_displayObject();
 			 }
 		 }
+public: System::Void objectUpdateGridView() {
+			objectGridView_displayObject();
+		}
 		// populates the object GridView based on selected value from world and object ComboBoxes
 private: System::Void objectGridView_displayObject() {
 			 if (this->objectGridView->InvokeRequired)
@@ -2763,6 +2768,39 @@ private: System::Void worldGridView_CellValueChanged(System::Object^  sender, Sy
 
 			 }
 		 }
+private: System::Void objectAddButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 AddObjectFormController ^control = AddObjectFormController::getInstance();
+			 control->createForm();
+			 control->setDisplayWorld(displayObjectWorld);
+			 control->Show();
+		 }
+private: System::Void resetObjectGridView() {
+			if (this->objectGridView->InvokeRequired) 
+			{
+				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::resetObjectGridView);
+				BeginInvoke(d, nullptr);
+			} 
+			else 
+			{
+				this->objectGridView->Rows->Clear();
+				displayObject = -1;
+			}
+		 }
+private: System::Void resetWorldGridView() {
+			if (this->worldGridView->InvokeRequired) 
+			{
+				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::resetWorldGridView);
+				BeginInvoke(d, nullptr);
+			} 
+			else 
+			{
+				this->worldGridView->Rows->Clear();
+				displayWorld = -1;
+				displayObjectWorld = -1;
+				this->objectAddButton->Enabled = false;
+			}
+		 }
+
 };
 }
 
