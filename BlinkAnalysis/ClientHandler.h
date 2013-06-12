@@ -52,10 +52,10 @@ private:
 
 	// Dikablis
 	// Width and Height of the Field of View for the Dikablis
-	static int DikablisViewingWidth;
-	static int DikablisViewingHeight;
-	static int DikablisViewingMargin;
-	static int DikablisViewingSize;
+	static unsigned long DikablisViewingWidth;
+	static unsigned long DikablisViewingHeight;
+	static unsigned long DikablisViewingMargin;
+	static unsigned long DikablisViewingSize;
 
 	// Used to store the calibrated eye vectors
 	float *dikablisEyeVectorArray;
@@ -147,13 +147,12 @@ public:
 	int getRigidBodyTool() { return rigidBodyTool; }
 
 	// Dikablis
-	static int getDikablisViewingWidth() { return DikablisViewingWidth; }
-	static int getDikablisViewingHeight() { return DikablisViewingHeight; }
-	static int getDikablisViewingMargin() { return DikablisViewingMargin; }
-	static int getDikablisViewingSize() { return DikablisViewingSize; }
+	static unsigned long getDikablisViewingWidth() { return DikablisViewingWidth; }
+	static unsigned long getDikablisViewingHeight() { return DikablisViewingHeight; }
+	static unsigned long getDikablisViewingMargin() { return DikablisViewingMargin; }
+	static unsigned long getDikablisViewingSize() { return DikablisViewingSize; }
 
-	void setRay(osg::Vec3 ray, int x, int y);
+	//void setRay(osg::Vec3 ray, int x, int y);
 	osg::Vec3 getRay(int x, int y);
-	void save();
 };
 

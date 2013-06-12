@@ -5,8 +5,7 @@
 #include <osg/Matrix>
 
 #include "Marker.h"
-
-#define EPSILON 0.00001
+#include "Marcos.h"
 
 class CaptureObjectUtil
 {

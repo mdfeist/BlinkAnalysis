@@ -173,6 +173,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="MainFormController.h" />
+    <ClInclude Include="Marcos.h" />
     <ClInclude Include="Marker.h" />
     <ClInclude Include="NatNetClientSetup.h" />
     <ClInclude Include="Objects.h" />

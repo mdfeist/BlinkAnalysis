@@ -5,23 +5,94 @@
 #include <vector>
 #include <osg/Vec3>
 
+
 class EyeCalibration {
 private:
 	class CalibrationPoint {
 	private:
-		int pixel_x, pixel_y;
-		osg::Vec3 ray;
+		int _x, _y;
+		osg::Vec3 _ray;
 	public:
 		CalibrationPoint() {}
-		CalibrationPoint(int pixel_x, int pixel_y, osg::Vec3 ray) {
-			this->pixel_x = pixel_x;
-			this->pixel_y = pixel_y;
-			this->ray = ray;
+		CalibrationPoint(int x, int y, osg::Vec3 ray) {
+			_x = x;
+			_y = y;
+			_ray = ray;
 		}
 
-		osg::Vec3 getRay() { return this->ray; }
-		int& x() { return this->pixel_x; }
-		int& y() { return this->pixel_y; }
+		osg::Vec3& ray() { return _ray; }
+		int& x() { return _x; }
+		int& y() { return _y; }
+
+		bool equal(const CalibrationPoint& rhs) {
+			return _x==rhs._x && _y==rhs._y;
+		}
+		
+		/** Multiply by scalar. */
+        inline const CalibrationPoint operator * (float rhs) const
+        {
+            return CalibrationPoint(_x*rhs, _y*rhs, _ray*rhs);
+        }
+
+        /** Unary multiply by scalar. */
+        inline CalibrationPoint& operator *= (float rhs)
+        {
+            _x*=rhs;
+            _y*=rhs;
+            _ray*=rhs;
+            return *this;
+        }
+
+        /** Divide by scalar. */
+        inline const CalibrationPoint operator / (float rhs) const
+        {
+            return CalibrationPoint(_x/rhs, _y/rhs, _ray/rhs);
+        }
+
+        /** Unary divide by scalar. */
+        inline CalibrationPoint& operator /= (float rhs)
+        {
+            _x/=rhs;
+            _y/=rhs;
+            _ray/=rhs;
+            return *this;
+        }
+
+        /** Binary vector add. */
+        inline const CalibrationPoint operator + (const CalibrationPoint& rhs) const
+        {
+            return CalibrationPoint(_x+rhs._x, _y+rhs._y, _ray+rhs._ray);
+        }
+
+		 /** Binary vector add. */
+        inline CalibrationPoint& operator += (const CalibrationPoint& rhs)
+        {
+            _x+=rhs._x;
+			_y+=rhs._y;
+			_ray+=rhs._ray;
+			return *this;
+        }
+
+        /** Binary vector subtract. */
+        inline const CalibrationPoint operator - (CalibrationPoint& rhs) const
+        {
+            return CalibrationPoint(_x-rhs._x, _y-rhs._y, _ray-rhs._ray);
+        }
+
+		 /** Binary vector subtract. */
+        inline CalibrationPoint& operator -= (const CalibrationPoint& rhs)
+        {
+            _x-=rhs._x;
+			_y-=rhs._y;
+			_ray-=rhs._ray;
+			return *this;
+        }
+
+        /** Negation operator. Returns the negative of the Vec3f. */
+        inline const CalibrationPoint operator - () const
+        {
+            return CalibrationPoint(-_x, -_y, -_ray);
+        }
 	};
 
 	class Segment {
@@ -34,8 +105,8 @@ private:
 			_p2 = to;
 		}
 
-		CalibrationPoint p1() { return _p1; }
-		CalibrationPoint p2() { return _p2; }
+		CalibrationPoint& p1() { return _p1; }
+		CalibrationPoint& p2() { return _p2; }
 
 		int x1() { return _p1.x(); }
 		int y1() { return _p1.y(); }
@@ -43,33 +114,56 @@ private:
 		int y2() { return _p2.y(); }
 	};
 
+	// Typedef an STL vector of vertices which are used to represent
+	// a polygon/contour and a series of triangles.
+	typedef std::vector< CalibrationPoint > CalibrationPointVector;
+	typedef std::vector< Segment > SegmentVector;
+
 	int rbHeadId;
 	int rbViewingObjectId;
-	osg::Vec3 eyeVector;
+	// Used to store the calibrated eye vectors
+	float *eyeVectorArray;
+	unsigned long viewingWidth;
+	unsigned long viewingHeight;
+	unsigned long viewingMargin;
 
 	char* getNameById(int id);
 
-	std::vector<CalibrationPoint> calibrationPoints;
-	std::vector<Segment> convexHull;
+	CalibrationPointVector calibrationPoints;
 
 	int center_x, center_y;
 
-	bool isLess(CalibrationPoint a, CalibrationPoint b);
-	bool isEdge(std::vector<CalibrationPoint> processingPoints, Segment edge);
-	int isLeft(Segment segment, CalibrationPoint r);
+	// triangulate a contour/polygon, places results in STL vector as series of triangles.
+	bool triangulate(CalibrationPointVector &contour, CalibrationPointVector &result);
+	// compute area of a contour/polygon
+	float area(CalibrationPointVector &contour);
+	// decide if point Px/Py is inside triangle defined by
+	// (Ax,Ay) (Bx,By) (Cx,Cy)
+	bool insideTriangle(CalibrationPoint A, CalibrationPoint B, CalibrationPoint C, CalibrationPoint P);
+	bool snip(CalibrationPointVector &contour,int u,int v,int w,int n,int *V);
 
-	std::vector<Segment> calculateConvexHull(std::vector<CalibrationPoint> processingPoints);
-	std::vector<Segment> getEdges(std::vector<CalibrationPoint> processingPoints);
-	int getLineIntersection(Segment edge1, Segment edge2);
+	// Convex Hull
+	SegmentVector calculateConvexHull(CalibrationPointVector processingPoints);
+	bool boundingPointsOfHull(SegmentVector &contour, CalibrationPointVector &result);
+	bool minimalTriangulation(CalibrationPointVector &contour, CalibrationPointVector &result);
+
+	bool sort(CalibrationPointVector &points, int center_x, int center_y);
+
+	int getLineIntersection(CalibrationPoint A, CalibrationPoint B, CalibrationPoint C, CalibrationPoint D);
+	bool isEdge(CalibrationPointVector processingPoints, Segment edge);
+	int isLeft(Segment segment, CalibrationPoint r);
+	bool isLess(CalibrationPoint a, CalibrationPoint b, int center_x, int center_y);
+	SegmentVector getEdges(CalibrationPointVector processingPoints);
 	CalibrationPoint getClosestPoint(CalibrationPoint a, CalibrationPoint b, CalibrationPoint point, bool segmentClamp);
 
 	struct ComparePoints : std::binary_function<CalibrationPoint, CalibrationPoint, bool> {
-		ComparePoints(EyeCalibration * cal) : _cal(cal) {}
-		bool operator() (CalibrationPoint a, CalibrationPoint b) const {
-			return _cal->isLess(a, b);
+		ComparePoints(EyeCalibration * cal, int x, int y) : _cal(cal), _x(x), _y(y) {}
+		bool operator() (const CalibrationPoint& a, const CalibrationPoint& b) const {
+			return _cal->isLess(a, b, _x, _y);
 		}
 
 		EyeCalibration * _cal;
+		int _x, _y;
 	};
 
 	struct ComparePointsDistanceFrom : std::binary_function<CalibrationPoint, CalibrationPoint, bool> {
@@ -90,7 +184,7 @@ private:
 
 public:
 	EyeCalibration(void);
-	~EyeCalibration(void) {};
+	~EyeCalibration(void);
 	
 	void setHeadId(int id) { this->rbHeadId = id; }
 	int getHeadId() { return this->rbHeadId; }
@@ -102,8 +196,8 @@ public:
 
 	bool addPoint();
 	bool calibrate();
-	int pointInPolygon(std::vector<Segment> hull, CalibrationPoint point);
 
-	void testPointInPolygon(CalibrationPoint point);
 	void createTestData();
+
+	void saveRayMap();
 };
