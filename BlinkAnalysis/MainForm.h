@@ -244,8 +244,8 @@ private: System::Windows::Forms::ComboBox^  worldComboBox;
 private: System::Windows::Forms::Button^  worldAddButton;
 
 private: System::Windows::Forms::DataGridView^  worldGridView;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldPropertyColumn;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
+
+
 private: System::Windows::Forms::Label^  worldListLabel;
 private: System::Windows::Forms::Label^  objectLabel;
 
@@ -254,8 +254,12 @@ private: System::Windows::Forms::ComboBox^  objectWComboBox;
 private: System::Windows::Forms::Button^  objectAddButton;
 private: System::Windows::Forms::ComboBox^  objectComboBox;
 private: System::Windows::Forms::DataGridView^  objectGridView;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldPropertyColumn;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectPropertyColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
+
+
 
 
 
@@ -366,8 +370,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->worldTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->worldListLabel = (gcnew System::Windows::Forms::Label());
 			this->worldGridView = (gcnew System::Windows::Forms::DataGridView());
-			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->worldAddButton = (gcnew System::Windows::Forms::Button());
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
@@ -377,8 +379,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->objectAddButton = (gcnew System::Windows::Forms::Button());
 			this->objectComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectGridView = (gcnew System::Windows::Forms::DataGridView());
-			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -391,6 +391,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1465,21 +1469,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 				this->worldValueColumn});
 			this->worldGridView->Location = System::Drawing::Point(6, 46);
 			this->worldGridView->Name = L"worldGridView";
+			this->worldGridView->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::CellSelect;
 			this->worldGridView->Size = System::Drawing::Size(250, 422);
 			this->worldGridView->TabIndex = 3;
 			this->worldGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellDoubleClick);
 			this->worldGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellValueChanged);
-			// 
-			// worldPropertyColumn
-			// 
-			this->worldPropertyColumn->HeaderText = L"Property";
-			this->worldPropertyColumn->Name = L"worldPropertyColumn";
-			this->worldPropertyColumn->ReadOnly = true;
-			// 
-			// worldValueColumn
-			// 
-			this->worldValueColumn->HeaderText = L"Value";
-			this->worldValueColumn->Name = L"worldValueColumn";
 			// 
 			// worldAddButton
 			// 
@@ -1589,21 +1583,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 				this->objectValueColumn});
 			this->objectGridView->Location = System::Drawing::Point(6, 86);
 			this->objectGridView->Name = L"objectGridView";
+			this->objectGridView->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::CellSelect;
 			this->objectGridView->Size = System::Drawing::Size(250, 382);
 			this->objectGridView->TabIndex = 6;
 			this->objectGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellDoubleClick);
 			this->objectGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellValueChanged);
-			// 
-			// objectPropertyColumn
-			// 
-			this->objectPropertyColumn->HeaderText = L"Property";
-			this->objectPropertyColumn->Name = L"objectPropertyColumn";
-			this->objectPropertyColumn->ReadOnly = true;
-			// 
-			// objectValueColumn
-			// 
-			this->objectValueColumn->HeaderText = L"Value";
-			this->objectValueColumn->Name = L"objectValueColumn";
 			// 
 			// menuStrip
 			// 
@@ -1694,6 +1678,32 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->setAsRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(191, 22);
 			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
 			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
+			// 
+			// worldPropertyColumn
+			// 
+			this->worldPropertyColumn->HeaderText = L"Property";
+			this->worldPropertyColumn->Name = L"worldPropertyColumn";
+			this->worldPropertyColumn->ReadOnly = true;
+			this->worldPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// worldValueColumn
+			// 
+			this->worldValueColumn->HeaderText = L"Value";
+			this->worldValueColumn->Name = L"worldValueColumn";
+			this->worldValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// objectPropertyColumn
+			// 
+			this->objectPropertyColumn->HeaderText = L"Property";
+			this->objectPropertyColumn->Name = L"objectPropertyColumn";
+			this->objectPropertyColumn->ReadOnly = true;
+			this->objectPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// objectValueColumn
+			// 
+			this->objectValueColumn->HeaderText = L"Value";
+			this->objectValueColumn->Name = L"objectValueColumn";
+			this->objectValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
 			// 
 			// MainForm
 			// 
