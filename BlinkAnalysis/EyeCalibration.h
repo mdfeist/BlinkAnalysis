@@ -145,7 +145,7 @@ private:
 	// Convex Hull
 	SegmentVector calculateConvexHull(CalibrationPointVector processingPoints);
 	bool boundingPointsOfHull(SegmentVector &contour, CalibrationPointVector &result);
-	bool minimalTriangulation(CalibrationPointVector &contour, CalibrationPointVector &result);
+	bool isInCircumCircle(CalibrationPoint &point, CalibrationPointVector &traingle);
 
 	bool sort(CalibrationPointVector &points, int center_x, int center_y);
 
