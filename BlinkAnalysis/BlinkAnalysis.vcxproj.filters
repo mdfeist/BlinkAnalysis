@@ -82,6 +82,12 @@
     <ClCompile Include="CaptureWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DefineCoordinateFrameForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SetObjectRigidBodyForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -166,6 +172,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Marcos.h">
+     <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineCoordinateFrameFormController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddWorldForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineCoordinateFrameForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddObjectFormController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SetObjectRigidBodyForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SetObjectRigidBodyFormController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -185,6 +209,12 @@
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="AddObjectForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddWorldForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DefineCoordinateFrameForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>

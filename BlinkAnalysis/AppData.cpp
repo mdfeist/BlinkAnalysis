@@ -181,9 +181,12 @@ bool AppData::addWorld(CaptureWorld *world)
 	std::pair<worlds_iterator, bool> ret;
 	ret = worlds.insert(std::pair<int, CaptureWorld*>(id, world));
 
-	MainFormController::getInstance()->worldUpdateData();
-
-	return (ret.second == false) ? true : false;
+	if (ret.second) // added successfully
+	{
+		MainFormController::getInstance()->worldUpdateList();
+		return true;
+	}
+	return false;
 }
 
 CaptureWorld* AppData::getWorld(int id)

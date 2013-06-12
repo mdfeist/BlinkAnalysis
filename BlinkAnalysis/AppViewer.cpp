@@ -30,13 +30,11 @@ osg::Group* rootNode;
 
 bool running = false;
 bool visible = false;
-bool redrawObj = false;
 
 float VIEWER_SCALE = 1;
 
 void AppViewer::stopAppViewer() { running = false; }
 void AppViewer::setVisible(bool bVisible) { visible = bVisible; }
-void AppViewer::redrawObjects() { redrawObj = true; }
 
 void render(void *) {
 	// Started Rendering
@@ -156,21 +154,7 @@ void render(void *) {
 					nodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 					// End Create Points
 				}
-			}
-
-			// TODO change this look at the Google Doc
-			if (redrawObj)
-			{
-				std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
-				for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
-				{
-					itr->second->updateObjectsNode();
-					// TODO handle new worlds being added?
-				}
-
-				redrawObj = false;
-			}
-			
+			}			
 
 			// Add Node containing all the points to the scene
 			rootNode->addChild( node );
@@ -279,4 +263,12 @@ void AppViewer::initAppViewer(HWND hwnd)
 
 	// Begin rendering on new thread
 	_beginthread( render, 0, NULL );
+}
+
+bool AppViewer::addNodeToViewer(osg::Node* node) {
+	return rootNode->addChild(node);
+}
+
+bool AppViewer::removeNodeFromViewer(osg::Node* node) {
+	return rootNode->removeChild(node);
 }

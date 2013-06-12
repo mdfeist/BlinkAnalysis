@@ -34,24 +34,21 @@ public:
 	~CaptureObject() { faces.clear(); }
 
 	void setID(int id) { this->id = id; }
-
 	int getID() { return id; }
 	
 	void setVertices(osg::Vec3Array* vertices) { this->vertices = vertices; }
+	int getNumVertices() { return vertices->size(); }
 
 	void addFace(osg::DrawElementsUInt* face) { faces.push_back(face); }
-
 	int getNumFaces() { return faces.size(); }
-
 	void removeFaces() { faces.clear(); }
 
-	void setRigidBody(int rid) { id = rid; }
-
-	int getRigidBody() { return id; }
+	void setRigidBody(int rid) { rigidBody = rid; }
+	int getRigidBody() { return rigidBody; }
 
 	void setName(std::string name) { this->name = name; }
-
 	std::string getName() { return name; }
+
 	// returns a Geode representing this object
 	osg::Geode* getAsGeode();
 };

@@ -24,10 +24,15 @@ namespace BlinkAnalysis {
 		AddObjectForm(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			displayWorld = -1;
 		}
+
+		void setDisplayWorld(int id) {
+			displayWorld = id; 
+			this->Text = L"Add Object (World ID " + displayWorld.ToString() + ")";
+		}
+		int getDisplayWorld() { return displayWorld; }
+
 
 	protected:
 		/// <summary>
@@ -82,8 +87,7 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::RadioButton^  planeMarkersRadio;
 	private: System::Windows::Forms::Label^  planeRigidDataLabel;
 
-
-	public: event EventHandler^ UpdateObject;
+	private: int displayWorld;
 
 	private:
 		/// <summary>
@@ -100,7 +104,6 @@ namespace BlinkAnalysis {
 		{
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->infoPage = (gcnew System::Windows::Forms::TabPage());
-			this->planeInfoLabel = (gcnew System::Windows::Forms::Label());
 			this->planePage = (gcnew System::Windows::Forms::TabPage());
 			this->planeRigidDataLabel = (gcnew System::Windows::Forms::Label());
 			this->planePt2SetButton = (gcnew System::Windows::Forms::Button());
@@ -108,6 +111,7 @@ namespace BlinkAnalysis {
 			this->planePt1SetButton = (gcnew System::Windows::Forms::Button());
 			this->planeRigidRadio = (gcnew System::Windows::Forms::RadioButton());
 			this->planeMarkersRadio = (gcnew System::Windows::Forms::RadioButton());
+			this->planeInfoLabel = (gcnew System::Windows::Forms::Label());
 			this->planeOptionalLabel = (gcnew System::Windows::Forms::Label());
 			this->planeNameTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->planeNameLabel = (gcnew System::Windows::Forms::Label());
@@ -145,17 +149,6 @@ namespace BlinkAnalysis {
 			this->infoPage->TabIndex = 0;
 			this->infoPage->Text = L"Info";
 			this->infoPage->UseVisualStyleBackColor = true;
-			// 
-			// planeInfoLabel
-			// 
-			this->planeInfoLabel->AutoSize = true;
-			this->planeInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->planeInfoLabel->Location = System::Drawing::Point(18, 21);
-			this->planeInfoLabel->Name = L"planeInfoLabel";
-			this->planeInfoLabel->Size = System::Drawing::Size(167, 15);
-			this->planeInfoLabel->TabIndex = 25;
-			this->planeInfoLabel->Text = L"Add a finite plane to the world";
 			// 
 			// planePage
 			// 
@@ -259,6 +252,17 @@ namespace BlinkAnalysis {
 			this->planeMarkersRadio->Text = L"Markers";
 			this->planeMarkersRadio->UseVisualStyleBackColor = true;
 			this->planeMarkersRadio->CheckedChanged += gcnew System::EventHandler(this, &AddObjectForm::planeMarkersRadio_CheckedChanged);
+			// 
+			// planeInfoLabel
+			// 
+			this->planeInfoLabel->AutoSize = true;
+			this->planeInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->planeInfoLabel->Location = System::Drawing::Point(18, 21);
+			this->planeInfoLabel->Name = L"planeInfoLabel";
+			this->planeInfoLabel->Size = System::Drawing::Size(167, 15);
+			this->planeInfoLabel->TabIndex = 25;
+			this->planeInfoLabel->Text = L"Add a finite plane to the world";
 			// 
 			// planeOptionalLabel
 			// 
@@ -403,7 +407,7 @@ namespace BlinkAnalysis {
 			this->ClientSize = System::Drawing::Size(418, 311);
 			this->Controls->Add(this->tabControl1);
 			this->Name = L"AddObjectForm";
-			this->Text = L"AddObjectForm";
+			this->Text = L"Add Object ";
 			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AddObjectForm::AddObjectForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &AddObjectForm::AddObjectForm_Load);
 			this->tabControl1->ResumeLayout(false);
@@ -521,7 +525,7 @@ private: System::Void setPoint(osg::Vec3* pos, Label^ text) {
 		 }
 		 // add plane to world based on data from posC, pos1, pos2
 private: System::Void planeSetButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 CaptureWorld* world = AppData::getInstance()->getWorld();
+			 CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
 				 std::string* str = new std::string( (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->planeNameTextBox->Text)).ToPointer());
@@ -530,8 +534,6 @@ private: System::Void planeSetButton_Click(System::Object^  sender, System::Even
 				 {
 					 String^ id = Convert::ToString(object->getID());
 					 String^ name = gcnew String(object->getName().c_str());
-					 UpdateObject(this, gcnew EventArgs());
-					 AppViewer::redrawObjects();
 				 }
 			 }
 			 this->Close();

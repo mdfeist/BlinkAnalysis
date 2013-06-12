@@ -22,10 +22,7 @@ private:
 	int id;
 
 	osg::Matrix* _globalToLocal;
-	// true: object positions are relative to transformation
-	// false: object positions are global position data
-	bool objectsRelative;
-
+	
 	// increments for each new object added
 	int _lastObjectID;
 	// map of IDs to objects in this world
@@ -55,7 +52,7 @@ public:
 	}
 
 	std::string getName() { return name; }
-	void setName(std::string name) { this->name = name; }
+	void setName(std::string name);
 	int getID() { return id; }
 
 	void setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects=false, bool updateObjects=false);
@@ -72,7 +69,10 @@ public:
 
 	int getNumberObjects();
 
-	osg::MatrixTransform* getAsGroup();
+	osg::MatrixTransform* getAsGroup(bool renderMatrix=false);
+
+	bool hasNode(osg::MatrixTransform* node) { return this->node == node; }
+
 	void updateObjectsNode();
 };
 
