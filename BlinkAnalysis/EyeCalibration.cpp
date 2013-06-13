@@ -285,9 +285,49 @@ EyeCalibration::SegmentVector EyeCalibration::calculateConvexHull(CalibrationPoi
 	return segments;
 }
 
-bool EyeCalibration::minimalTriangulation(CalibrationPointVector &contour, CalibrationPointVector &result) {
+bool EyeCalibration::isInCircumCircle(CalibrationPoint &point, CalibrationPointVector &traingle) {
 
-	return true;
+	CalibrationPoint center, P0;
+
+	if (traingle.size() != 3)
+		return false;
+
+	CalibrationPoint A = traingle[0];
+	CalibrationPoint B = traingle[1];
+	CalibrationPoint C = traingle[2];
+
+	P0 = A + (B - A)/2.f;
+	center = C + (P0 - C)*(3.f/2.f);
+
+	sort(traingle, center.x(), center.y());
+
+	float ax_sq = A.x()*A.x();
+	float ay_sq = A.y()*A.y();
+
+	float bx_sq = B.x()*B.x();
+	float by_sq = B.y()*B.y();
+
+	float cx_sq = C.x()*C.x();
+	float cy_sq = C.y()*C.y();
+
+	float px_sq = point.x()*point.x();
+	float py_sq = point.y()*point.y();
+
+	float a11 = A.x() - point.x();
+	float a12 = A.y() - point.y();
+	float a13 = (ax_sq - px_sq) + (ay_sq - py_sq);
+
+	float a21 = B.x() - point.x();
+	float a22 = B.y() - point.y();
+	float a23 = (bx_sq - px_sq) + (by_sq - py_sq);
+
+	float a31 = C.x() - point.x();
+	float a32 = C.y() - point.y();
+	float a33 = (cx_sq - px_sq) + (cy_sq - py_sq);
+
+	float det = (a11)*(a22*a33 - a32*a23) - (a12)*(a21*a33 - a31*a23) + (a13)*(a21*a32 - a31*a22);
+
+	return det > 0;
 }
 
 bool EyeCalibration::calibrate() {
@@ -312,13 +352,14 @@ bool EyeCalibration::calibrate() {
 		return false;
 	}
 
+	// Min/Max coordinates of the polygon
 	CalibrationPoint 
 		minX = calibrationPoints.at(0), 
 		minY = calibrationPoints.at(0), 
 		maxX = calibrationPoints.at(0), 
 		maxY = calibrationPoints.at(0);
 
-	// Print each points information
+	// Print each points information and get the min and max
 	for (unsigned int i = 0; i < calibrationPoints.size(); i++) {
 		CalibrationPoint point = calibrationPoints.at(i);
 		osg::Vec3 ray = point.ray();
@@ -361,6 +402,7 @@ bool EyeCalibration::calibrate() {
 			maxY.x(), maxY.y());
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
 
+		// Get center
 		this->center_x = (maxX.x() - minX.x())/2;
 		this->center_y = (maxY.y() - minY.y())/2;
 
@@ -372,6 +414,7 @@ bool EyeCalibration::calibrate() {
 	// Get Convex Hull
 	CalibrationPointVector boundingPoints;
 	SegmentVector convexHull = calculateConvexHull(calibrationPoints);
+	// Get the bounding points of the convex hull
 	boundingPointsOfHull(convexHull, boundingPoints);
 
 	// Print each segment information
@@ -384,17 +427,20 @@ bool EyeCalibration::calibrate() {
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
 	}
 
+	// Resort the bounding points
 	sort(boundingPoints, center_x, center_y);
 
 	// Triangulate
 	CalibrationPointVector traingles;
 	triangulate(boundingPoints, traingles);
 
+	// Check if the triangulation is valid 
 	if (traingles.size() % 3 != 0) {
 		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Error: Triangulating polygon.\n");
 		return false;
 	}
 
+	// Get the remaining inner points of the convex hull
 	CalibrationPointVector innerPoints;
 	for (unsigned int i = 0; i < calibrationPoints.size(); i++) {
 		CalibrationPoint point = calibrationPoints[i];
@@ -410,6 +456,7 @@ bool EyeCalibration::calibrate() {
 			innerPoints.push_back(point);
 	}
 
+	
 	unsigned int traingleCount = traingles.size() / 3;
 	for (unsigned int i = 0; i < innerPoints.size(); i++) {
 		CalibrationPoint P = innerPoints[i];
@@ -473,6 +520,102 @@ bool EyeCalibration::calibrate() {
 
 	traingleCount = traingles.size() / 3;
 
+	// Flip edges of the triangles
+	for (int k = traingleCount - 1; k > 0 ; k--) {
+		CalibrationPointVector tri1;
+
+		tri1.push_back(traingles[3*k + 0]);
+		tri1.push_back(traingles[3*k + 1]);
+		tri1.push_back(traingles[3*k + 2]);
+
+		for (int i = k - 1; i >= 0; i--) {
+			CalibrationPointVector tri2;
+
+			tri2.push_back(traingles[3*i + 0]);
+			tri2.push_back(traingles[3*i + 1]);
+			tri2.push_back(traingles[3*i + 2]);
+
+			// Get shared edge if exists
+			int shared = 0;
+			CalibrationPointVector sharedPoints;
+			CalibrationPoint nonSharedPoint;
+			for (unsigned int idx1 = 0; idx1 < 3; idx1++) {
+				for (unsigned int idx2 = 0; idx2 < 3; idx2++) {
+					if (tri2[idx2].equal(tri1[idx1])) {
+						sharedPoints.push_back(tri1[idx1]);
+						shared++;
+					} else {
+						nonSharedPoint = tri2[idx2];
+					}
+				}
+			}
+
+
+			if (shared == 2) {
+				if (isInCircumCircle(nonSharedPoint, tri1)) {
+					sprintf_s(buf, "Point %d - (%d, %d): In circle of triangle (%d, %d), (%d, %d), (%d, %d)\n", 
+						i + 1, nonSharedPoint.x(), nonSharedPoint.y(), 
+						tri1[0].x(), tri1[0].y(), 
+						tri1[1].x(), tri1[1].y(), 
+						tri1[2].x(), tri1[2].y());
+					EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog(buf);
+
+					// Sort tri1
+					for (unsigned int idx = 0; idx < 3; idx++) {
+						if (tri1[idx].equal(sharedPoints[0]) || tri1[idx].equal(sharedPoints[1])) {
+							CalibrationPoint shared = tri1[idx];
+							tri1.erase(tri1.begin()+idx);
+							tri1.insert(tri1.begin(), shared);
+						}
+					}
+
+					// Sort tri2
+					for (unsigned int idx = 0; idx < 3; idx++) {
+						if (tri2[idx].equal(sharedPoints[0]) || tri2[idx].equal(sharedPoints[1])) {
+							CalibrationPoint shared = tri2[idx];
+							tri2.erase(tri2.begin()+idx);
+							tri2.insert(tri2.begin(), shared);
+						}
+					}
+
+					// Clean up old triangles
+					traingles.erase(traingles.begin()+3*k, traingles.begin()+3*k+3);
+					traingles.erase(traingles.begin()+3*i, traingles.begin()+3*i+3);
+
+					CalibrationPoint center, P0;
+
+					// New Triangle 1
+					CalibrationPointVector new_tri1;
+					new_tri1.push_back(tri1[0]);
+					new_tri1.push_back(tri1[2]);
+					new_tri1.push_back(tri2[2]);
+
+					P0 = tri1[0] + (tri2[2] - tri1[0])/2.f;
+					center = tri1[2] + (P0 - tri1[2])*(3.f/2.f);
+
+					sort(new_tri1, center.x(), center.y());
+
+					// New Triangle 2
+					CalibrationPointVector new_tri2;
+					new_tri2.push_back(tri1[1]);
+					new_tri2.push_back(tri1[2]);
+					new_tri2.push_back(tri2[2]);
+
+					P0 = tri1[1] + (tri2[2] - tri1[1])/2.f;
+					center = tri1[2] + (P0 - tri1[2])*(3.f/2.f);
+
+					sort(new_tri2, center.x(), center.y());
+
+					traingles.insert(traingles.end(), new_tri1.begin(), new_tri1.end());
+					traingles.insert(traingles.end(), new_tri2.begin(), new_tri2.end());
+
+					break;
+				}
+			}
+		}
+	}
+
+	// Draw triangles
 	for (unsigned int j = 0; j < (viewingHeight+2*viewingMargin); j++) {
 		for (unsigned int i = 0; i < (viewingWidth+2*viewingMargin); i++) {
 			CalibrationPoint P(i - viewingMargin, j - viewingMargin, osg::Vec3(0.f, 0.f, 0.f));
@@ -483,7 +626,13 @@ bool EyeCalibration::calibrate() {
 				CalibrationPoint C = traingles[3*k + 2];
 
 				if (insideTriangle(A,B,C,P)) {
-					osg::Vec3 ray = (A.ray() + B.ray() + C.ray())/3.f;
+					osg::Vec3 ray;
+
+					float det = A.x()*B.y()-B.x()*A.y()+B.x()*C.y()-C.x()*B.y()+C.x()*A.y()-A.x()*C.y();
+					osg::Vec3 a = (A.ray()*(B.y()-C.y())+B.ray()*(C.y()-A.y())+C.ray()*(A.y()-B.y())) / det;
+					osg::Vec3 b = (A.ray()*(C.x()-B.x())+B.ray()*(A.x()-C.x())+C.ray()*(B.x()-A.x())) / det;
+					osg::Vec3 c = (A.ray()*(B.x()*C.y()-C.x()*B.y())+B.ray()*(C.x()*A.y()-A.x()*C.y())+C.ray()*(A.x()*B.y()-B.x()*A.y())) / det;
+					ray = a*P.x()+b*P.y()+c;
 
 					unsigned long location = 3*(j*(viewingWidth+2*viewingMargin) + i);
 					
@@ -497,6 +646,56 @@ bool EyeCalibration::calibrate() {
 		}
 	}
 
+	// Draw Outside
+	for (unsigned int j = 0; j < (viewingHeight+2*viewingMargin); j++) {
+		for (unsigned int i = 0; i < (viewingWidth+2*viewingMargin); i++) {
+			CalibrationPoint P(i - viewingMargin, j - viewingMargin, osg::Vec3(0.f, 0.f, 0.f));
+
+			bool inside = false;
+			for (unsigned int k = 0; k < traingleCount; k++) {
+				CalibrationPoint A = traingles[3*k + 0];
+				CalibrationPoint B = traingles[3*k + 1];
+				CalibrationPoint C = traingles[3*k + 2];
+
+				if (insideTriangle(A,B,C,P)) {
+					inside = true;
+					break;
+				}
+			}
+
+			if (!inside) {
+
+				CalibrationPoint closest;
+				float min_distance = -1;
+				for (unsigned int k = 0; k < convexHull.size(); k++) {
+					CalibrationPoint A = convexHull[k].p1();
+					CalibrationPoint B = convexHull[k].p2();
+
+					CalibrationPoint P0 = getClosestPoint(A, B, P, true);
+					
+					float diff_x = P0.x() - P.x();
+					float diff_y = P0.y() - P.y();
+
+					float distance = diff_x*diff_x + diff_y*diff_y;
+
+					if (min_distance < 0 || min_distance > distance) {
+						min_distance = distance;
+						closest = P0;
+					}
+				}
+
+				osg::Vec3 ray = closest.ray();
+
+				unsigned long location = 3*(j*(viewingWidth+2*viewingMargin) + i);
+
+				this->eyeVectorArray[location + 0] = ray.x();
+				this->eyeVectorArray[location + 1] = ray.y();
+				this->eyeVectorArray[location + 2] = ray.z();
+			}
+		}
+	}
+
+	// Draw points
 	for (unsigned int c = 0; c < calibrationPoints.size(); c++) {
 		CalibrationPoint point = calibrationPoints[c];
 
@@ -519,6 +718,7 @@ bool EyeCalibration::calibrate() {
 		}
 	}
 
+	// Draw bounding points
 	for (unsigned int c = 0; c < boundingPoints.size(); c++) {
 		CalibrationPoint point = boundingPoints[c];
 
@@ -828,7 +1028,7 @@ void EyeCalibration::createTestData() {
 	CalibrationPoint point7(4, 480, osg::Vec3(125.f, 0.f, 125.f));
 	calibrationPoints.push_back(point7);
 
-	CalibrationPoint point8(280, 465, osg::Vec3(125.f, 0.f, 0.f));
+	CalibrationPoint point8(280, 550, osg::Vec3(125.f, 0.f, 0.f));
 	calibrationPoints.push_back(point8);
 
 	CalibrationPoint point9(724, 520, osg::Vec3(0.f, 255.f, 255.f));
