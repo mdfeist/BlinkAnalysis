@@ -258,6 +258,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldPropertyColumn
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectPropertyColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
+private: System::Windows::Forms::Button^  worldRemoveButton;
+private: System::Windows::Forms::Button^  removeObjectButton;
+
 
 
 
@@ -368,17 +371,23 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->rigidBodyTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualRigidBodyListView = (gcnew System::Windows::Forms::ListView());
 			this->worldTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->worldRemoveButton = (gcnew System::Windows::Forms::Button());
 			this->worldListLabel = (gcnew System::Windows::Forms::Label());
 			this->worldGridView = (gcnew System::Windows::Forms::DataGridView());
+			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->worldAddButton = (gcnew System::Windows::Forms::Button());
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->removeObjectButton = (gcnew System::Windows::Forms::Button());
 			this->objectLabel = (gcnew System::Windows::Forms::Label());
 			this->objectWLabel = (gcnew System::Windows::Forms::Label());
 			this->objectWComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectAddButton = (gcnew System::Windows::Forms::Button());
 			this->objectComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectGridView = (gcnew System::Windows::Forms::DataGridView());
+			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -391,10 +400,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1436,6 +1441,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			// 
 			// worldTabPage
 			// 
+			this->worldTabPage->Controls->Add(this->worldRemoveButton);
 			this->worldTabPage->Controls->Add(this->worldListLabel);
 			this->worldTabPage->Controls->Add(this->worldGridView);
 			this->worldTabPage->Controls->Add(this->worldAddButton);
@@ -1447,6 +1453,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->worldTabPage->TabIndex = 1;
 			this->worldTabPage->Text = L"World";
 			this->worldTabPage->UseVisualStyleBackColor = true;
+			// 
+			// worldRemoveButton
+			// 
+			this->worldRemoveButton->Enabled = false;
+			this->worldRemoveButton->Location = System::Drawing::Point(155, 448);
+			this->worldRemoveButton->Name = L"worldRemoveButton";
+			this->worldRemoveButton->Size = System::Drawing::Size(101, 23);
+			this->worldRemoveButton->TabIndex = 2;
+			this->worldRemoveButton->Text = L"Remove World";
+			this->worldRemoveButton->UseVisualStyleBackColor = true;
+			this->worldRemoveButton->Click += gcnew System::EventHandler(this, &MainForm::worldRemoveButton_Click);
 			// 
 			// worldListLabel
 			// 
@@ -1470,10 +1487,23 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->worldGridView->Location = System::Drawing::Point(6, 46);
 			this->worldGridView->Name = L"worldGridView";
 			this->worldGridView->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::CellSelect;
-			this->worldGridView->Size = System::Drawing::Size(250, 422);
+			this->worldGridView->Size = System::Drawing::Size(250, 396);
 			this->worldGridView->TabIndex = 3;
 			this->worldGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellDoubleClick);
 			this->worldGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellValueChanged);
+			// 
+			// worldPropertyColumn
+			// 
+			this->worldPropertyColumn->HeaderText = L"Property";
+			this->worldPropertyColumn->Name = L"worldPropertyColumn";
+			this->worldPropertyColumn->ReadOnly = true;
+			this->worldPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// worldValueColumn
+			// 
+			this->worldValueColumn->HeaderText = L"Value";
+			this->worldValueColumn->Name = L"worldValueColumn";
+			this->worldValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
 			// 
 			// worldAddButton
 			// 
@@ -1501,6 +1531,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			// 
 			// objectTabPage
 			// 
+			this->objectTabPage->Controls->Add(this->removeObjectButton);
 			this->objectTabPage->Controls->Add(this->objectLabel);
 			this->objectTabPage->Controls->Add(this->objectWLabel);
 			this->objectTabPage->Controls->Add(this->objectWComboBox);
@@ -1514,6 +1545,15 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->objectTabPage->TabIndex = 2;
 			this->objectTabPage->Text = L"Object";
 			this->objectTabPage->UseVisualStyleBackColor = true;
+			// 
+			// removeObjectButton
+			// 
+			this->removeObjectButton->Location = System::Drawing::Point(155, 448);
+			this->removeObjectButton->Name = L"removeObjectButton";
+			this->removeObjectButton->Size = System::Drawing::Size(101, 23);
+			this->removeObjectButton->TabIndex = 13;
+			this->removeObjectButton->Text = L"Remove Object";
+			this->removeObjectButton->UseVisualStyleBackColor = true;
 			// 
 			// objectLabel
 			// 
@@ -1584,10 +1624,23 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->objectGridView->Location = System::Drawing::Point(6, 86);
 			this->objectGridView->Name = L"objectGridView";
 			this->objectGridView->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::CellSelect;
-			this->objectGridView->Size = System::Drawing::Size(250, 382);
+			this->objectGridView->Size = System::Drawing::Size(250, 356);
 			this->objectGridView->TabIndex = 6;
 			this->objectGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellDoubleClick);
 			this->objectGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellValueChanged);
+			// 
+			// objectPropertyColumn
+			// 
+			this->objectPropertyColumn->HeaderText = L"Property";
+			this->objectPropertyColumn->Name = L"objectPropertyColumn";
+			this->objectPropertyColumn->ReadOnly = true;
+			this->objectPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// objectValueColumn
+			// 
+			this->objectValueColumn->HeaderText = L"Value";
+			this->objectValueColumn->Name = L"objectValueColumn";
+			this->objectValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
 			// 
 			// menuStrip
 			// 
@@ -1678,32 +1731,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->setAsRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(191, 22);
 			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
 			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
-			// 
-			// worldPropertyColumn
-			// 
-			this->worldPropertyColumn->HeaderText = L"Property";
-			this->worldPropertyColumn->Name = L"worldPropertyColumn";
-			this->worldPropertyColumn->ReadOnly = true;
-			this->worldPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
-			// worldValueColumn
-			// 
-			this->worldValueColumn->HeaderText = L"Value";
-			this->worldValueColumn->Name = L"worldValueColumn";
-			this->worldValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
-			// objectPropertyColumn
-			// 
-			this->objectPropertyColumn->HeaderText = L"Property";
-			this->objectPropertyColumn->Name = L"objectPropertyColumn";
-			this->objectPropertyColumn->ReadOnly = true;
-			this->objectPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
-			// objectValueColumn
-			// 
-			this->objectValueColumn->HeaderText = L"Value";
-			this->objectValueColumn->Name = L"objectValueColumn";
-			this->objectValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
 			// 
 			// MainForm
 			// 
@@ -2576,8 +2603,9 @@ public: System::Void worldUpdateList() {
 
 			isUpdatingWorlds = false;
 		}
-public: System::Void worldUpdateGridView() {
-			worldGridView_displayWorld();
+public: System::Void worldUpdateGridView(int id) {
+			if (id == displayWorld)
+				worldGridView_displayWorld();
 		}
 		// populates the world GridView based on selected value from world ComboBox
 private: System::Void worldGridView_displayWorld() {
@@ -2633,6 +2661,8 @@ private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender
 			 int id = worldExtractID(text);
 			 if (id >= 0)
 			 {
+				 if (id > 0)	this->worldRemoveButton->Enabled = true;
+				 else			this->worldRemoveButton->Enabled = false;
 				 displayWorld = id;
 				 worldGridView_displayWorld();
 			 }
@@ -2642,12 +2672,11 @@ private: System::Void objectWComboBox_SelectedIndexChanged(System::Object^  send
 			 if (!this->objectWComboBox->SelectedItem)
 				 return;
 			 
-			 this->objectAddButton->Enabled = true;
-
 			 String^ text = this->objectWComboBox->SelectedItem->ToString();
 			 int id = worldExtractID(text);
 			 if (id >= 0)
 			 {
+				 this->objectAddButton->Enabled = true;
 				 displayObjectWorld = id;
 				 objectComboBox_updateList();
 			 }
@@ -2696,8 +2725,9 @@ private: System::Void objectComboBox_SelectedIndexChanged(System::Object^  sende
 				 objectGridView_displayObject();
 			 }
 		 }
-public: System::Void objectUpdateGridView() {
-			objectGridView_displayObject();
+public: System::Void objectUpdateGridView(int id) {
+			if (id == displayObject)
+				objectGridView_displayObject();
 		}
 		// populates the object GridView based on selected value from world and object ComboBoxes
 private: System::Void objectGridView_displayObject() {
@@ -2841,6 +2871,7 @@ private: System::Void resetWorldGridView() {
 				displayWorld = -1;
 				displayObjectWorld = -1;
 				this->objectAddButton->Enabled = false;
+				this->worldRemoveButton->Enabled = false;
 			}
 		 }
 private: System::Void objectGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
@@ -2856,6 +2887,25 @@ private: System::Void objectGridView_CellDoubleClick(System::Object^  sender, Sy
 			 control->setHasRigidBody(rb != 0);
 			 control->Show();
 		 }
+private: System::Void worldRemoveButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			String^ message = "Are you sure you want to remove " + this->worldComboBox->SelectedItem->ToString() + "?";
+			String^ str = (String^) this->worldGridView->Rows[(int)worldProperty::OBJECTS]->Cells[1]->Value;
+			int numObjects = Int32::Parse(str);
+			if (numObjects > 0)
+			{
+				message += "\nThis will also remove " + numObjects.ToString() + " associated object";
+				if (numObjects > 1)
+					message += "s";
+			}
+
+			System::Windows::Forms::DialogResult result = MessageBox::Show(
+				message, "Remove World", MessageBoxButtons::OKCancel, MessageBoxIcon::Question);
+			if(result == ::DialogResult::OK){
+				AppData::getInstance()->removeWorld(displayWorld);
+				displayWorld = -1;
+				worldUpdateList();
+			}
+		}
 };
 }
 

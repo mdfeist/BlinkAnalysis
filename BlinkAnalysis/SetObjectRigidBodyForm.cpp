@@ -14,7 +14,7 @@ System::Void SetObjectRigidBodyForm::attachButton_Click(System::Object^  sender,
 					 if (object)
 					 {
 						 object->setRigidBody(rigidID);
-						 MainFormController::getInstance()->objectUpdateGridView();
+						 MainFormController::getInstance()->objectUpdateGridView(object->getID());
 					 }
 				 }
 			 }
@@ -28,7 +28,7 @@ System::Void SetObjectRigidBodyForm::detachButton_Click(System::Object^  sender,
 				if (object)
 				{
 					object->setRigidBody(-1);
-					MainFormController::getInstance()->objectUpdateGridView();
+					MainFormController::getInstance()->objectUpdateGridView(object->getID());
 				}
 			}
 			this->Close();

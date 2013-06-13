@@ -9,7 +9,7 @@ System::Void DefineCoordinateFrameForm::coordinateSetButton_Click(System::Object
 			if (world)
 			{
 				world->setCoordinateFrame(CaptureObjectUtil::makeGlobalToLocalMatrix(*posO, *posX, *posY));
-				MainFormController::getInstance()->worldUpdateGridView();
+				MainFormController::getInstance()->worldUpdateGridView(world->getID());
 			}
 				 
 			this->Close();
@@ -22,7 +22,7 @@ System::Void DefineCoordinateFrameForm::coordinateResetButton_Click(System::Obje
 				osg::Matrix* m = new osg::Matrix();
 				m->makeIdentity();
 				world->setCoordinateFrame(m);
-				MainFormController::getInstance()->worldUpdateGridView();
+				MainFormController::getInstance()->worldUpdateGridView(world->getID());
 			}
 				 
 			this->Close();

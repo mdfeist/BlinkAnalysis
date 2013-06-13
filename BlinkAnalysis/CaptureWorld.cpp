@@ -125,21 +125,23 @@ int CaptureWorld::addObject(CaptureObject* obj)
 	if (ret.second)
 	{
 		MainFormController::getInstance()->objectUpdateList();
+		// in case world displayed is the one being modified
+		MainFormController::getInstance()->worldUpdateGridView(id); 
 		return _lastObjectID++;
 	}
 	return -1;
 }
 
 	
-bool CaptureWorld::removeObject(int id)
+bool CaptureWorld::removeObject(int oid)
 {
-	objects_iterator itr = _objects.find(id);
+	objects_iterator itr = _objects.find(oid);
 	
 	if (itr == _objects.end())
 		return false;
 
 	delete itr->second;
-	_objects.erase(id);
+	_objects.erase(itr);
 	return true;
 }
 
@@ -158,9 +160,9 @@ int CaptureWorld::getNumberObjects()
 	return _objects.size();
 }
 
-CaptureObject* CaptureWorld::getObject(int id)
+CaptureObject* CaptureWorld::getObject(int oid)
 {
-	objects_iterator itr = _objects.find(id);
+	objects_iterator itr = _objects.find(oid);
 	
 	if (itr == _objects.end())
 		return NULL;
@@ -177,7 +179,7 @@ CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3
 
 	// set up plane vertices
 	osg::Vec3 opposite = pt1 + pt2 - corner;
-	osg::Vec3Array* vertices = new osg::Vec3Array();
+	osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
 	vertices->push_back(corner);
 	vertices->push_back(pt1);
 	vertices->push_back(opposite);
@@ -185,7 +187,7 @@ CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3
 	obj->setVertices(vertices);
 
 	// set up face
-	osg::DrawElementsUInt* face = new osg::DrawElementsUInt(osg::PrimitiveSet::TRIANGLE_FAN, 5);
+	osg::ref_ptr<osg::DrawElementsUInt> face = new osg::DrawElementsUInt(osg::PrimitiveSet::TRIANGLE_FAN);
 	face->push_back(0);
 	face->push_back(1);
 	face->push_back(2);

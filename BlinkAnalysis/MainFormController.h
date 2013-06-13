@@ -37,8 +37,8 @@ public:
 	void optiTrackInitDataView() { this->form->optiTrackInitDataView(); }
 	// Update world list
 	void worldUpdateList() { this->form->worldUpdateList(); }
-	void worldUpdateGridView() { this->form->worldUpdateGridView(); }
+	void worldUpdateGridView(int id) { this->form->worldUpdateGridView(id); }
 	void objectUpdateList() { this->form->objectComboBox_updateList(); }
-	void objectUpdateGridView() { this->form->objectUpdateGridView(); }
+	void objectUpdateGridView(int id) { this->form->objectUpdateGridView(id); }
 };
 

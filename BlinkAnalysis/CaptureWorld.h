@@ -59,9 +59,9 @@ public:
 
 	CaptureObject* addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
 
-	CaptureObject* getObject(int id);
+	CaptureObject* getObject(int oid);
 
-	bool removeObject(int id);
+	bool removeObject(int oid);
 
 	void clearObjects();
 
