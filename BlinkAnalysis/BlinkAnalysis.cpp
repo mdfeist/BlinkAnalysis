@@ -21,11 +21,13 @@ int main(array<System::String ^> ^args)
 	// Create the ClientHandler and attach it to the global App Data
 	ClientHandler* client = new ClientHandler();
 	AppData::getInstance()->setClient(client);
+
+	// Create new custom world
 	CaptureWorld* world = new CaptureWorld();
 	world->setName("default");
 	AppData::getInstance()->addWorld(world);
 	//TODO TESTING
-	world->addPlane(osg::Vec3(0, 0, 0.5), osg::Vec3(1, 0, 0.5), osg::Vec3(0, 1, 0.5), "");
+	world->addPlane(osg::Vec3(0, 0, 0.5), osg::Vec3(1, 0, 0.5), osg::Vec3(0, 1, 0.5), "Plane");
 
 	if (args->Length >= 1) {
 		char* fileName = (char*)Marshal::StringToHGlobalAnsi(args[0]).ToPointer();
