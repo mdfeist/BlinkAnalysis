@@ -25,6 +25,7 @@
 #include "SetObjectRigidBodyFormController.h"
 #include "AppData.h"
 #include "AppViewer.h"
+#include "WorldManager.h"
 
 #include "NatNetClientSetup.h"
 
@@ -45,18 +46,20 @@ namespace BlinkAnalysis {
 	// Make sure to follow this order when adding rows to GridView
 	enum class worldProperty 
 	{ 
-		ID = 0,
-		NAME = 1,
-		OBJECTS = 2,
-		MATRIX = 3
+		ID,
+		NAME,
+		OBJECTS,
+		MATRIX, 
+		RENDER
 	};
 	enum class objectProperty 
 	{ 
-		ID = 0,
-		NAME = 1,
-		RIGID = 2, 
-		FACES = 3,
-		VERTICES = 4 
+		ID,
+		NAME,
+		RIGID, 
+		FACES,
+		VERTICES, 
+		RENDER
 	};
 
 	/// <summary>
@@ -254,12 +257,20 @@ private: System::Windows::Forms::ComboBox^  objectWComboBox;
 private: System::Windows::Forms::Button^  objectAddButton;
 private: System::Windows::Forms::ComboBox^  objectComboBox;
 private: System::Windows::Forms::DataGridView^  objectGridView;
+
+
+
+
+private: System::Windows::Forms::Button^  worldRemoveButton;
+private: System::Windows::Forms::Button^  removeObjectButton;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldPropertyColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectPropertyColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
-private: System::Windows::Forms::Button^  worldRemoveButton;
-private: System::Windows::Forms::Button^  removeObjectButton;
+
+
+
+
 
 
 
@@ -374,8 +385,6 @@ private: System::Windows::Forms::Button^  removeObjectButton;
 			this->worldRemoveButton = (gcnew System::Windows::Forms::Button());
 			this->worldListLabel = (gcnew System::Windows::Forms::Label());
 			this->worldGridView = (gcnew System::Windows::Forms::DataGridView());
-			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->worldAddButton = (gcnew System::Windows::Forms::Button());
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
@@ -386,8 +395,6 @@ private: System::Windows::Forms::Button^  removeObjectButton;
 			this->objectAddButton = (gcnew System::Windows::Forms::Button());
 			this->objectComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectGridView = (gcnew System::Windows::Forms::DataGridView());
-			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->projectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -400,6 +407,10 @@ private: System::Windows::Forms::Button^  removeObjectButton;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->objectPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->objectValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->worldPropertyColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->worldValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1492,19 +1503,6 @@ private: System::Windows::Forms::Button^  removeObjectButton;
 			this->worldGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellDoubleClick);
 			this->worldGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::worldGridView_CellValueChanged);
 			// 
-			// worldPropertyColumn
-			// 
-			this->worldPropertyColumn->HeaderText = L"Property";
-			this->worldPropertyColumn->Name = L"worldPropertyColumn";
-			this->worldPropertyColumn->ReadOnly = true;
-			this->worldPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
-			// worldValueColumn
-			// 
-			this->worldValueColumn->HeaderText = L"Value";
-			this->worldValueColumn->Name = L"worldValueColumn";
-			this->worldValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
 			// worldAddButton
 			// 
 			this->worldAddButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
@@ -1629,19 +1627,6 @@ private: System::Windows::Forms::Button^  removeObjectButton;
 			this->objectGridView->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellDoubleClick);
 			this->objectGridView->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::objectGridView_CellValueChanged);
 			// 
-			// objectPropertyColumn
-			// 
-			this->objectPropertyColumn->HeaderText = L"Property";
-			this->objectPropertyColumn->Name = L"objectPropertyColumn";
-			this->objectPropertyColumn->ReadOnly = true;
-			this->objectPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
-			// objectValueColumn
-			// 
-			this->objectValueColumn->HeaderText = L"Value";
-			this->objectValueColumn->Name = L"objectValueColumn";
-			this->objectValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
 			// menuStrip
 			// 
 			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->projectToolStripMenuItem, 
@@ -1731,6 +1716,32 @@ private: System::Windows::Forms::Button^  removeObjectButton;
 			this->setAsRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(191, 22);
 			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
 			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
+			// 
+			// objectPropertyColumn
+			// 
+			this->objectPropertyColumn->HeaderText = L"Property";
+			this->objectPropertyColumn->Name = L"objectPropertyColumn";
+			this->objectPropertyColumn->ReadOnly = true;
+			this->objectPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// objectValueColumn
+			// 
+			this->objectValueColumn->HeaderText = L"Value";
+			this->objectValueColumn->Name = L"objectValueColumn";
+			this->objectValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// worldPropertyColumn
+			// 
+			this->worldPropertyColumn->HeaderText = L"Property";
+			this->worldPropertyColumn->Name = L"worldPropertyColumn";
+			this->worldPropertyColumn->ReadOnly = true;
+			this->worldPropertyColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// worldValueColumn
+			// 
+			this->worldValueColumn->HeaderText = L"Value";
+			this->worldValueColumn->Name = L"worldValueColumn";
+			this->worldValueColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
 			// 
 			// MainForm
 			// 
@@ -2588,7 +2599,7 @@ public: System::Void worldUpdateList() {
 				resetWorldGridView();
 				resetObjectGridView();
 
-				std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
+				std::map<int, CaptureWorld*> worlds = WorldManager::getInstance()->getWorlds();
 				int idx = 0;
 				for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 				{
@@ -2617,7 +2628,7 @@ private: System::Void worldGridView_displayWorld() {
 			 else
 			 {
 				 this->worldGridView->Rows->Clear();
-				 CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 				 if (!world) return;
 				 
 				 array<String^>^ row;
@@ -2637,16 +2648,19 @@ private: System::Void worldGridView_displayWorld() {
 				 row = gcnew array<String^> { "Transformation", iden };
 				 this->worldGridView->Rows->Add(row);
 
-				 // set certain rows to read only
-				 this->worldGridView->Rows[(int)worldProperty::ID]->ReadOnly = true;
-				 this->worldGridView->Rows[(int)worldProperty::OBJECTS]->ReadOnly = true;
-				 this->worldGridView->Rows[(int)worldProperty::MATRIX]->ReadOnly = true;
+				 String^ ren = world->renderWorld() ? "true" : "false";
+				 row = gcnew array<String^> { "Render", ren };
+				 this->worldGridView->Rows->Add(row);
 
-				 // if default world
-				 if (world->getID() == 0)
+				 // set certain rows to read only
+				 for (int i = 0; i <= (int) worldProperty::RENDER; i++)
 				 {
-					 this->worldGridView->Rows[(int)worldProperty::NAME]->ReadOnly = true;				 
+					 this->worldGridView->Rows[i]->ReadOnly = true;
 				 }
+
+				 // if not default world, allow name edit
+				 if (world->getID() != 0)
+					 this->worldGridView->Rows[(int)worldProperty::NAME]->ReadOnly = false;
 			 }
 		 }
 		 // update world display if drop down list value changes
@@ -2693,7 +2707,7 @@ public: System::Void objectComboBox_updateList() {
 				 this->objectComboBox->Items->Clear();
 				 resetObjectGridView();
 
-				 CaptureWorld* world = AppData::getInstance()->getWorld(displayObjectWorld);
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
 				 int idx = 0;
 				 if (world)
 				 {
@@ -2739,7 +2753,7 @@ private: System::Void objectGridView_displayObject() {
 			 else
 			 {
 				 this->objectGridView->Rows->Clear();
-				 CaptureWorld* world = AppData::getInstance()->getWorld(displayObjectWorld);
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
 				 if (!world) return;
 				 CaptureObject* object = world->getObject(displayObject);
 				 if (!object) return;
@@ -2763,11 +2777,19 @@ private: System::Void objectGridView_displayObject() {
 
 				 row = gcnew array<String^> { "Vertices", object->getNumVertices().ToString() };
 				 this->objectGridView->Rows->Add(row);
+
+				 String^ ren = object->renderObject() ? "true" : "false";
+				 row = gcnew array<String^> { "Render", ren };
+				 this->objectGridView->Rows->Add(row);
 				 
 				 // set certain rows to read only
-				 this->objectGridView->Rows[(int)objectProperty::ID]->ReadOnly = true;
-				 this->objectGridView->Rows[(int)objectProperty::FACES]->ReadOnly = true;
-				 this->objectGridView->Rows[(int)objectProperty::VERTICES]->ReadOnly = true;
+				 for (int i = 0; i <= (int) objectProperty::RENDER; i++)
+				 {
+					 this->objectGridView->Rows[i]->ReadOnly = true;
+				 }
+
+				 // allow name edit
+				 this->objectGridView->Rows[(int)objectProperty::NAME]->ReadOnly = false;
 			 }
 		 }
 		 // extracts ID from text format "Name (##)"
@@ -2786,24 +2808,34 @@ private: System::Void worldAddButton_Click(System::Object^  sender, System::Even
 			 AddWorldForm^ addWorldForm = gcnew AddWorldForm();
 			 addWorldForm->Show();
 		 }
-		 // TODO: allow wider use case?
-		 // this is only for editing coordinate frame of a world
+		 
 private: System::Void worldGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
-			 if (e->RowIndex != (int)worldProperty::MATRIX ||
-				 e->ColumnIndex != 1 || // Value
-				 displayWorld == 0) // default world, cannot change coordinates
+			 if (e->ColumnIndex != 1) // must be value column
 				 return;
 
-			 DefineCoordinateFrameFormController ^control = DefineCoordinateFrameFormController::getInstance();
-			 control->createForm();
-			 control->setDisplayWorld(displayWorld);
-			 control->Show();
+			 if (e->RowIndex == (int)worldProperty::MATRIX &&	// setting coordinate frame
+				 displayWorld != 0)								// but not if default world
+			 {
+				 DefineCoordinateFrameFormController ^control = DefineCoordinateFrameFormController::getInstance();
+				 control->createForm();
+				 control->setDisplayWorld(displayWorld);
+				 control->Show();
+			 }
+			 else if (e->RowIndex == (int)worldProperty::RENDER)
+			 {
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+				 if (world)
+				 {
+					 String^ ren = world->toggleRender() ? "true" : "false";
+					 this->worldGridView->Rows[e->RowIndex]->Cells[1]->Value = ren;
+				 }
+			 }
 		 }
 		 // user edits property value for world
 private: System::Void worldGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 			 if (e->RowIndex == (int) worldProperty::NAME)
 			 {
-				CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
+				CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 				if (world)
 				{
 					std::string* str = new std::string(
@@ -2822,7 +2854,7 @@ private: System::Void worldGridView_CellValueChanged(System::Object^  sender, Sy
 private: System::Void objectGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 			 if (e->RowIndex == (int) objectProperty::NAME)
 			 {
-				CaptureWorld* world = AppData::getInstance()->getWorld(displayObjectWorld);
+				CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
 				if (world)
 				{
 					CaptureObject* object = world->getObject(displayObject);
@@ -2875,17 +2907,30 @@ private: System::Void resetWorldGridView() {
 			}
 		 }
 private: System::Void objectGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
-			 if (e->RowIndex != (int)objectProperty::RIGID ||
-				 e->ColumnIndex != 1) // Value
+			 if (e->ColumnIndex != 1) // nust be Value column
 				 return;
-
-			 SetObjectRigidBodyFormController ^control = SetObjectRigidBodyFormController::getInstance();
-			 control->createForm();
-			 control->setRigidBodyVector(this->optiTrackRigidBodyVector);
-			 control->setWorldAndObject(displayObjectWorld, displayObject);
-			 int rb = String::Compare((String^)this->objectGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value, "none");
-			 control->setHasRigidBody(rb != 0);
-			 control->Show();
+			 
+			 // set Rigid Body number
+			 if (e->RowIndex == (int)objectProperty::RIGID)
+			 {
+				SetObjectRigidBodyFormController ^control = SetObjectRigidBodyFormController::getInstance();
+				control->createForm();
+				control->setRigidBodyVector(this->optiTrackRigidBodyVector);
+				control->setWorldAndObject(displayObjectWorld, displayObject);
+				int rb = String::Compare((String^)this->objectGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value, "none");
+				control->setHasRigidBody(rb != 0);
+				control->Show();
+			 }
+			 // set Render on/off
+			 else if (e->RowIndex == (int)objectProperty::RENDER)
+			 {
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
+				 if (world)
+				 {
+					 String^ ren = world->toggleRenderObject(displayObject) ? "true" : "false";
+					 this->objectGridView->Rows[e->RowIndex]->Cells[1]->Value = ren;
+				 }
+			 }
 		 }
 private: System::Void worldRemoveButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			String^ message = "Are you sure you want to remove " + this->worldComboBox->SelectedItem->ToString() + "?";
@@ -2901,7 +2946,7 @@ private: System::Void worldRemoveButton_Click(System::Object^  sender, System::E
 			System::Windows::Forms::DialogResult result = MessageBox::Show(
 				message, "Remove World", MessageBoxButtons::OKCancel, MessageBoxIcon::Question);
 			if(result == ::DialogResult::OK){
-				AppData::getInstance()->removeWorld(displayWorld);
+				WorldManager::getInstance()->removeWorld(displayWorld);
 				displayWorld = -1;
 				worldUpdateList();
 			}

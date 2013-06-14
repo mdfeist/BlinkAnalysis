@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AppData.h"
+#include "WorldManager.h"
 
 namespace BlinkAnalysis {
 
@@ -107,7 +108,7 @@ namespace BlinkAnalysis {
 					 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->nameTextBox->Text)).ToPointer()
 					 );
 				 CaptureWorld* world = new CaptureWorld(*name);
-				 AppData::getInstance()->addWorld(world);
+				 WorldManager::getInstance()->addWorld(world);
 				 Close();
 			 }
 	private: System::Void nameTextBox_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
@@ -117,7 +118,7 @@ namespace BlinkAnalysis {
 						 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->nameTextBox->Text)).ToPointer()
 						 );
 					 CaptureWorld* world = new CaptureWorld(*name);
-					 AppData::getInstance()->addWorld(world);
+					 WorldManager::getInstance()->addWorld(world);
 					 Close();
 				 }
 			 }

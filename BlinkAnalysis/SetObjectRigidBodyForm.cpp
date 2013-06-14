@@ -7,7 +7,7 @@ using namespace BlinkAnalysis;
 System::Void SetObjectRigidBodyForm::attachButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if (rigidID >= 0)
 			 {
-				 CaptureWorld* world = AppData::getInstance()->getWorld(worldID);
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(worldID);
 				 if (world)
 				 {
 					 CaptureObject* object = world->getObject(objectID);
@@ -21,7 +21,7 @@ System::Void SetObjectRigidBodyForm::attachButton_Click(System::Object^  sender,
 			 this->Close();
 		 }
 System::Void SetObjectRigidBodyForm::detachButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			CaptureWorld* world = AppData::getInstance()->getWorld(worldID);
+			CaptureWorld* world = WorldManager::getInstance()->getWorld(worldID);
 			if (world)
 			{
 				CaptureObject* object = world->getObject(objectID);

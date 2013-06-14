@@ -2,6 +2,7 @@
 
 #include "AppData.h"
 #include "AppViewer.h"
+#include "WorldManager.h"
 #include <string>
 
 namespace BlinkAnalysis {
@@ -525,7 +526,7 @@ private: System::Void setPoint(osg::Vec3* pos, Label^ text) {
 		 }
 		 // add plane to world based on data from posC, pos1, pos2
 private: System::Void planeSetButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
+			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
 				 std::string* str = new std::string( (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->planeNameTextBox->Text)).ToPointer());

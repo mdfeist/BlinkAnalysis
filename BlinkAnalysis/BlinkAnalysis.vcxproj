@@ -151,6 +151,7 @@
     </ClCompile>
     <ClCompile Include="TCPClientListener.cpp" />
     <ClCompile Include="CaptureObject.cpp" />
+    <ClCompile Include="WorldManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddObjectForm.h">
@@ -201,6 +202,7 @@
     <ClInclude Include="TCPClientListener.h" />
     <ClInclude Include="WizardPages.h" />
     <ClInclude Include="CaptureObject.h" />
+    <ClInclude Include="WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />

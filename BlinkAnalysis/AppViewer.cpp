@@ -24,6 +24,7 @@
 
 #include "Objects.h"
 #include "AppData.h"
+#include "WorldManager.h"
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
@@ -189,7 +190,7 @@ void AppViewer::initAppViewer(HWND hwnd)
 		rootNode = new osg::Group();
 	
 	// Add world, a Group node containing captured objects
-	std::map<int, CaptureWorld*> worlds = AppData::getInstance()->getWorlds();
+	std::map<int, CaptureWorld*> worlds = WorldManager::getInstance()->getWorlds();
 	for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 	{
 		rootNode->addChild(itr->second->getAsGroup());

@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <osg/Geode>
+#include <osg/Matrix>
 #include <osg/MatrixTransform>
 
 #include "MainFormController.h"
@@ -12,7 +13,7 @@
 
 int CaptureWorld::_lastWorldID = 0;
 
-CaptureWorld::CaptureWorld()
+void CaptureWorld::initCaptureWorld()
 {
 	_lastObjectID = 0;
 	id = _lastWorldID++;
@@ -26,51 +27,30 @@ CaptureWorld::CaptureWorld()
 	_globalToLocal->makeIdentity();
 
 	node = NULL;
+	render = true;
+}
+
+CaptureWorld::CaptureWorld()
+{
+	initCaptureWorld();
 }
 
 CaptureWorld::CaptureWorld(std::string name)
 {
-	_lastObjectID = 0;
-	id = _lastWorldID++;
+	initCaptureWorld();
 
 	if (!name.empty())
-	{
 		this->name = name;
-	}
-	else
-	{
-		std::stringstream sstr;
-		sstr << "World";
-		sstr << id;
-		this->name = sstr.str();
-	}
-
-	_globalToLocal = new osg::Matrix();
-	_globalToLocal->makeIdentity();
-
-	node = NULL;
 }
 
 CaptureWorld::CaptureWorld(std::string name, osg::Matrix* globToLoc)
 {
-	_lastObjectID = 0;
-	id = _lastWorldID++;
+	initCaptureWorld();
 
 	if (!name.empty())
-	{
 		this->name = name;
-	}
-	else
-	{
-		std::stringstream sstr;
-		sstr << "World";
-		sstr << id;
-		this->name = sstr.str();
-	}
 
 	_globalToLocal = globToLoc;
-
-	node = NULL;
 }
 
 void CaptureWorld::setName(std::string name)
@@ -86,6 +66,63 @@ void CaptureWorld::setName(std::string name)
 		sstr << id;
 		this->name = sstr.str();
 	}
+}
+
+const osg::Matrix CaptureWorld::getLocalToGlobalMatrix()
+{
+	return osg::Matrix::inverse(*_globalToLocal);
+}
+
+const osg::Matrix CaptureWorld::getGlobalToLocalMatrix()
+{
+	return *_globalToLocal;
+}
+
+void CaptureWorld::setRender(bool ren)
+{
+	// rendering status unchanged, exit
+	if (ren == render)
+		return;
+
+	render = ren;
+	if (render)
+		AppViewer::addNodeToViewer(getAsGroup());
+	else
+		AppViewer::removeNodeFromViewer(node);
+}
+
+bool CaptureWorld::toggleRender()
+{
+	render = !render;
+	if (render)
+		AppViewer::addNodeToViewer(getAsGroup());
+	else
+		AppViewer::removeNodeFromViewer(node);
+	return render;
+}
+
+void CaptureWorld::setRenderObject(int oid, bool ren)
+{
+	CaptureObject* obj = getObject(oid);
+	// add object to currently rendering world
+	osg::Node* objNode = obj->setRender(ren);
+	if (ren && obj && node && render)
+	{
+		node->addChild(objNode);
+	}
+	// remove object from currently rendering world
+	else if (!ren && obj && node && render)
+	{
+		node->removeChild(objNode);
+	}
+}
+
+bool CaptureWorld::toggleRenderObject(int oid)
+{
+	CaptureObject* obj = getObject(oid);
+	bool ren = !obj->renderObject();
+	setRenderObject(oid, ren);
+	return ren;
 }
 
 void CaptureWorld::setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects, bool updateObjects)
@@ -233,7 +270,8 @@ void CaptureWorld::updateObjectsNode()
 		for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
 		{
 			// TODO 
-			node->addChild(itr->second->getAsGeode());
+			if (itr->second->renderObject())
+				node->addChild(itr->second->getAsGeode());
 		}
 	}
 }

@@ -5,7 +5,7 @@
 using namespace BlinkAnalysis;
 
 System::Void DefineCoordinateFrameForm::coordinateSetButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
+			CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			if (world)
 			{
 				world->setCoordinateFrame(CaptureObjectUtil::makeGlobalToLocalMatrix(*posO, *posX, *posY));
@@ -16,7 +16,7 @@ System::Void DefineCoordinateFrameForm::coordinateSetButton_Click(System::Object
 		}
 
 System::Void DefineCoordinateFrameForm::coordinateResetButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			CaptureWorld* world = AppData::getInstance()->getWorld(displayWorld);
+			CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			if (world)
 			{
 				osg::Matrix* m = new osg::Matrix();

@@ -14,7 +14,6 @@
 #include "pugixml.hpp"
 
 
-typedef std::map<int, CaptureWorld*>::iterator worlds_iterator;
 
 public class AppData
 {
@@ -27,15 +26,6 @@ public:
 	// Set/Get the ClientHandler
 	void setClient(ClientHandler *client) { this->client = client; }
 	ClientHandler* getClient() { return this->client; }
-
-	// Set/Get CaptureWorld
-	// returns false or NULL if invalid world ID
-	bool addWorld(CaptureWorld *world); 
-	CaptureWorld* getWorld(int id);
-	int getNumberWorlds();
-	std::map<int, CaptureWorld*> getWorlds();
-	bool removeWorld(int id);
-	void clearWorlds();
 
 	void setFileName(char* fileName) { strncpy_s(this->fileName, fileName, strlen(fileName)); }
 	char* getFileName() { return this->fileName; }
@@ -58,7 +48,6 @@ private:
 
 	static AppData* m_pInstance;
 	ClientHandler *client;
-	std::map<int, CaptureWorld*> worlds;
 
 	bool needSaveFlag;
 	pugi::xml_document doc;
