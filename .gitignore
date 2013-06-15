@@ -25,7 +25,9 @@ Debug*/
 !NatNetLib.lib
 *.sbr
 obj/
+BlinkAnalysis/Release*/
 Release*/
+BlinkAnalysis/EyeCalibration_V1*/
 _ReSharper*/
 TestResult*
 *.vssscc
