@@ -73,13 +73,23 @@ bool EyeCalibration::addPoint() {
 	ray = viewing->getPosition() - head->getPosition();
 	ray = headMatrix * ray;
 	ray.normalize();
-	ray = ray/ray.z();
+	ray = ray/ray.y();
 
 	Dikablis::journal_struct journal;
 	journal = Dikablis::getJournal();
 
 	CalibrationPoint point(journal.field_x, journal.field_y, ray);
-	calibrationPoints.push_back(point);
+
+	bool exists = false;
+	for (unsigned int i = 0; i < calibrationPoints.size(); i++) {
+		if (point.equal(calibrationPoints[i])) {
+			exists = true;
+			break;
+		}
+	}
+
+	if (!exists)
+		calibrationPoints.push_back(point);
 
 	return true;
 }
@@ -695,6 +705,8 @@ bool EyeCalibration::calibrate() {
 		}
 	}
 
+// Testing
+#if 0
 	// Draw points
 	for (unsigned int c = 0; c < calibrationPoints.size(); c++) {
 		CalibrationPoint point = calibrationPoints[c];
@@ -742,6 +754,17 @@ bool EyeCalibration::calibrate() {
 	}
 
 	saveRayMap();
+#endif
+
+	ClientHandler* client = AppData::getInstance()->getClient();
+
+	if (client) {
+		client->setRayCalibration(this->eyeVectorArray);
+		client->setHeadId(this->rbHeadId);
+	} else {
+		EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Failed: Unable to find client.\n");
+		return false;
+	}
 
 	EyeCalibrationWizardFormController::getInstance()->calibrationOutputLog("Done\n");
 
@@ -1007,30 +1030,16 @@ void EyeCalibration::saveRayMap() {
 
 void EyeCalibration::createTestData() {
 
-	CalibrationPoint point1(20, 5, osg::Vec3(255.f, 0.f, 0.f));
+	CalibrationPoint point1(20, 5, osg::Vec3(-1.2f, -1.f, 2.f));
 	calibrationPoints.push_back(point1);
 
-	CalibrationPoint point2(322, 2, osg::Vec3(125.f, 125.f, 0.f));
+	CalibrationPoint point2(700, 25, osg::Vec3(1.4f, -1.f, 1.6f));
 	calibrationPoints.push_back(point2);
 
-	CalibrationPoint point3(700, 25, osg::Vec3(0, 0.f, 125.f));
+	CalibrationPoint point3(-10, 520, osg::Vec3(-0.8, -1.f, -1.4f));
 	calibrationPoints.push_back(point3);
 
-	CalibrationPoint point4(-10, 280, osg::Vec3(0.f, 125.f, 0.f));
+	CalibrationPoint point4(730, 542, osg::Vec3(1.f, -1.f, -1.3f));
 	calibrationPoints.push_back(point4);
 
-	CalibrationPoint point5(374, 180, osg::Vec3(0.f, 0.f, 255.f));
-	calibrationPoints.push_back(point5);
-
-	CalibrationPoint point6(742, 320, osg::Vec3(0.f, 125.f, 125.f));
-	calibrationPoints.push_back(point6);
-
-	CalibrationPoint point7(4, 480, osg::Vec3(125.f, 0.f, 125.f));
-	calibrationPoints.push_back(point7);
-
-	CalibrationPoint point8(280, 550, osg::Vec3(125.f, 0.f, 0.f));
-	calibrationPoints.push_back(point8);
-
-	CalibrationPoint point9(724, 520, osg::Vec3(0.f, 255.f, 255.f));
-	calibrationPoints.push_back(point9);
 }

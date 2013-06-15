@@ -59,6 +59,8 @@ private:
 
 	// Used to store the calibrated eye vectors
 	float *dikablisEyeVectorArray;
+
+	int headid;
 	
 public:
 	ClientHandler(void);						// Constructor
@@ -152,7 +154,11 @@ public:
 	static unsigned long getDikablisViewingMargin() { return DikablisViewingMargin; }
 	static unsigned long getDikablisViewingSize() { return DikablisViewingSize; }
 
-	//void setRay(osg::Vec3 ray, int x, int y);
+	void setRayCalibration(float *vectorArray);
 	osg::Vec3 getRay(int x, int y);
+
+	void setHeadId(int id);
+	int getHeadId();
+	RigidBody* getHead();
 };
 

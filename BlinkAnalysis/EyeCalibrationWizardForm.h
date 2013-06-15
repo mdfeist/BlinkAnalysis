@@ -620,17 +620,22 @@ private: System::Void pageChanged(System::Object^  sender, System::EventArgs^  e
 			 // Check Valid information for each page
 			 if (this->wizardPages->SelectedTab == this->headSelectPage &&
 				 this->eyeCalibration->getHeadId() < 0) {
-				  this->nextBtn->Enabled = false;
+					 this->nextBtn->Enabled = false;
 			 } else if (this->wizardPages->SelectedTab == this->objectSelectPage &&
 				 this->eyeCalibration->getViewingObjectId() < 0) {
-				  this->nextBtn->Enabled = false;
+					 this->nextBtn->Enabled = false;
+			 } else if (this->wizardPages->SelectedTab == this->calculatingPage) {
+				 this->nextBtn->Enabled = false;
 			 } else {
-				  this->nextBtn->Enabled = true;
+				 this->nextBtn->Enabled = true;
 			 }
 
 			 // Calculate Calibration Points
-			 if (this->wizardPages->SelectedTab == this->calculatingPage)
-				 this->eyeCalibration->calibrate();
+			 if (this->wizardPages->SelectedTab == this->calculatingPage) {
+				 if (this->eyeCalibration->calibrate()) {
+					 this->nextBtn->Enabled = true;
+				 }
+			 }
 
 			 // Done and change text in the next button to finished
 			 if (this->wizardPages->SelectedIndex == this->wizardPages->TabCount - 1)
@@ -697,8 +702,8 @@ private: System::Void selectAsObjectBtn_Click(System::Object^  sender, System::E
 			 }
 		 }
 private: System::Void addCalibrationPointBtn_Click(System::Object^  sender, System::EventArgs^  e) {
-			  //this->eyeCalibration->addPoint();
-			  this->eyeCalibration->createTestData();
+			  this->eyeCalibration->addPoint();
+			  //this->eyeCalibration->createTestData();
 		 }
 public: System::Void calibrationOutputLog(String^ value) {
 			if (this->calibrationOutputLogLabel->InvokeRequired)

@@ -16,6 +16,7 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/Point>
+#include <osg/LineWidth>
 #include <osgDB/ReadFile>
 #include <osgViewer/Viewer>
 #include <osgViewer/GraphicsWindow>
@@ -24,6 +25,7 @@
 
 #include "Objects.h"
 #include "AppData.h"
+#include "Dikablis.h"
 #include "WorldManager.h"
 
 osgViewer::Viewer* viewer;
@@ -32,10 +34,186 @@ osg::Group* rootNode;
 bool running = false;
 bool visible = false;
 
-float VIEWER_SCALE = 1;
+bool localMarkers = false;
+
+float VIEWER_SCALE = 5.f;
 
 void AppViewer::stopAppViewer() { running = false; }
 void AppViewer::setVisible(bool bVisible) { visible = bVisible; }
+
+void renderEyeVector(osg::Geode* node) {
+	// Get the current client
+	ClientHandler* client = AppData::getInstance()->getClient();
+
+	// Check if the client was created and is not NULL
+	if (client) {
+		// Create Points
+		// Create geo to store ray
+		osg::Geometry* geo = new osg::Geometry(); 
+
+		// Create array to hold ray
+		osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array(); 
+		osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+
+		// Lock Client so marker data isn't changed
+		if (client->lock())
+		{
+			// Get current position of head
+			RigidBody* head = client->getHead();
+
+			if (head != NULL) {
+				osg::Vec3 pos = head->getPosition();
+
+				// Add to the points array
+				points->push_back( pos * VIEWER_SCALE );
+				colors->push_back(osg::Vec4(1, 0, 0, 1));
+
+				osg::Matrixf headMatrix;
+				headMatrix.makeIdentity();
+				headMatrix.makeTranslate(head->getPosition());
+				headMatrix.makeRotate(head->getRotation());
+
+				Dikablis::journal_struct journal = Dikablis::getJournal();
+
+				int x = journal.field_x;
+				int y = journal.field_y;
+
+				osg::Vec3 ray = client->getRay(x, y);
+
+				ray = headMatrix * ray;
+
+				points->push_back( ray * VIEWER_SCALE );
+				colors->push_back(osg::Vec4(1, 0, 0, 1));
+			}
+		}
+
+		// Unlock Client so marker data can be updated
+		client->unlock();
+
+		// Add the points array to the geometry
+		geo->setVertexArray( points ); 
+
+		// Render the points geometry as Points
+		geo->addPrimitiveSet( new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, points->size() ) ); 
+
+		// Set Color array to the geometry
+		geo->setColorArray(colors); 
+		geo->setColorBinding(osg::Geometry::BIND_PER_VERTEX); 
+
+		// Add the geometry to the node
+		node->addDrawable( geo );
+
+		// Set the size of the points and turn off lighting
+		osg::ref_ptr<osg::StateSet> nodeState = node->getOrCreateStateSet();
+		nodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+		nodeState->setAttribute( new osg::LineWidth( 3.0f ) , osg::StateAttribute::ON );
+	}
+}
+
+void renderMarkers(osg::Geode* node) {
+	// Get the current client
+	ClientHandler* client = AppData::getInstance()->getClient();
+
+	// Check if the client was created and is not NULL
+	if (client) {
+		// Lock Client so marker data isn't changed
+		if (client->lock())
+		{
+			// Create Points
+			// Create geo to store points
+			osg::Geometry* geo = new osg::Geometry(); 
+
+			// Create array to hold points
+			osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array(); 
+			osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(); 
+
+			// Get the map of all the Rigid Bodies attached to the client
+			std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
+
+			// Set the current marker index to zero
+			int markerIndex = 0;
+
+			// Loop Through all the Rigid Bodies attached to the client
+			for (std::map<int, RigidBody*>::iterator it_body=bodyMap->begin(); it_body!=bodyMap->end(); ++it_body)
+			{
+				// Get pointer to Rigid Body
+				RigidBody* body = it_body->second;
+
+				// Get the vector of all the Markers attached to the Rigid Body
+				std::vector<Marker>* markers = body->getMarkersVector();
+
+				// Check if the markers vector is created and not null
+				if (markers)
+				{
+					// Loop through all the markers attached to the Rigid Body
+					for (std::vector<Marker>::iterator it_marker=markers->begin(); it_marker!=markers->end(); ++it_marker)
+					{
+						// Get Pointer to marker
+						Marker marker = *it_marker;
+
+						// Get current position of marker
+						osg::Vec3 pos = marker.getPosition();
+
+						// Add marker to the points array
+						points->push_back( pos * VIEWER_SCALE );
+
+						// Add colors
+						colors->push_back( marker.getColor() );
+
+						// Update the current index
+						markerIndex++;
+					}
+				}
+			}
+
+			if (localMarkers) {
+				// Labeled Markers
+				std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
+				for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
+				{
+					// Get Pointer to marker
+					Marker* marker = it_marker->second;
+
+					// Get current position of marker
+					osg::Vec3 pos = marker->getPosition(); 
+
+					// Add marker to the points array
+					points->push_back( pos * VIEWER_SCALE );
+
+					// Add colors
+					if (marker->isSelected())
+						colors->push_back(osg::Vec4(0, 1, 0, 1));
+					else
+						colors->push_back(osg::Vec4(0, 0, 1, 1));
+				}
+			}
+			// Unlock Client so marker data can be updated
+			client->unlock();
+
+			// Add the points array to the geometry
+			geo->setVertexArray( points ); 
+
+			// Render the points geometry as Points
+			geo->addPrimitiveSet( new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, points->size() ) ); 
+
+			// Set Color array to the geometry
+			geo->setColorArray(colors); 
+			geo->setColorBinding(osg::Geometry::BIND_PER_VERTEX); 
+
+			// Add the geometry to the node
+			node->addDrawable( geo );
+
+			// Set the size of the points and turn off lighting
+			osg::ref_ptr<osg::StateSet> nodeState = node->getOrCreateStateSet();
+			nodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+			nodeState->setMode(GL_BLEND, osg::StateAttribute::ON);
+			nodeState->setMode(GL_POINT_SMOOTH, osg::StateAttribute::ON);
+			nodeState->setAttribute( new osg::Point( 10.0f ) , osg::StateAttribute::ON );
+			nodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+			// End Create Points
+		}
+	}	
+}
 
 void render(void *) {
 	// Started Rendering
@@ -53,109 +231,11 @@ void render(void *) {
 			// Add Geode to store all the marker points
 			osg::Geode* node = new osg::Geode(); 
 
-			// Get the current client
-			ClientHandler* client = AppData::getInstance()->getClient();
+			// Render the OptiTrack Markers
+			renderMarkers(node);
 
-			// Check if the client was created and is not NULL
-			if (client) {
-				// Lock Client so marker data isn't changed
-				if (client->lock())
-				{
-					// Create Points
-					// Create geo to store points
-					osg::Geometry* geo = new osg::Geometry(); 
-
-					// Create array to hold points
-					osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array(); 
-					osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(); 
-
-					// Get the map of all the Rigid Bodies attached to the client
-					std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
-
-					// Set the current marker index to zero
-					int markerIndex = 0;
-
-					// Loop Through all the Rigid Bodies attached to the client
-					for (std::map<int, RigidBody*>::iterator it_body=bodyMap->begin(); it_body!=bodyMap->end(); ++it_body)
-					{
-						// Get pointer to Rigid Body
-						RigidBody* body = it_body->second;
-
-						// Get the vector of all the Markers attached to the Rigid Body
-						std::vector<Marker>* markers = body->getMarkersVector();
-				
-						// Check if the markers vector is created and not null
-						if (markers)
-						{
-							// Loop through all the markers attached to the Rigid Body
-							for (std::vector<Marker>::iterator it_marker=markers->begin(); it_marker!=markers->end(); ++it_marker)
-							{
-								// Get Pointer to marker
-								Marker marker = *it_marker;
-								
-								// Get current position of marker
-								osg::Vec3 pos = marker.getPosition();
-
-								// Add marker to the points array
-								points->push_back( pos * VIEWER_SCALE );
-								//points->push_back( pos / 100.f ); 
-
-								// Add colors
-								colors->push_back( marker.getColor() );
-
-								// Update the current index
-								markerIndex++;
-							}
-						}
-					}
-					
-					// Labeled Markers
-					std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
-					for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
-					{
-						// Get Pointer to marker
-						Marker* marker = it_marker->second;
-
-						// Get current position of marker
-						osg::Vec3 pos = marker->getPosition(); 
-
-						// Add marker to the points array
-						points->push_back( pos * VIEWER_SCALE );
-						//points->push_back( pos / 100.f );
-
-						// Add colors
-						if (marker->isSelected())
-							colors->push_back(osg::Vec4(0, 1, 0, 1));
-						else
-							colors->push_back(osg::Vec4(0, 0, 1, 1));
-					}
-					
-					// Unlock Client so marker data can be updated
-					client->unlock();
-
-					// Add the points array to the geometry
-					geo->setVertexArray( points ); 
-
-					// Render the points geometry as Points
-					geo->addPrimitiveSet( new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, points->size() ) ); 
-
-					// Set Color array to the geometry
-					geo->setColorArray(colors); 
-					geo->setColorBinding(osg::Geometry::BIND_PER_VERTEX); 
-
-					// Add the geometry to the node
-					node->addDrawable( geo );
-
-					// Set the size of the points and turn off lighting
-					osg::ref_ptr<osg::StateSet> nodeState = node->getOrCreateStateSet();
-					nodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-					nodeState->setMode(GL_BLEND, osg::StateAttribute::ON);
-					nodeState->setMode(GL_POINT_SMOOTH, osg::StateAttribute::ON);
-					nodeState->setAttribute( new osg::Point( 10.0f ) , osg::StateAttribute::ON );
-					nodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-					// End Create Points
-				}
-			}			
+			// Render Eye Vector
+			renderEyeVector(node);
 
 			// Add Node containing all the points to the scene
 			rootNode->addChild( node );

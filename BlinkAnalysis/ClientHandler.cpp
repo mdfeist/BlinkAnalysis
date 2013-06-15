@@ -44,6 +44,8 @@ ClientHandler::ClientHandler(void)
 	this->rigidBodyTool = -1;
 
 	this->dikablisEyeVectorArray = (float*) malloc(sizeof(float) * ClientHandler::DikablisViewingSize);
+
+	this->headid = 0;
 }
 
 // Cleans up the ClientHandler
@@ -56,6 +58,14 @@ ClientHandler::~ClientHandler(void)
 		free(this->dikablisEyeVectorArray);
 }
 
+void ClientHandler::setRayCalibration(float *vectorArray) {
+	if (this->dikablisEyeVectorArray != NULL &&
+		vectorArray != NULL) {
+		for (unsigned int i = 0; i < DikablisViewingSize; i++) {
+			this->dikablisEyeVectorArray[i] = vectorArray[i];
+		}
+	}
+}
 
 osg::Vec3 ClientHandler::getRay(int x, int y) {
 	osg::Vec3 ray;
@@ -72,6 +82,18 @@ osg::Vec3 ClientHandler::getRay(int x, int y) {
 	}
 
 	return ray;
+}
+
+void ClientHandler::setHeadId(int id) {
+	this->headid = id;
+}
+
+int ClientHandler::getHeadId() {
+	return this->headid;
+}
+
+RigidBody* ClientHandler::getHead() {
+	return getRigidBody(this->headid);
 }
 
 // Add a Rigid Body to the ClientHandler
