@@ -1045,7 +1045,7 @@ void EyeCalibration::createTestData() {
 	CalibrationPoint point2(700, 25, osg::Vec3(1.4f, -1.f, 1.6f));
 	calibrationPoints.push_back(point2);
 
-	CalibrationPoint point3(-10, 520, osg::Vec3(-0.8, -1.f, -1.4f));
+	CalibrationPoint point3(-10, 520, osg::Vec3(-0.8f, -1.f, -1.4f));
 	calibrationPoints.push_back(point3);
 
 	CalibrationPoint point4(730, 542, osg::Vec3(1.f, -1.f, -1.3f));

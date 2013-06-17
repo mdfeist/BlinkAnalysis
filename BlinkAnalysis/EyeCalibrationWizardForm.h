@@ -41,7 +41,8 @@ namespace BlinkAnalysis {
 	protected: 
 	private: System::Windows::Forms::Button^  nextBtn;
 	private: System::Windows::Forms::Button^  cancelBtn;
-	private: System::Windows::Forms::TabControl^ wizardPages;
+	private: System::Windows::Forms::TabControl^  wizardPagesTemp;
+
 	private: System::Windows::Forms::TabPage^  introPage;
 	private: System::Windows::Forms::TabPage^  headSelectPage;
 
@@ -101,7 +102,7 @@ namespace BlinkAnalysis {
 			this->backBtn = (gcnew System::Windows::Forms::Button());
 			this->nextBtn = (gcnew System::Windows::Forms::Button());
 			this->cancelBtn = (gcnew System::Windows::Forms::Button());
-			this->wizardPages = (gcnew System::Windows::Forms::TabControl());
+			this->wizardPagesTemp = (gcnew System::Windows::Forms::TabControl());
 			this->introPage = (gcnew System::Windows::Forms::TabPage());
 			this->eyeCalibrationInstructionsLabel = (gcnew System::Windows::Forms::Label());
 			this->introTitleLabel = (gcnew System::Windows::Forms::Label());
@@ -132,7 +133,7 @@ namespace BlinkAnalysis {
 			this->screenShape = (gcnew Microsoft::VisualBasic::PowerPacks::RectangleShape());
 			this->calculatingPage = (gcnew System::Windows::Forms::TabPage());
 			this->calibrationOutputLogLabel = (gcnew System::Windows::Forms::TextBox());
-			this->wizardPages->SuspendLayout();
+			this->wizardPagesTemp->SuspendLayout();
 			this->introPage->SuspendLayout();
 			this->headSelectPage->SuspendLayout();
 			this->objectSelectPage->SuspendLayout();
@@ -177,21 +178,21 @@ namespace BlinkAnalysis {
 			this->cancelBtn->UseVisualStyleBackColor = true;
 			this->cancelBtn->Click += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::cancelBtn_Click);
 			// 
-			// wizardPages
+			// wizardPagesTemp
 			// 
-			this->wizardPages->Controls->Add(this->introPage);
-			this->wizardPages->Controls->Add(this->headSelectPage);
-			this->wizardPages->Controls->Add(this->objectSelectPage);
-			this->wizardPages->Controls->Add(this->calibrationPage);
-			this->wizardPages->Controls->Add(this->calculatingPage);
-			this->wizardPages->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->wizardPagesTemp->Controls->Add(this->introPage);
+			this->wizardPagesTemp->Controls->Add(this->headSelectPage);
+			this->wizardPagesTemp->Controls->Add(this->objectSelectPage);
+			this->wizardPagesTemp->Controls->Add(this->calibrationPage);
+			this->wizardPagesTemp->Controls->Add(this->calculatingPage);
+			this->wizardPagesTemp->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->wizardPages->Location = System::Drawing::Point(0, 0);
-			this->wizardPages->Name = L"wizardPages";
-			this->wizardPages->SelectedIndex = 0;
-			this->wizardPages->Size = System::Drawing::Size(537, 321);
-			this->wizardPages->TabIndex = 3;
-			this->wizardPages->SelectedIndexChanged += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::pageChanged);
+			this->wizardPagesTemp->Location = System::Drawing::Point(0, 0);
+			this->wizardPagesTemp->Name = L"wizardPagesTemp";
+			this->wizardPagesTemp->SelectedIndex = 0;
+			this->wizardPagesTemp->Size = System::Drawing::Size(537, 321);
+			this->wizardPagesTemp->TabIndex = 3;
+			this->wizardPagesTemp->SelectedIndexChanged += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::pageChanged);
 			// 
 			// introPage
 			// 
@@ -276,14 +277,13 @@ namespace BlinkAnalysis {
 			// headRigidBodyListView
 			// 
 			this->headRigidBodyListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
-			this->headRigidBodyListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
-				| System::Windows::Forms::AnchorStyles::Right));
+			this->headRigidBodyListView->Dock = System::Windows::Forms::DockStyle::Left;
 			this->headRigidBodyListView->FullRowSelect = true;
 			this->headRigidBodyListView->LabelWrap = false;
-			this->headRigidBodyListView->Location = System::Drawing::Point(0, 0);
+			this->headRigidBodyListView->Location = System::Drawing::Point(3, 3);
 			this->headRigidBodyListView->MultiSelect = false;
 			this->headRigidBodyListView->Name = L"headRigidBodyListView";
-			this->headRigidBodyListView->Size = System::Drawing::Size(245, 295);
+			this->headRigidBodyListView->Size = System::Drawing::Size(245, 289);
 			this->headRigidBodyListView->TabIndex = 2;
 			this->headRigidBodyListView->TileSize = System::Drawing::Size(100, 20);
 			this->headRigidBodyListView->UseCompatibleStateImageBehavior = false;
@@ -339,14 +339,13 @@ namespace BlinkAnalysis {
 			// objectRigidBodyListView
 			// 
 			this->objectRigidBodyListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
-			this->objectRigidBodyListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
-				| System::Windows::Forms::AnchorStyles::Right));
+			this->objectRigidBodyListView->Dock = System::Windows::Forms::DockStyle::Left;
 			this->objectRigidBodyListView->FullRowSelect = true;
 			this->objectRigidBodyListView->LabelWrap = false;
-			this->objectRigidBodyListView->Location = System::Drawing::Point(0, 0);
+			this->objectRigidBodyListView->Location = System::Drawing::Point(3, 3);
 			this->objectRigidBodyListView->MultiSelect = false;
 			this->objectRigidBodyListView->Name = L"objectRigidBodyListView";
-			this->objectRigidBodyListView->Size = System::Drawing::Size(245, 295);
+			this->objectRigidBodyListView->Size = System::Drawing::Size(245, 289);
 			this->objectRigidBodyListView->TabIndex = 6;
 			this->objectRigidBodyListView->TileSize = System::Drawing::Size(100, 20);
 			this->objectRigidBodyListView->UseCompatibleStateImageBehavior = false;
@@ -497,7 +496,7 @@ namespace BlinkAnalysis {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(534, 362);
-			this->Controls->Add(this->wizardPages);
+			this->Controls->Add(this->wizardPagesTemp);
 			this->Controls->Add(this->cancelBtn);
 			this->Controls->Add(this->nextBtn);
 			this->Controls->Add(this->backBtn);
@@ -509,7 +508,7 @@ namespace BlinkAnalysis {
 			this->Text = L"Eye Calibration Wizard";
 			this->Closed += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::Form_Closing);
 			this->Load += gcnew System::EventHandler(this, &EyeCalibrationWizardForm::Form_Load);
-			this->wizardPages->ResumeLayout(false);
+			this->wizardPagesTemp->ResumeLayout(false);
 			this->introPage->ResumeLayout(false);
 			this->introPage->PerformLayout();
 			this->headSelectPage->ResumeLayout(false);
@@ -527,6 +526,12 @@ namespace BlinkAnalysis {
 //private: WizardPages^ wizardPages;
 private: EyeCalibration *eyeCalibration;
 private: int currentPage;
+
+#if Debug
+	private: System::Windows::Forms::TabControl^ wizardPages;
+#else
+	private: WizardPages^ wizardPages;
+#endif
 		 // Abstract Delegate to change text
 	private: delegate void SetTextDelegate(String^ value);
 		// User Defined Functions
@@ -538,14 +543,21 @@ private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e)
 			 // Set current page
 			 this->currentPage = 0;
 
-			 /*
+#if Debug
+			 this->wizardPages = this->wizardPagesTemp;
+#else
+			 this->Controls->Remove(this->wizardPagesTemp);
+
 			 this->wizardPages = gcnew WizardPages();
 
 			 this->wizardPages->SuspendLayout();
-
 			 this->wizardPages->Controls->Add(this->introPage);
 			 this->wizardPages->Controls->Add(this->headSelectPage);
-			 this->wizardPages->Controls->Add(this->tabPage1);
+			 this->wizardPages->Controls->Add(this->objectSelectPage);
+			 this->wizardPages->Controls->Add(this->calibrationPage);
+			 this->wizardPages->Controls->Add(this->calculatingPage);
+			 this->wizardPages->Font = (gcnew System::Drawing::Font(L"Segoe UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				 static_cast<System::Byte>(0)));
 			 this->wizardPages->Location = System::Drawing::Point(0, 0);
 			 this->wizardPages->Name = L"wizardPages";
 			 this->wizardPages->SelectedIndex = 0;
@@ -555,8 +567,7 @@ private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e)
 
 			 this->Controls->Add(this->wizardPages);
 			 this->wizardPages->ResumeLayout(false);
-			 */
-
+#endif
 			 // Create list of Rigid Body's
 			 this->headRigidBodyListView->View = View::Details;
 			 this->headRigidBodyListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
