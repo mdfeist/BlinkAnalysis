@@ -161,6 +161,7 @@ int CaptureWorld::addObject(CaptureObject* obj)
 
 	if (ret.second)
 	{
+		updateObjectsNode();
 		MainFormController::getInstance()->objectUpdateList();
 		// in case world displayed is the one being modified
 		MainFormController::getInstance()->worldUpdateGridView(id); 
@@ -176,6 +177,11 @@ bool CaptureWorld::removeObject(int oid)
 	
 	if (itr == _objects.end())
 		return false;
+
+	// remove object from currently rendering world
+	osg::Node* objNode = itr->second->setRender(false);
+	if (node && render)
+		node->removeChild(objNode);
 
 	delete itr->second;
 	_objects.erase(itr);
