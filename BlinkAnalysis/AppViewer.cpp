@@ -31,6 +31,8 @@
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
 
+osg::Vec3 lastRay;
+
 bool running = false;
 bool visible = false;
 
@@ -70,7 +72,7 @@ void renderEyeVector(osg::Geode* node) {
 
 				osg::Matrixf headMatrix;
 				headMatrix.makeIdentity();
-				headMatrix.makeTranslate(head->getPosition());
+				//headMatrix.makeTranslate(head->getPosition());
 				headMatrix.makeRotate(head->getRotation());
 
 				Dikablis::journal_struct journal = Dikablis::getJournal();
@@ -78,11 +80,25 @@ void renderEyeVector(osg::Geode* node) {
 				int x = journal.field_x;
 				int y = journal.field_y;
 
+				/*
+				static int x = 0;
+				static int y = 250;
+				static float animation = 0.0f;
+
+				animation += 0.01f;
+
+				x = sinf(animation)*(250) + 250;
+				*/
+
 				osg::Vec3 ray = client->getRay(x, y);
 
 				ray = headMatrix * ray;
 
-				points->push_back( ray * VIEWER_SCALE );
+				ray = (ray - lastRay)/4.f + lastRay;
+
+				lastRay = ray;
+
+				points->push_back( (ray + pos) * VIEWER_SCALE );
 				colors->push_back(osg::Vec4(1, 0, 0, 1));
 			}
 		}

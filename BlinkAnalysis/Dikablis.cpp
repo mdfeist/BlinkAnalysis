@@ -96,7 +96,9 @@ void recieved(std::string msg) {
 		sscanf_s(split[16].c_str(), "%d", &journal.field_y);
 	}
 
-	dikablisJournal = journal;
+	if (journal.eye_valid) {
+		dikablisJournal = journal;
+	}
 
 	// Pass the journal information to the MainForm so it can be displayed
 	MainFormController::getInstance()->dikablisMessage(journal);

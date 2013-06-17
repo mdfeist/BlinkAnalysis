@@ -8,6 +8,7 @@
 #include <algorithm>    // std::sort
 #include <iostream>
 #include <fstream>
+#include <math.h>
 
 #include <osg/Matrix>
 
@@ -63,7 +64,7 @@ bool EyeCalibration::addPoint() {
 
 	osg::Matrixf headMatrix;
 	headMatrix.makeIdentity();
-	headMatrix.makeTranslate(head->getPosition());
+	//headMatrix.makeTranslate(head->getPosition());
 	headMatrix.makeRotate(head->getRotation());
 
 	if (!headMatrix.invert_4x4(headMatrix))
@@ -73,7 +74,7 @@ bool EyeCalibration::addPoint() {
 	ray = viewing->getPosition() - head->getPosition();
 	ray = headMatrix * ray;
 	ray.normalize();
-	ray = ray/ray.y();
+	//ray = ray/ray.y();
 
 	Dikablis::journal_struct journal;
 	journal = Dikablis::getJournal();
@@ -752,9 +753,9 @@ bool EyeCalibration::calibrate() {
 			}
 		}
 	}
+#endif
 
 	saveRayMap();
-#endif
 
 	ClientHandler* client = AppData::getInstance()->getClient();
 
@@ -972,6 +973,14 @@ void EyeCalibration::saveRayMap() {
  
     WriteFile(file,&fileHeader,sizeof(fileHeader),&write,NULL);
     WriteFile(file,&fileInfo,sizeof(fileInfo),&write,NULL);
+
+	float max = 0.f;
+	for (unsigned int i = 0; i < (viewingWidth+2*viewingMargin)*(viewingHeight+2*viewingMargin); i++) {
+		float value = fabsf(this->eyeVectorArray[i]);
+
+		if (value > max)
+			max = value;
+	}
 	
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
@@ -981,9 +990,9 @@ void EyeCalibration::saveRayMap() {
 			int pi_height = (((float)j/height)*(viewingHeight+2*viewingMargin));
 			int pi = 3*(pi_height*(viewingWidth+2*viewingMargin) + pi_width);
 
-			int blue = this->eyeVectorArray[pi + 2];
-			int green = this->eyeVectorArray[pi + 1];
-			int red = this->eyeVectorArray[pi + 0];
+			int blue = ((this->eyeVectorArray[pi + 2] + max)/(2*max))*255;
+			int green = ((this->eyeVectorArray[pi + 1] + max)/(2*max))*255;
+			int red = ((this->eyeVectorArray[pi + 0] + max)/(2*max))*255;
 
 			if (blue < 0)
 				blue = 0;
