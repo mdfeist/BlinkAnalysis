@@ -20,7 +20,7 @@ public:
 	int getNumberWorlds();
 	std::map<int, CaptureWorld*> getWorlds();
 	bool removeWorld(int id);
-	void clearWorlds();
+	void clearWorlds(bool stopRender = false);
 
 protected:
 	WorldManager(void);

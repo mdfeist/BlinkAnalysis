@@ -65,10 +65,12 @@ bool WorldManager::removeWorld(int id)
 	return true;
 }
 
-void WorldManager::clearWorlds()
+void WorldManager::clearWorlds(bool stopRender)
 {
 	for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 	{
+		if (stopRender)
+			itr->second->setRender(false);
 		delete itr->second;
 	}
 	worlds.clear();

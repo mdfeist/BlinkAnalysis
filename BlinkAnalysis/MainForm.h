@@ -2003,10 +2003,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			 }
 	private: System::Void MainForm_Closed( Object^ /*sender*/, System::EventArgs ^ e )
 			{
+				AppViewer::stopAppViewer();
+
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
 					NatNetClientSetup::deleteClient(&client);
 
+					client->clearLabeledMarkers();
 					std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
 					
 					for (std::map<int, RigidBody*>::iterator it=bodyMap->begin(); it!=bodyMap->end(); ++it)
@@ -2023,7 +2026,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 					delete client;
 				}
 
-				AppViewer::stopAppViewer();
+				WorldManager::getInstance()->clearWorlds();
 
 #if _DEBUG
 _WATCH_MEMORY
