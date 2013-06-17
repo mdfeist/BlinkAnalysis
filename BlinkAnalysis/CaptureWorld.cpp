@@ -256,7 +256,8 @@ osg::MatrixTransform* CaptureWorld::getAsGroup(bool renderMatrix)
 	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
 	{
 		// TODO 
-		node->addChild(itr->second->getAsGeode());
+		if (itr->second->renderObject())
+			node->addChild(itr->second->getAsGeode());
 	}
 
 	return node;

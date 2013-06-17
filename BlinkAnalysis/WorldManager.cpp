@@ -58,6 +58,8 @@ bool WorldManager::removeWorld(int id)
 	if (itr == worlds.end())
 		return false;
 
+	itr->second->setRender(false);
+
 	delete itr->second;
 	worlds.erase(id);
 	return true;

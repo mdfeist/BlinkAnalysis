@@ -2653,7 +2653,8 @@ private: System::Void worldGridView_displayWorld() {
 				 this->worldGridView->Rows->Add(row);
 
 				 // set certain rows to read only
-				 for (int i = 0; i <= (int) worldProperty::RENDER; i++)
+				 int numRows = this->worldGridView->Rows->Count;
+				 for (int i = 0; i < numRows; i++)
 				 {
 					 this->worldGridView->Rows[i]->ReadOnly = true;
 				 }
@@ -2783,7 +2784,8 @@ private: System::Void objectGridView_displayObject() {
 				 this->objectGridView->Rows->Add(row);
 				 
 				 // set certain rows to read only
-				 for (int i = 0; i <= (int) objectProperty::RENDER; i++)
+				 int numRows = this->objectGridView->Rows->Count;
+				 for (int i = 0; i < numRows; i++)
 				 {
 					 this->objectGridView->Rows[i]->ReadOnly = true;
 				 }
