@@ -89,6 +89,10 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Label^  planeRigidDataLabel;
 
 	private: int displayWorld;
+	private: System::Windows::Forms::RadioButton^  planeCoordRadio;
+	private: System::Windows::Forms::TextBox^  planeInPt2TextBox;
+	private: System::Windows::Forms::TextBox^  planeInCornerTextBox;
+	private: System::Windows::Forms::TextBox^  planeInPt1TextBox;
 
 	private:
 		/// <summary>
@@ -106,6 +110,10 @@ namespace BlinkAnalysis {
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->infoPage = (gcnew System::Windows::Forms::TabPage());
 			this->planePage = (gcnew System::Windows::Forms::TabPage());
+			this->planeInPt2TextBox = (gcnew System::Windows::Forms::TextBox());
+			this->planeInCornerTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->planeInPt1TextBox = (gcnew System::Windows::Forms::TextBox());
+			this->planeCoordRadio = (gcnew System::Windows::Forms::RadioButton());
 			this->planeRigidDataLabel = (gcnew System::Windows::Forms::Label());
 			this->planePt2SetButton = (gcnew System::Windows::Forms::Button());
 			this->planeCornerSetButton = (gcnew System::Windows::Forms::Button());
@@ -153,6 +161,10 @@ namespace BlinkAnalysis {
 			// 
 			// planePage
 			// 
+			this->planePage->Controls->Add(this->planeInPt2TextBox);
+			this->planePage->Controls->Add(this->planeInCornerTextBox);
+			this->planePage->Controls->Add(this->planeInPt1TextBox);
+			this->planePage->Controls->Add(this->planeCoordRadio);
 			this->planePage->Controls->Add(this->planeRigidDataLabel);
 			this->planePage->Controls->Add(this->planePt2SetButton);
 			this->planePage->Controls->Add(this->planeCornerSetButton);
@@ -181,6 +193,45 @@ namespace BlinkAnalysis {
 			this->planePage->TabIndex = 1;
 			this->planePage->Text = L"Plane";
 			this->planePage->UseVisualStyleBackColor = true;
+			// 
+			// planeInPt2TextBox
+			// 
+			this->planeInPt2TextBox->Location = System::Drawing::Point(75, 223);
+			this->planeInPt2TextBox->Name = L"planeInPt2TextBox";
+			this->planeInPt2TextBox->Size = System::Drawing::Size(223, 20);
+			this->planeInPt2TextBox->TabIndex = 35;
+			this->planeInPt2TextBox->Visible = false;
+			this->planeInPt2TextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectForm::planeTextBox_Validating);
+			// 
+			// planeInCornerTextBox
+			// 
+			this->planeInCornerTextBox->Location = System::Drawing::Point(75, 197);
+			this->planeInCornerTextBox->Name = L"planeInCornerTextBox";
+			this->planeInCornerTextBox->Size = System::Drawing::Size(223, 20);
+			this->planeInCornerTextBox->TabIndex = 34;
+			this->planeInCornerTextBox->Visible = false;
+			this->planeInCornerTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectForm::planeTextBox_Validating);
+			// 
+			// planeInPt1TextBox
+			// 
+			this->planeInPt1TextBox->Location = System::Drawing::Point(75, 171);
+			this->planeInPt1TextBox->Name = L"planeInPt1TextBox";
+			this->planeInPt1TextBox->Size = System::Drawing::Size(223, 20);
+			this->planeInPt1TextBox->TabIndex = 33;
+			this->planeInPt1TextBox->Visible = false;
+			this->planeInPt1TextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectForm::planeTextBox_Validating);
+			// 
+			// planeCoordRadio
+			// 
+			this->planeCoordRadio->AutoSize = true;
+			this->planeCoordRadio->Location = System::Drawing::Point(257, 93);
+			this->planeCoordRadio->Name = L"planeCoordRadio";
+			this->planeCoordRadio->Size = System::Drawing::Size(81, 17);
+			this->planeCoordRadio->TabIndex = 32;
+			this->planeCoordRadio->TabStop = true;
+			this->planeCoordRadio->Text = L"Coordinates";
+			this->planeCoordRadio->UseVisualStyleBackColor = true;
+			this->planeCoordRadio->CheckedChanged += gcnew System::EventHandler(this, &AddObjectForm::planeCoordRadio_CheckedChanged);
 			// 
 			// planeRigidDataLabel
 			// 
@@ -233,7 +284,7 @@ namespace BlinkAnalysis {
 			// planeRigidRadio
 			// 
 			this->planeRigidRadio->AutoSize = true;
-			this->planeRigidRadio->Location = System::Drawing::Point(198, 93);
+			this->planeRigidRadio->Location = System::Drawing::Point(148, 93);
 			this->planeRigidRadio->Name = L"planeRigidRadio";
 			this->planeRigidRadio->Size = System::Drawing::Size(100, 17);
 			this->planeRigidRadio->TabIndex = 27;
@@ -524,8 +575,58 @@ private: System::Void setPoint(osg::Vec3* pos, Label^ text) {
 			str += Convert::ToString(pos->z());
 			text->Text = str;
 		 }
+		 // extracts coordinates from input text box
+private: bool extractCoordinates()
+		 {
+			 float x, y, z;
+			 array<String^>^ split;
+
+			 // pos1
+			 split = this->planeInPt1TextBox->Text->Split(gcnew array<wchar_t> {','});
+			 if (!Single::TryParse(split[0], x))
+				 return false;
+			 if (!Single::TryParse(split[1], y))
+				 return false;
+			 if (!Single::TryParse(split[2], z))
+				 return false;
+			 if (!pos1)
+				 pos1 = new osg::Vec3(x, y, z);
+			 else
+				 pos1->set(x, y, z);
+
+			 // posC
+			 split = this->planeInCornerTextBox->Text->Split(gcnew array<wchar_t> {','});
+			 if (!Single::TryParse(split[0], x))
+				 return false;
+			 if (!Single::TryParse(split[1], y))
+				 return false;
+			 if (!Single::TryParse(split[2], z))
+				 return false;
+			 if (!posC)
+				 posC = new osg::Vec3(x, y, z);
+			 else
+				 posC->set(x, y, z);
+
+			 // pos2
+			 split = this->planeInPt2TextBox->Text->Split(gcnew array<wchar_t> {','});
+			 if (!Single::TryParse(split[0], x))
+				 return false;
+			 if (!Single::TryParse(split[1], y))
+				 return false;
+			 if (!Single::TryParse(split[2], z))
+				 return false;
+			 if (!pos2)
+				 pos2 = new osg::Vec3(x, y, z);
+			 else
+				 pos2->set(x, y, z);
+
+			 return true;
+		 }
 		 // add plane to world based on data from posC, pos1, pos2
 private: System::Void planeSetButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->planeCoordRadio->Checked && !extractCoordinates())
+				 return;
+
 			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
@@ -578,6 +679,20 @@ private: System::Void markerTextBoxes(bool visible, objectType type) {
 
 			 }
 		 }
+		 	 // set visible/not visible for text boxes associated with coordinates view
+private: System::Void coordinateTextBoxes(bool visible, objectType type) {
+			 switch (type)
+			 {
+			 // plane
+			 case objectType::PLANE :
+				 this->planeInPt1TextBox->Visible = visible;
+				 this->planeInCornerTextBox->Visible = visible;
+				 this->planeInPt2TextBox->Visible = visible;
+				 break;
+
+
+			 }
+		 }
 		 // change visibility of form objects based on which radio button is checked
 private: System::Void planeRigidRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->planeRigidRadio->Checked)
@@ -613,6 +728,31 @@ private: System::Void planeMarkersRadio_CheckedChanged(System::Object^  sender, 
 			 else
 			 {
 				 markerTextBoxes(false, objectType::PLANE);
+			 }
+		 }
+private: bool isCoordinate(String^ str) {
+			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*," + 
+							"\\s*-?\\d+(.\\d+)?\\s*," +
+							"\\s*-?\\d+(.\\d+)?\\s*$";
+			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
+			 return regex->IsMatch(str);
+		 }
+private: System::Void planeCoordRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->planeCoordRadio->Checked)
+			 {
+				 coordinateTextBoxes(true, objectType::PLANE);
+
+				 this->planeDataPt1Label->Text = "";
+				 this->planeDataCornerLabel->Text = "";
+				 this->planeDataPt2Label->Text = "";
+
+				 this->planeSetButton->Enabled = false;
+				 this->planeDataGetButton->Visible = false;
+			 }
+			 else
+			 {
+				 coordinateTextBoxes(false, objectType::PLANE);
+				 this->planeDataGetButton->Visible = true;
 			 }
 		 }
 private: System::Void AddObjectForm_Load(System::Object^  sender, System::EventArgs^  e) {
@@ -667,6 +807,40 @@ private: System::Void planeSetDataButton_Click(System::Object^  sender, System::
 					this->planeSetButton->Enabled = false;
 			}
 		}
+private: System::Void planeTextBox_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
+			 if (sender == this->planeInPt1TextBox && 
+				 isCoordinate(this->planeInPt1TextBox->Text))
+			 {
+				 if ( isCoordinate(this->planeInCornerTextBox->Text) &&
+					  isCoordinate(this->planeInPt2TextBox->Text) )
+				 {
+					  this->planeSetButton->Enabled = true;
+				 }
+			 }
+			 else if (sender == this->planeInCornerTextBox && 
+				 isCoordinate(this->planeInCornerTextBox->Text))
+			 {
+				 if ( isCoordinate(this->planeInPt1TextBox->Text) &&
+					  isCoordinate(this->planeInPt2TextBox->Text) )
+				 {
+					  this->planeSetButton->Enabled = true;
+				 }
+			 }
+			 else if (sender == this->planeInPt2TextBox && 
+				 isCoordinate(this->planeInPt2TextBox->Text))
+			 {
+				 if ( isCoordinate(this->planeInPt1TextBox->Text) &&
+					  isCoordinate(this->planeInCornerTextBox->Text) )
+				 {
+					  this->planeSetButton->Enabled = true;
+				 }
+			 }
+			 else
+			 {
+				 this->planeSetButton->Enabled = false;
+			 }
+
+		 }
 };
 
 }

@@ -38,7 +38,7 @@ public:
 	// Update world list
 	void worldUpdateList() { this->form->worldUpdateList(); }
 	void worldUpdateGridView(int id) { this->form->worldUpdateGridView(id); }
-	void objectUpdateList() { this->form->objectComboBox_updateList(); }
+	void objectUpdateList() { this->form->objectUpdateList(); }
 	void objectUpdateGridView(int id) { this->form->objectUpdateGridView(id); }
 };
 
