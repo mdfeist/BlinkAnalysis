@@ -363,9 +363,11 @@ void AppViewer::initAppViewer(HWND hwnd)
 }
 
 bool AppViewer::addNodeToViewer(osg::Node* node) {
+	if (!rootNode) return false;
 	return rootNode->addChild(node);
 }
 
 bool AppViewer::removeNodeFromViewer(osg::Node* node) {
+	if (!rootNode) return false;
 	return rootNode->removeChild(node);
 }

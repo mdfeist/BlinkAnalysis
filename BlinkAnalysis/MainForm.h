@@ -2584,6 +2584,29 @@ private: System::Void setAsRigidBodyToolToolStripMenuItem_Click(System::Object^ 
 	// Capture World and Objects
 	/////////////////////
 
+/////////////////////
+// Util Functions
+
+// extracts ID from text format "Name (##)"
+private: int worldExtractID(String^ str) {
+			 array<String^>^ split = str->Split(gcnew array<wchar_t> {'(', ')'});
+
+			 int result;
+			 // id contained in second to last element
+			 if (Int32::TryParse(split[split->Length - 2], result))
+				 return result;
+			 else
+				 return -1;
+		 }
+		 // converts a managed String^ to unmanaged std::string*
+private: std::string* managedToStdString(String^ str) {
+			 return new std::string( 
+				 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer());
+		 }
+
+/////////////////////
+// World Functions
+
 		 // update list of worlds in both World and Object tab
 public: System::Void worldUpdateList() {
 			static bool isUpdatingWorlds = false;
@@ -2689,20 +2712,88 @@ private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender
 				 worldGridView_displayWorld();
 			 }
 		 }
-		 // update list of objects if drop down list value changes
-private: System::Void objectWComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-			 if (!this->objectWComboBox->SelectedItem)
+		 // add a new world (name only)
+private: System::Void worldAddButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 AddWorldForm^ addWorldForm = gcnew AddWorldForm();
+			 addWorldForm->Show();
+		 }
+		 
+private: System::Void worldGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
+			 if (e->ColumnIndex != 1) // must be value column
 				 return;
-			 
-			 String^ text = this->objectWComboBox->SelectedItem->ToString();
-			 int id = worldExtractID(text);
-			 if (id >= 0)
+
+			 if (e->RowIndex == (int)worldProperty::MATRIX &&	// setting coordinate frame
+				 displayWorld != 0)								// but not if default world
 			 {
-				 this->objectAddButton->Enabled = true;
-				 displayObjectWorld = id;
-				 objectUpdateList();
+				 DefineCoordinateFrameFormController ^control = DefineCoordinateFrameFormController::getInstance();
+				 control->createForm();
+				 control->setDisplayWorld(displayWorld);
+				 control->Show();
+			 }
+			 else if (e->RowIndex == (int)worldProperty::RENDER)
+			 {
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+				 if (world)
+				 {
+					 String^ ren = world->toggleRender() ? "true" : "false";
+					 this->worldGridView->Rows[e->RowIndex]->Cells[1]->Value = ren;
+				 }
 			 }
 		 }
+		 // user edits property value for world
+private: System::Void worldGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
+			 if (e->RowIndex == (int) worldProperty::NAME)
+			 {
+				CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+				if (world)
+				{
+					std::string* str = managedToStdString(
+						(String^)this->worldGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value);
+					world->setName(*str);
+					int idx = this->worldComboBox->SelectedIndex;
+					worldUpdateList();
+					this->worldComboBox->SelectedIndex = idx;
+				}
+			 }
+		 }
+private: System::Void resetWorldGridView() {
+			if (this->worldGridView->InvokeRequired) 
+			{
+				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::resetWorldGridView);
+				BeginInvoke(d, nullptr);
+			} 
+			else 
+			{
+				this->worldGridView->Rows->Clear();
+				displayWorld = -1;
+				displayObjectWorld = -1;
+				this->objectAddButton->Enabled = false;
+				this->worldRemoveButton->Enabled = false;
+			}
+		 }
+private: System::Void worldRemoveButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			String^ message = "Are you sure you want to remove " + this->worldComboBox->SelectedItem->ToString() + "?";
+			String^ str = (String^) this->worldGridView->Rows[(int)worldProperty::OBJECTS]->Cells[1]->Value;
+			int numObjects = Int32::Parse(str);
+			if (numObjects > 0)
+			{
+				message += "\nThis will also remove " + numObjects.ToString() + " associated object";
+				if (numObjects > 1)
+					message += "s";
+			}
+
+			System::Windows::Forms::DialogResult result = MessageBox::Show(
+				message, "Remove World", MessageBoxButtons::OKCancel, MessageBoxIcon::Question);
+			if(result == ::DialogResult::OK){
+				WorldManager::getInstance()->removeWorld(displayWorld);
+				displayWorld = -1;
+				worldUpdateList();
+			}
+		}
+
+/////////////////////
+// Object Functions
+		 
 		 // populate list of objects based on displayObjectWorld
 public: System::Void objectUpdateList() {
 			if (this->objectComboBox->InvokeRequired) 
@@ -2730,6 +2821,20 @@ public: System::Void objectUpdateList() {
 					 }
 				 }
 			}
+		 }
+		 // update list of objects if drop down list value changes
+private: System::Void objectWComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (!this->objectWComboBox->SelectedItem)
+				 return;
+			 
+			 String^ text = this->objectWComboBox->SelectedItem->ToString();
+			 int id = worldExtractID(text);
+			 if (id >= 0)
+			 {
+				 this->objectAddButton->Enabled = true;
+				 displayObjectWorld = id;
+				 objectUpdateList();
+			 }
 		 }
 		 // update object display if drop down list value changes
 private: System::Void objectComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -2802,64 +2907,6 @@ private: System::Void objectGridView_displayObject() {
 				 this->objectGridView->Rows[(int)objectProperty::NAME]->ReadOnly = false;
 			 }
 		 }
-		 // extracts ID from text format "Name (##)"
-private: int worldExtractID(String^ str) {
-			 array<String^>^ split = str->Split(gcnew array<wchar_t> {'(', ')'});
-
-			 int result;
-			 // id contained in second to last element
-			 if (Int32::TryParse(split[split->Length - 2], result))
-				 return result;
-			 else
-				 return -1;
-		 }
-		 // add a new world (name only)
-private: System::Void worldAddButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 AddWorldForm^ addWorldForm = gcnew AddWorldForm();
-			 addWorldForm->Show();
-		 }
-		 
-private: System::Void worldGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
-			 if (e->ColumnIndex != 1) // must be value column
-				 return;
-
-			 if (e->RowIndex == (int)worldProperty::MATRIX &&	// setting coordinate frame
-				 displayWorld != 0)								// but not if default world
-			 {
-				 DefineCoordinateFrameFormController ^control = DefineCoordinateFrameFormController::getInstance();
-				 control->createForm();
-				 control->setDisplayWorld(displayWorld);
-				 control->Show();
-			 }
-			 else if (e->RowIndex == (int)worldProperty::RENDER)
-			 {
-				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
-				 if (world)
-				 {
-					 String^ ren = world->toggleRender() ? "true" : "false";
-					 this->worldGridView->Rows[e->RowIndex]->Cells[1]->Value = ren;
-				 }
-			 }
-		 }
-		 // user edits property value for world
-private: System::Void worldGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
-			 if (e->RowIndex == (int) worldProperty::NAME)
-			 {
-				CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
-				if (world)
-				{
-					std::string* str = new std::string(
-						(const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(
-						(String^)this->worldGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value)
-						).ToPointer()
-					);
-					world->setName(*str);
-					int idx = this->worldComboBox->SelectedIndex;
-					worldUpdateList();
-					this->worldComboBox->SelectedIndex = idx;
-				}
-			 }
-		 }
 		 		 // user edits property value for object
 private: System::Void objectGridView_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 			 if (e->RowIndex == (int) objectProperty::NAME)
@@ -2870,11 +2917,8 @@ private: System::Void objectGridView_CellValueChanged(System::Object^  sender, S
 					CaptureObject* object = world->getObject(displayObject);
 					if (object)
 					{
-						std::string* str = new std::string(
-							(const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(
-							(String^)this->objectGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value)
-							).ToPointer()
-						);
+						std::string* str = managedToStdString(
+							(String^)this->objectGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value);
 						object->setName(*str);
 						int idx = this->objectComboBox->SelectedIndex;
 						objectUpdateList();
@@ -2900,21 +2944,6 @@ private: System::Void resetObjectGridView() {
 				this->objectGridView->Rows->Clear();
 				displayObject = -1;
 				this->removeObjectButton->Enabled = false;
-			}
-		 }
-private: System::Void resetWorldGridView() {
-			if (this->worldGridView->InvokeRequired) 
-			{
-				SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::resetWorldGridView);
-				BeginInvoke(d, nullptr);
-			} 
-			else 
-			{
-				this->worldGridView->Rows->Clear();
-				displayWorld = -1;
-				displayObjectWorld = -1;
-				this->objectAddButton->Enabled = false;
-				this->worldRemoveButton->Enabled = false;
 			}
 		 }
 private: System::Void objectGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
@@ -2943,25 +2972,6 @@ private: System::Void objectGridView_CellDoubleClick(System::Object^  sender, Sy
 				 }
 			 }
 		 }
-private: System::Void worldRemoveButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			String^ message = "Are you sure you want to remove " + this->worldComboBox->SelectedItem->ToString() + "?";
-			String^ str = (String^) this->worldGridView->Rows[(int)worldProperty::OBJECTS]->Cells[1]->Value;
-			int numObjects = Int32::Parse(str);
-			if (numObjects > 0)
-			{
-				message += "\nThis will also remove " + numObjects.ToString() + " associated object";
-				if (numObjects > 1)
-					message += "s";
-			}
-
-			System::Windows::Forms::DialogResult result = MessageBox::Show(
-				message, "Remove World", MessageBoxButtons::OKCancel, MessageBoxIcon::Question);
-			if(result == ::DialogResult::OK){
-				WorldManager::getInstance()->removeWorld(displayWorld);
-				displayWorld = -1;
-				worldUpdateList();
-			}
-		}
 private: System::Void removeObjectButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			String^ message = "Are you sure you want to remove " + this->objectComboBox->SelectedItem->ToString() + "?";
 

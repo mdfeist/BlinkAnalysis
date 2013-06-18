@@ -25,6 +25,7 @@ bool WorldManager::addWorld(CaptureWorld *world)
 
 	if (ret.second) // added successfully
 	{
+		world->setRender(true);
 		MainFormController::getInstance()->worldUpdateList();
 		return true;
 	}

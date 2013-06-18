@@ -14,8 +14,6 @@ namespace BlinkAnalysis {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	enum class objectType {PLANE, BOX};
-
 	/// <summary>
 	/// Summary for AddObjectForm
 	/// </summary>
@@ -93,6 +91,30 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::TextBox^  planeInPt2TextBox;
 	private: System::Windows::Forms::TextBox^  planeInCornerTextBox;
 	private: System::Windows::Forms::TextBox^  planeInPt1TextBox;
+	private: System::Windows::Forms::TabPage^  boxPage;
+	private: System::Windows::Forms::Button^  boxSetButton;
+	private: System::Windows::Forms::TextBox^  boxInCenTextBox;
+	private: System::Windows::Forms::RadioButton^  boxCoordRadio;
+
+
+	private: System::Windows::Forms::RadioButton^  boxRigidRadio;
+	private: System::Windows::Forms::RadioButton^  boxMarkersRadio;
+
+	private: System::Windows::Forms::Label^  boxInfoLabel;
+	private: System::Windows::Forms::Label^  boxOptionalLabel;
+	private: System::Windows::Forms::TextBox^  boxNameTextBox;
+	private: System::Windows::Forms::Label^  boxNameLabel;
+	private: System::Windows::Forms::Label^  boxCentreLabel;
+	private: System::Windows::Forms::Button^  boxGetButton;
+	private: System::Windows::Forms::Label^  boxCenDataLabel;
+
+	private: System::Windows::Forms::TextBox^  boxCenTextBox;
+	private: System::Windows::Forms::TextBox^  boxHTextBox;
+	private: System::Windows::Forms::TextBox^  boxWTextBox;
+	private: System::Windows::Forms::TextBox^  boxLTextBox;
+	private: System::Windows::Forms::Label^  boxHeightLabel;
+	private: System::Windows::Forms::Label^  boxWidthLabel;
+	private: System::Windows::Forms::Label^  boxLengthLabel;
 
 	private:
 		/// <summary>
@@ -135,14 +157,36 @@ namespace BlinkAnalysis {
 			this->planeCornerTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->planePt2TextBox = (gcnew System::Windows::Forms::TextBox());
 			this->planePt1TextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxPage = (gcnew System::Windows::Forms::TabPage());
+			this->boxHTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxWTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxLTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxHeightLabel = (gcnew System::Windows::Forms::Label());
+			this->boxWidthLabel = (gcnew System::Windows::Forms::Label());
+			this->boxLengthLabel = (gcnew System::Windows::Forms::Label());
+			this->boxSetButton = (gcnew System::Windows::Forms::Button());
+			this->boxInCenTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxCoordRadio = (gcnew System::Windows::Forms::RadioButton());
+			this->boxRigidRadio = (gcnew System::Windows::Forms::RadioButton());
+			this->boxMarkersRadio = (gcnew System::Windows::Forms::RadioButton());
+			this->boxInfoLabel = (gcnew System::Windows::Forms::Label());
+			this->boxOptionalLabel = (gcnew System::Windows::Forms::Label());
+			this->boxNameTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxNameLabel = (gcnew System::Windows::Forms::Label());
+			this->boxCentreLabel = (gcnew System::Windows::Forms::Label());
+			this->boxGetButton = (gcnew System::Windows::Forms::Button());
+			this->boxCenDataLabel = (gcnew System::Windows::Forms::Label());
+			this->boxCenTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->tabControl1->SuspendLayout();
 			this->planePage->SuspendLayout();
+			this->boxPage->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this->tabControl1->Controls->Add(this->infoPage);
 			this->tabControl1->Controls->Add(this->planePage);
+			this->tabControl1->Controls->Add(this->boxPage);
 			this->tabControl1->Location = System::Drawing::Point(0, -1);
 			this->tabControl1->Name = L"tabControl1";
 			this->tabControl1->SelectedIndex = 0;
@@ -394,7 +438,7 @@ namespace BlinkAnalysis {
 			this->planeSetButton->Name = L"planeSetButton";
 			this->planeSetButton->Size = System::Drawing::Size(103, 23);
 			this->planeSetButton->TabIndex = 17;
-			this->planeSetButton->Text = L"Set Points";
+			this->planeSetButton->Text = L"Make Plane";
 			this->planeSetButton->UseVisualStyleBackColor = true;
 			this->planeSetButton->Click += gcnew System::EventHandler(this, &AddObjectForm::planeSetButton_Click);
 			// 
@@ -452,6 +496,225 @@ namespace BlinkAnalysis {
 			this->planePt1TextBox->Size = System::Drawing::Size(82, 20);
 			this->planePt1TextBox->TabIndex = 11;
 			// 
+			// boxPage
+			// 
+			this->boxPage->Controls->Add(this->boxHTextBox);
+			this->boxPage->Controls->Add(this->boxWTextBox);
+			this->boxPage->Controls->Add(this->boxLTextBox);
+			this->boxPage->Controls->Add(this->boxHeightLabel);
+			this->boxPage->Controls->Add(this->boxWidthLabel);
+			this->boxPage->Controls->Add(this->boxLengthLabel);
+			this->boxPage->Controls->Add(this->boxSetButton);
+			this->boxPage->Controls->Add(this->boxInCenTextBox);
+			this->boxPage->Controls->Add(this->boxCoordRadio);
+			this->boxPage->Controls->Add(this->boxRigidRadio);
+			this->boxPage->Controls->Add(this->boxMarkersRadio);
+			this->boxPage->Controls->Add(this->boxInfoLabel);
+			this->boxPage->Controls->Add(this->boxOptionalLabel);
+			this->boxPage->Controls->Add(this->boxNameTextBox);
+			this->boxPage->Controls->Add(this->boxNameLabel);
+			this->boxPage->Controls->Add(this->boxCentreLabel);
+			this->boxPage->Controls->Add(this->boxGetButton);
+			this->boxPage->Controls->Add(this->boxCenDataLabel);
+			this->boxPage->Controls->Add(this->boxCenTextBox);
+			this->boxPage->Location = System::Drawing::Point(4, 22);
+			this->boxPage->Name = L"boxPage";
+			this->boxPage->Padding = System::Windows::Forms::Padding(3);
+			this->boxPage->Size = System::Drawing::Size(410, 287);
+			this->boxPage->TabIndex = 2;
+			this->boxPage->Text = L"Box";
+			this->boxPage->UseVisualStyleBackColor = true;
+			// 
+			// boxHTextBox
+			// 
+			this->boxHTextBox->Location = System::Drawing::Point(212, 222);
+			this->boxHTextBox->Name = L"boxHTextBox";
+			this->boxHTextBox->Size = System::Drawing::Size(83, 20);
+			this->boxHTextBox->TabIndex = 54;
+			this->boxHTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectForm::boxTextBox_Validating);
+			// 
+			// boxWTextBox
+			// 
+			this->boxWTextBox->Location = System::Drawing::Point(123, 222);
+			this->boxWTextBox->Name = L"boxWTextBox";
+			this->boxWTextBox->Size = System::Drawing::Size(83, 20);
+			this->boxWTextBox->TabIndex = 53;
+			this->boxWTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectForm::boxTextBox_Validating);
+			// 
+			// boxLTextBox
+			// 
+			this->boxLTextBox->Location = System::Drawing::Point(34, 222);
+			this->boxLTextBox->Name = L"boxLTextBox";
+			this->boxLTextBox->Size = System::Drawing::Size(83, 20);
+			this->boxLTextBox->TabIndex = 52;
+			this->boxLTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectForm::boxTextBox_Validating);
+			// 
+			// boxHeightLabel
+			// 
+			this->boxHeightLabel->AutoSize = true;
+			this->boxHeightLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxHeightLabel->Location = System::Drawing::Point(209, 204);
+			this->boxHeightLabel->Name = L"boxHeightLabel";
+			this->boxHeightLabel->Size = System::Drawing::Size(71, 15);
+			this->boxHeightLabel->TabIndex = 51;
+			this->boxHeightLabel->Text = L"Height (Z)";
+			// 
+			// boxWidthLabel
+			// 
+			this->boxWidthLabel->AutoSize = true;
+			this->boxWidthLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxWidthLabel->Location = System::Drawing::Point(120, 204);
+			this->boxWidthLabel->Name = L"boxWidthLabel";
+			this->boxWidthLabel->Size = System::Drawing::Size(65, 15);
+			this->boxWidthLabel->TabIndex = 50;
+			this->boxWidthLabel->Text = L"Width (Y)";
+			// 
+			// boxLengthLabel
+			// 
+			this->boxLengthLabel->AutoSize = true;
+			this->boxLengthLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxLengthLabel->Location = System::Drawing::Point(31, 204);
+			this->boxLengthLabel->Name = L"boxLengthLabel";
+			this->boxLengthLabel->Size = System::Drawing::Size(74, 15);
+			this->boxLengthLabel->TabIndex = 49;
+			this->boxLengthLabel->Text = L"Length (X)";
+			// 
+			// boxSetButton
+			// 
+			this->boxSetButton->Enabled = false;
+			this->boxSetButton->Location = System::Drawing::Point(292, 253);
+			this->boxSetButton->Name = L"boxSetButton";
+			this->boxSetButton->Size = System::Drawing::Size(103, 23);
+			this->boxSetButton->TabIndex = 48;
+			this->boxSetButton->Text = L"Make Box";
+			this->boxSetButton->UseVisualStyleBackColor = true;
+			this->boxSetButton->Click += gcnew System::EventHandler(this, &AddObjectForm::boxSetButton_Click);
+			// 
+			// boxInCenTextBox
+			// 
+			this->boxInCenTextBox->Location = System::Drawing::Point(108, 171);
+			this->boxInCenTextBox->Name = L"boxInCenTextBox";
+			this->boxInCenTextBox->Size = System::Drawing::Size(220, 20);
+			this->boxInCenTextBox->TabIndex = 47;
+			this->boxInCenTextBox->Visible = false;
+			this->boxInCenTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectForm::boxTextBox_Validating);
+			// 
+			// boxCoordRadio
+			// 
+			this->boxCoordRadio->AutoSize = true;
+			this->boxCoordRadio->Location = System::Drawing::Point(257, 93);
+			this->boxCoordRadio->Name = L"boxCoordRadio";
+			this->boxCoordRadio->Size = System::Drawing::Size(81, 17);
+			this->boxCoordRadio->TabIndex = 46;
+			this->boxCoordRadio->TabStop = true;
+			this->boxCoordRadio->Text = L"Coordinates";
+			this->boxCoordRadio->UseVisualStyleBackColor = true;
+			this->boxCoordRadio->CheckedChanged += gcnew System::EventHandler(this, &AddObjectForm::boxCoordRadio_CheckedChanged);
+			// 
+			// boxRigidRadio
+			// 
+			this->boxRigidRadio->AutoSize = true;
+			this->boxRigidRadio->Location = System::Drawing::Point(148, 93);
+			this->boxRigidRadio->Name = L"boxRigidRadio";
+			this->boxRigidRadio->Size = System::Drawing::Size(100, 17);
+			this->boxRigidRadio->TabIndex = 43;
+			this->boxRigidRadio->Text = L"Rigid Body Tool";
+			this->boxRigidRadio->UseVisualStyleBackColor = true;
+			// 
+			// boxMarkersRadio
+			// 
+			this->boxMarkersRadio->AutoSize = true;
+			this->boxMarkersRadio->Checked = true;
+			this->boxMarkersRadio->Location = System::Drawing::Point(67, 93);
+			this->boxMarkersRadio->Name = L"boxMarkersRadio";
+			this->boxMarkersRadio->Size = System::Drawing::Size(63, 17);
+			this->boxMarkersRadio->TabIndex = 42;
+			this->boxMarkersRadio->TabStop = true;
+			this->boxMarkersRadio->Text = L"Markers";
+			this->boxMarkersRadio->UseVisualStyleBackColor = true;
+			this->boxMarkersRadio->CheckedChanged += gcnew System::EventHandler(this, &AddObjectForm::boxMarkerRadio_CheckedChanged);
+			// 
+			// boxInfoLabel
+			// 
+			this->boxInfoLabel->AutoSize = true;
+			this->boxInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxInfoLabel->Location = System::Drawing::Point(18, 21);
+			this->boxInfoLabel->Name = L"boxInfoLabel";
+			this->boxInfoLabel->Size = System::Drawing::Size(127, 15);
+			this->boxInfoLabel->TabIndex = 41;
+			this->boxInfoLabel->Text = L"Add a box to the world";
+			// 
+			// boxOptionalLabel
+			// 
+			this->boxOptionalLabel->AutoSize = true;
+			this->boxOptionalLabel->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
+			this->boxOptionalLabel->Location = System::Drawing::Point(254, 60);
+			this->boxOptionalLabel->Name = L"boxOptionalLabel";
+			this->boxOptionalLabel->Size = System::Drawing::Size(44, 13);
+			this->boxOptionalLabel->TabIndex = 40;
+			this->boxOptionalLabel->Text = L"optional";
+			// 
+			// boxNameTextBox
+			// 
+			this->boxNameTextBox->Location = System::Drawing::Point(69, 57);
+			this->boxNameTextBox->Name = L"boxNameTextBox";
+			this->boxNameTextBox->Size = System::Drawing::Size(179, 20);
+			this->boxNameTextBox->TabIndex = 39;
+			// 
+			// boxNameLabel
+			// 
+			this->boxNameLabel->AutoSize = true;
+			this->boxNameLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxNameLabel->Location = System::Drawing::Point(18, 58);
+			this->boxNameLabel->Name = L"boxNameLabel";
+			this->boxNameLabel->Size = System::Drawing::Size(45, 15);
+			this->boxNameLabel->TabIndex = 38;
+			this->boxNameLabel->Text = L"Name";
+			// 
+			// boxCentreLabel
+			// 
+			this->boxCentreLabel->AutoSize = true;
+			this->boxCentreLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxCentreLabel->Location = System::Drawing::Point(17, 172);
+			this->boxCentreLabel->Name = L"boxCentreLabel";
+			this->boxCentreLabel->Size = System::Drawing::Size(85, 15);
+			this->boxCentreLabel->TabIndex = 37;
+			this->boxCentreLabel->Text = L"Base Centre";
+			// 
+			// boxGetButton
+			// 
+			this->boxGetButton->Location = System::Drawing::Point(21, 128);
+			this->boxGetButton->Name = L"boxGetButton";
+			this->boxGetButton->Size = System::Drawing::Size(75, 23);
+			this->boxGetButton->TabIndex = 36;
+			this->boxGetButton->Text = L"Get Data";
+			this->boxGetButton->UseVisualStyleBackColor = true;
+			this->boxGetButton->Click += gcnew System::EventHandler(this, &AddObjectForm::boxGetButton_Click);
+			// 
+			// boxCenDataLabel
+			// 
+			this->boxCenDataLabel->AutoSize = true;
+			this->boxCenDataLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxCenDataLabel->Location = System::Drawing::Point(101, 131);
+			this->boxCenDataLabel->Name = L"boxCenDataLabel";
+			this->boxCenDataLabel->Size = System::Drawing::Size(84, 15);
+			this->boxCenDataLabel->TabIndex = 35;
+			this->boxCenDataLabel->Text = L"No data found";
+			// 
+			// boxCenTextBox
+			// 
+			this->boxCenTextBox->Location = System::Drawing::Point(108, 171);
+			this->boxCenTextBox->Name = L"boxCenTextBox";
+			this->boxCenTextBox->Size = System::Drawing::Size(79, 20);
+			this->boxCenTextBox->TabIndex = 34;
+			// 
 			// AddObjectForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -465,20 +728,151 @@ namespace BlinkAnalysis {
 			this->tabControl1->ResumeLayout(false);
 			this->planePage->ResumeLayout(false);
 			this->planePage->PerformLayout();
+			this->boxPage->ResumeLayout(false);
+			this->boxPage->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 
+///////////////////////////
 // local variables
-private: osg::Vec3* pos1;
-private: osg::Vec3* posC;
-private: osg::Vec3* pos2;
-private: osg::Vec3* pos;
+///////////////////////////
+private: osg::Vec3* planePos1;
+private: osg::Vec3* planePosC;
+private: osg::Vec3* planePos2;
+private: osg::Vec3* planePos;
+private: osg::Vec3* boxPosCen;
 
+///////////////////////////
+// util functions
+///////////////////////////
+		 // set text to display when there is no position data
+private: System::Void setDefaultText(Label^ text) {
+				text->Text = this->defaultDataText;
+			}
+		 // set text to display when there is position data
+private: System::Void setPoint(osg::Vec3* pos, Label^ text) {
+			String^ str = Convert::ToString(pos->x());
+			str += ", ";
+			str += Convert::ToString(pos->y());
+			str += ", ";
+			str += Convert::ToString(pos->z());
+			text->Text = str;
+		 }
+		 // converts a managed String^ to unmanaged std::string*
+private: std::string* managedToStdString(String^ str) {
+			 return new std::string( (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer());
+		 }
+		 // checks if input string is a valid coordinate (x, y, z)
+private: bool isCoordinate(String^ str) {
+			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*," + 
+							"\\s*-?\\d+(.\\d+)?\\s*," +
+							"\\s*-?\\d+(.\\d+)?\\s*$";
+			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
+			 return regex->IsMatch(str);
+		 }
+		 // checks if input string is a valid float
+private: bool isFloat(String^ str) {
+			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*$";
+			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
+			 return regex->IsMatch(str);
+		 }
+		 // extracts coordinates from input text box
+private: bool extractCoordinates(TextBox^ tb, osg::Vec3* pt) {
+			 if (!pt || !tb)
+				 return false;
+
+			 float x, y, z;
+			 array<String^>^ split = tb->Text->Split(gcnew array<wchar_t> {','});
+			 if (!Single::TryParse(split[0], x))
+				 return false;
+			 if (!Single::TryParse(split[1], y))
+				 return false;
+			 if (!Single::TryParse(split[2], z))
+				 return false;
+
+			 pt->set(x, y, z);
+			 return true;
+		 }
+		 // set visible/not visible for buttons associated with rigid body view
+private: System::Void rigidSetButtons(bool enable, bool visible, ObjectType type) {
+			 switch (type)
+			 {
+			 // plane
+			 case PLANE :
+				 this->planePt1SetButton->Visible = visible;
+				 this->planePt1SetButton->Enabled = enable;
+				 
+				 this->planeCornerSetButton->Visible = visible;
+				 this->planeCornerSetButton->Enabled = enable;
+				 
+				 this->planePt2SetButton->Visible = visible;
+				 this->planePt2SetButton->Enabled = enable;
+				 break;
+
+
+			 }
+		 }
+		 // set visible/not visible for text boxes associated with markers view
+private: System::Void markerTextBoxes(bool visible, ObjectType type) {
+			 switch (type)
+			 {
+			 // plane
+			 case PLANE :
+				 this->planePt1TextBox->Visible = visible;
+				 this->planeCornerTextBox->Visible = visible;
+				 this->planePt2TextBox->Visible = visible;
+				 break;
+			 case BOX :
+				 this->boxCenTextBox->Visible = visible;
+				 break;
+
+			 }
+		 }
+		 	 // set visible/not visible for text boxes associated with coordinates view
+private: System::Void coordinateTextBoxes(bool visible, ObjectType type) {
+			 switch (type)
+			 {
+			 // plane
+			 case PLANE :
+				 this->planeInPt1TextBox->Visible = visible;
+				 this->planeInCornerTextBox->Visible = visible;
+				 this->planeInPt2TextBox->Visible = visible;
+				 break;
+			 case BOX :
+				 this->boxInCenTextBox->Visible = visible;
+
+			 }
+		 }
+
+///////////////////////////
+// form functions
+///////////////////////////
+private: System::Void AddObjectForm_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) {
+		 	if (planePos1)	delete planePos1;
+			if (planePosC)	delete planePosC;
+			if (planePos2)	delete planePos2;
+			if (planePos)	delete planePos;
+			if (boxPosCen)	delete boxPosCen;
+		 }
+		 // set enable/disable, visible/not visible for buttons associated with rigid body tool view
+private: System::Void AddObjectForm_Load(System::Object^  sender, System::EventArgs^  e) {
+			this->defaultDataText = L"No data found";
+			planePos1	= new osg::Vec3();
+			planePosC	= new osg::Vec3();
+			planePos2	= new osg::Vec3();
+			planePos	= new osg::Vec3();
+			boxPosCen	= new osg::Vec3();
+		 }
+
+///////////////////////////
+// plane functions
+///////////////////////////
 		 // get data from client
 		 // markers: based on ID in each text field
 		 // rigid body: based on chosen rigid body tool
+		 // coordinate: based on input (validated)
 private: System::Void planeDataGetButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			ClientHandler* client = AppData::getInstance()->getClient();
 			// use markers
@@ -500,11 +894,8 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				else
 				{
 					osg::Vec3 pt = marker->getPosition();
-					if (!pos1)
-						pos1 = new osg::Vec3(pt.x(), pt.y(), pt.z());
-					else
-						pos1->set(pt.x(), pt.y(), pt.z());
-						setPoint(pos1, this->planeDataPt1Label);
+					planePos1->set(pt.x(), pt.y(), pt.z());
+					setPoint(planePos1, this->planeDataPt1Label);
 				}
 				
 				// corner
@@ -518,11 +909,8 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				else
 				{
 					osg::Vec3 pt = marker->getPosition();
-					if (!posC)
-						posC = new osg::Vec3(pt.x(), pt.y(), pt.z());
-					else
-						posC->set(pt.x(), pt.y(), pt.z());
-						setPoint(posC, this->planeDataCornerLabel);
+					planePosC->set(pt.x(), pt.y(), pt.z());
+					setPoint(planePosC, this->planeDataCornerLabel);
 				}
 				
 				// point 2
@@ -536,11 +924,8 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				else
 				{
 					osg::Vec3 pt = marker->getPosition();
-					if (!pos2)
-						pos2 = new osg::Vec3(pt.x(), pt.y(), pt.z());
-					else
-						pos2->set(pt.x(), pt.y(), pt.z());
-						setPoint(pos2, this->planeDataPt2Label);
+					planePos2->set(pt.x(), pt.y(), pt.z());
+					setPoint(planePos2, this->planeDataPt2Label);
 				}
 					client->unlock();
 			}
@@ -550,88 +935,25 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				RigidBody* body = client->getRigidBody(client->getRigidBodyTool());
 				if (body)
 				{
-					if (!pos)
-						pos = new osg::Vec3(); 
-
-					pos->set(body->getPosition().x(), 
+					planePos->set(body->getPosition().x(), 
 							body->getPosition().y(), 
 							body->getPosition().z());
-					setPoint(pos, this->planeRigidDataLabel);
-					rigidSetButtons(true, true, objectType::PLANE);
+					setPoint(planePos, this->planeRigidDataLabel);
+					rigidSetButtons(true, true, PLANE);
 					return;
 				}
 			}
 		}
-		 // set text to display when there is no position data
-private: System::Void setDefaultText(Label^ text) {
-				text->Text = this->defaultDataText;
-			}
-		 // set text to display when there is position data
-private: System::Void setPoint(osg::Vec3* pos, Label^ text) {
-			String^ str = Convert::ToString(pos->x());
-			str += ", ";
-			str += Convert::ToString(pos->y());
-			str += ", ";
-			str += Convert::ToString(pos->z());
-			text->Text = str;
-		 }
-		 // extracts coordinates from input text box
-private: bool extractCoordinates()
-		 {
-			 float x, y, z;
-			 array<String^>^ split;
-
-			 // pos1
-			 split = this->planeInPt1TextBox->Text->Split(gcnew array<wchar_t> {','});
-			 if (!Single::TryParse(split[0], x))
-				 return false;
-			 if (!Single::TryParse(split[1], y))
-				 return false;
-			 if (!Single::TryParse(split[2], z))
-				 return false;
-			 if (!pos1)
-				 pos1 = new osg::Vec3(x, y, z);
-			 else
-				 pos1->set(x, y, z);
-
-			 // posC
-			 split = this->planeInCornerTextBox->Text->Split(gcnew array<wchar_t> {','});
-			 if (!Single::TryParse(split[0], x))
-				 return false;
-			 if (!Single::TryParse(split[1], y))
-				 return false;
-			 if (!Single::TryParse(split[2], z))
-				 return false;
-			 if (!posC)
-				 posC = new osg::Vec3(x, y, z);
-			 else
-				 posC->set(x, y, z);
-
-			 // pos2
-			 split = this->planeInPt2TextBox->Text->Split(gcnew array<wchar_t> {','});
-			 if (!Single::TryParse(split[0], x))
-				 return false;
-			 if (!Single::TryParse(split[1], y))
-				 return false;
-			 if (!Single::TryParse(split[2], z))
-				 return false;
-			 if (!pos2)
-				 pos2 = new osg::Vec3(x, y, z);
-			 else
-				 pos2->set(x, y, z);
-
-			 return true;
-		 }
 		 // add plane to world based on data from posC, pos1, pos2
 private: System::Void planeSetButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 if (this->planeCoordRadio->Checked && !extractCoordinates())
+			 if (this->planeCoordRadio->Checked && !planeExtractCoordinates())
 				 return;
 
 			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
-				 std::string* str = new std::string( (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->planeNameTextBox->Text)).ToPointer());
-				 CaptureObject* object = world->addPlane(*posC, *pos1, *pos2, *str);
+				 std::string* str = managedToStdString(this->planeNameTextBox->Text);
+				 CaptureObject* object = world->addPlane(*planePosC, *planePos1, *planePos2, *str);
 				 if (object)
 				 {
 					 String^ id = Convert::ToString(object->getID());
@@ -640,64 +962,10 @@ private: System::Void planeSetButton_Click(System::Object^  sender, System::Even
 			 }
 			 this->Close();
 		 }
-private: System::Void AddObjectForm_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) {
-		 	if (pos1) delete pos1;
-			if (posC) delete posC;
-			if (pos2) delete pos2;
-			if (pos) delete pos;
-		 }
-		 // set enable/disable, visible/not visible for buttons associated with rigid body tool view
-private: System::Void rigidSetButtons(bool enable, bool visible, objectType type) {
-			 switch (type)
-			 {
-			 // plane
-			 case objectType::PLANE :
-				 this->planePt1SetButton->Visible = visible;
-				 this->planePt1SetButton->Enabled = enable;
-				 
-				 this->planeCornerSetButton->Visible = visible;
-				 this->planeCornerSetButton->Enabled = enable;
-				 
-				 this->planePt2SetButton->Visible = visible;
-				 this->planePt2SetButton->Enabled = enable;
-				 break;
-
-
-			 }
-		 }
-		 // set visible/not visible for text boxes associated with markers view
-private: System::Void markerTextBoxes(bool visible, objectType type) {
-			 switch (type)
-			 {
-			 // plane
-			 case objectType::PLANE :
-				 this->planePt1TextBox->Visible = visible;
-				 this->planeCornerTextBox->Visible = visible;
-				 this->planePt2TextBox->Visible = visible;
-				 break;
-
-
-			 }
-		 }
-		 	 // set visible/not visible for text boxes associated with coordinates view
-private: System::Void coordinateTextBoxes(bool visible, objectType type) {
-			 switch (type)
-			 {
-			 // plane
-			 case objectType::PLANE :
-				 this->planeInPt1TextBox->Visible = visible;
-				 this->planeInCornerTextBox->Visible = visible;
-				 this->planeInPt2TextBox->Visible = visible;
-				 break;
-
-
-			 }
-		 }
-		 // change visibility of form objects based on which radio button is checked
 private: System::Void planeRigidRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->planeRigidRadio->Checked)
 			 {
-				 rigidSetButtons(false, true, objectType::PLANE);
+				 rigidSetButtons(false, true, PLANE);
 
 				 setDefaultText(this->planeRigidDataLabel);
 				 setDefaultText(this->planeDataPt1Label);
@@ -709,7 +977,7 @@ private: System::Void planeRigidRadio_CheckedChanged(System::Object^  sender, Sy
 			 }
 			 else
 			 {
-				 rigidSetButtons(false, false, objectType::PLANE);
+				 rigidSetButtons(false, false, PLANE);
 
 				 this->planeRigidDataLabel->Visible = false;
 			 }
@@ -717,7 +985,7 @@ private: System::Void planeRigidRadio_CheckedChanged(System::Object^  sender, Sy
 private: System::Void planeMarkersRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->planeMarkersRadio->Checked)
 			 {
-				 markerTextBoxes(true, objectType::PLANE);
+				 markerTextBoxes(true, PLANE);
 
 				 setDefaultText(this->planeDataPt1Label);
 				 setDefaultText(this->planeDataCornerLabel);
@@ -727,20 +995,13 @@ private: System::Void planeMarkersRadio_CheckedChanged(System::Object^  sender, 
 			 }
 			 else
 			 {
-				 markerTextBoxes(false, objectType::PLANE);
+				 markerTextBoxes(false, PLANE);
 			 }
-		 }
-private: bool isCoordinate(String^ str) {
-			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*," + 
-							"\\s*-?\\d+(.\\d+)?\\s*," +
-							"\\s*-?\\d+(.\\d+)?\\s*$";
-			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
-			 return regex->IsMatch(str);
 		 }
 private: System::Void planeCoordRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->planeCoordRadio->Checked)
 			 {
-				 coordinateTextBoxes(true, objectType::PLANE);
+				 coordinateTextBoxes(true, PLANE);
 
 				 this->planeDataPt1Label->Text = "";
 				 this->planeDataCornerLabel->Text = "";
@@ -751,26 +1012,31 @@ private: System::Void planeCoordRadio_CheckedChanged(System::Object^  sender, Sy
 			 }
 			 else
 			 {
-				 coordinateTextBoxes(false, objectType::PLANE);
+				 coordinateTextBoxes(false, PLANE);
 				 this->planeDataGetButton->Visible = true;
 			 }
 		 }
-private: System::Void AddObjectForm_Load(System::Object^  sender, System::EventArgs^  e) {
-			this->defaultDataText = L"No data found";
-			pos1 = NULL;
-			posC = NULL;
-			pos2 = NULL;
-			pos = NULL;
+		 // populate vectors based on coordinate input
+private: bool planeExtractCoordinates()
+		 {
+			 if (!extractCoordinates(this->planeInPt1TextBox, planePos1))
+				 return false;
+
+			 if (!extractCoordinates(this->planeInCornerTextBox, planePosC))
+				 return false;
+
+			 if (!extractCoordinates(this->planeInPt2TextBox, planePos2))
+				 return false;
+
+			 return true;
 		 }
+		 // change visibility of form objects based on which radio button is checked
 		 // gets data from rigid body tool and sets it to one of the three points
 private: System::Void planeSetDataButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			if (sender == this->planePt1SetButton)
 			{
-				if (!pos1)
-					pos1 = new osg::Vec3();
-
-				pos1->set(pos->x(), pos->y(), pos->z());
-				setPoint(pos, this->planeDataPt1Label);
+				planePos1->set(planePos->x(), planePos->y(), planePos->z());
+				setPoint(planePos, this->planeDataPt1Label);
 					 
 				if ( String::Compare(this->planeDataCornerLabel->Text, this->defaultDataText) &&
 					String::Compare(this->planeDataPt2Label->Text, this->defaultDataText) )
@@ -780,11 +1046,8 @@ private: System::Void planeSetDataButton_Click(System::Object^  sender, System::
 			}
 			else if (sender == this->planeCornerSetButton)
 			{
-				if (!posC)
-					posC = new osg::Vec3();
-
-				posC->set(pos->x(), pos->y(), pos->z());
-				setPoint(pos, this->planeDataCornerLabel);
+				planePosC->set(planePos->x(), planePos->y(), planePos->z());
+				setPoint(planePos, this->planeDataCornerLabel);
 
 				if ( String::Compare(this->planeDataPt1Label->Text, this->defaultDataText) &&
 					String::Compare(this->planeDataPt2Label->Text, this->defaultDataText) )
@@ -794,11 +1057,8 @@ private: System::Void planeSetDataButton_Click(System::Object^  sender, System::
 			}
 			else if (sender == this->planePt2SetButton)
 			{
-				if (!pos2)
-					pos2 = new osg::Vec3();
-
-				pos2->set(pos->x(), pos->y(), pos->z());
-				setPoint(pos, this->planeDataPt2Label);
+				planePos2->set(planePos->x(), planePos->y(), planePos->z());
+				setPoint(planePos, this->planeDataPt2Label);
 
 				if ( String::Compare(this->planeDataPt1Label->Text, this->defaultDataText) &&
 					String::Compare(this->planeDataCornerLabel->Text, this->defaultDataText) )
@@ -841,6 +1101,131 @@ private: System::Void planeTextBox_Validating(System::Object^  sender, System::C
 			 }
 
 		 }
+
+///////////////////////////
+// box functions
+///////////////////////////
+
+private: System::Void boxGetButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			ClientHandler* client = AppData::getInstance()->getClient();
+			// use markers
+			if (this->boxMarkersRadio->Checked && client->lock())
+			{
+				Marker* marker;
+				bool result;
+				int id;
+				this->boxSetButton->Enabled = true;
+				
+				result = Int32::TryParse(this->boxCenTextBox->Text, id);
+				marker = client->getLabeledMarker(id);
+				if (!result || !marker)
+				{
+					setDefaultText(this->boxCenDataLabel);
+					this->boxSetButton->Enabled = false;
+				}
+				else
+				{
+					osg::Vec3 pt = marker->getPosition();
+					boxPosCen->set(pt.x(), pt.y(), pt.z());
+					setPoint(boxPosCen, this->boxCenDataLabel);
+
+					if (isFloat(this->boxLTextBox->Text) &&
+						isFloat(this->boxWTextBox->Text) &&
+						isFloat(this->boxHTextBox->Text))
+						 this->boxSetButton->Enabled = true;
+				}
+
+				client->unlock();
+			}
+			// use rigid tool
+			else if (this->boxRigidRadio->Checked && client)
+			{
+				RigidBody* body = client->getRigidBody(client->getRigidBodyTool());
+				if (body)
+				{
+					boxPosCen->set(body->getPosition().x(), 
+							body->getPosition().y(), 
+							body->getPosition().z());
+					setPoint(boxPosCen, this->boxCenDataLabel);
+
+					if (isFloat(this->boxLTextBox->Text) &&
+						isFloat(this->boxWTextBox->Text) &&
+						isFloat(this->boxHTextBox->Text))
+						 this->boxSetButton->Enabled = true;
+
+					return;
+				}
+			}
+		 }
+private: System::Void boxSetButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->boxCoordRadio->Checked && !extractCoordinates(this->boxInCenTextBox, boxPosCen))
+				 return;
+			 
+			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+			 if (world)
+			 {
+				 std::string* str = managedToStdString(this->boxNameTextBox->Text);
+				 float l, w, h;
+				 
+				 l = Single::Parse(this->boxLTextBox->Text);
+				 w = Single::Parse(this->boxWTextBox->Text);
+				 h = Single::Parse(this->boxHTextBox->Text);
+
+				 CaptureObject* object = world->addBox(*boxPosCen, osg::Vec3(l, w, h), *str);
+				 if (object)
+				 {
+					 String^ id = Convert::ToString(object->getID());
+					 String^ name = gcnew String(object->getName().c_str());
+				 }
+			 }
+			 this->Close();
+		 }
+private: System::Void boxMarkerRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->boxMarkersRadio->Checked)
+			 {
+				 markerTextBoxes(true, BOX);
+				 setDefaultText(this->boxCenDataLabel);
+
+				 this->planeSetButton->Enabled = false;
+			 }
+			 else
+			 {
+				 markerTextBoxes(false, BOX);
+			 }
+		 }
+private: System::Void boxCoordRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->boxCoordRadio->Checked)
+			 {
+				 coordinateTextBoxes(true, BOX);
+
+				 this->boxCenDataLabel->Text = "";
+
+				 this->boxSetButton->Enabled = false;
+				 this->boxGetButton->Visible = false;
+			 }
+			 else
+			 {
+				 coordinateTextBoxes(false, BOX);
+				 this->boxGetButton->Visible = true;
+			 }
+		 }
+private: System::Void boxTextBox_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
+			 if ( this->boxCoordRadio->Checked &&
+				 isCoordinate(this->boxInCenTextBox->Text) &&
+				 isFloat(this->boxLTextBox->Text) &&
+				 isFloat(this->boxWTextBox->Text) &&
+				 isFloat(this->boxHTextBox->Text) )
+				 this->boxSetButton->Enabled = true;
+			 else if ( !this->boxCoordRadio->Checked &&
+					 String::Compare(this->boxCenDataLabel->Text, this->defaultDataText) &&
+					 isFloat(this->boxLTextBox->Text) &&
+					 isFloat(this->boxWTextBox->Text) &&
+					 isFloat(this->boxHTextBox->Text) )
+				 this->boxSetButton->Enabled = true;
+			 else
+				 this->boxSetButton->Enabled = false;
+		 }
+
 };
 
 }

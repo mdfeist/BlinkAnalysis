@@ -23,11 +23,12 @@ void CaptureWorld::initCaptureWorld()
 	sstr << id;
 	name = sstr.str();
 
-	_globalToLocal = new osg::Matrix();
-	_globalToLocal->makeIdentity();
+	_localToGlobal = new osg::Matrix();
+	_localToGlobal->makeIdentity();
 
 	node = NULL;
-	render = true;
+	render = false;
+	renderMat = false;
 }
 
 CaptureWorld::CaptureWorld()
@@ -43,14 +44,14 @@ CaptureWorld::CaptureWorld(std::string name)
 		this->name = name;
 }
 
-CaptureWorld::CaptureWorld(std::string name, osg::Matrix* globToLoc)
+CaptureWorld::CaptureWorld(std::string name, osg::Matrix* locToGlob)
 {
 	initCaptureWorld();
 
 	if (!name.empty())
 		this->name = name;
 
-	_globalToLocal = globToLoc;
+	_localToGlobal = locToGlob;
 }
 
 void CaptureWorld::setName(std::string name)
@@ -70,12 +71,24 @@ void CaptureWorld::setName(std::string name)
 
 const osg::Matrix CaptureWorld::getLocalToGlobalMatrix()
 {
-	return osg::Matrix::inverse(*_globalToLocal);
+	return *_localToGlobal;
 }
 
 const osg::Matrix CaptureWorld::getGlobalToLocalMatrix()
 {
-	return *_globalToLocal;
+	return osg::Matrix::inverse(*_localToGlobal);
+}
+
+void CaptureWorld::setRenderMatrix(bool ren)
+{
+	if (renderMat == ren)
+		return;
+
+	renderMat = ren;
+	if (render && renderMat && node)
+		node->setMatrix(getGlobalToLocalMatrix());
+	else if (!renderMat && node)
+		node->setMatrix(osg::Matrix::identity());
 }
 
 void CaptureWorld::setRender(bool ren)
@@ -125,10 +138,10 @@ bool CaptureWorld::toggleRenderObject(int oid)
 	return ren;
 }
 
-void CaptureWorld::setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects, bool updateObjects)
+void CaptureWorld::setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects, bool updateObjects)
 {
-	delete _globalToLocal;
-	_globalToLocal = globToLoc;
+	delete _localToGlobal;
+	_localToGlobal = locToGlob;
 
 	if (deleteObjects)
 	{
@@ -140,8 +153,8 @@ void CaptureWorld::setCoordinateFrame(osg::Matrix* globToLoc, bool deleteObjects
 		//TODO
 	}
 
-	if (node)
-		node->setMatrix(getLocalToGlobalMatrix());
+	if (render && renderMat && node)
+		node->setMatrix(getGlobalToLocalMatrix());
 }
 
 int CaptureWorld::addObject(CaptureObject* obj)
@@ -216,44 +229,50 @@ CaptureObject* CaptureWorld::getObject(int oid)
 // TODO: assumed static for now
 CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name)
 {
-	CaptureObject* obj = new CaptureObject();
+	CaptureObjectPlane* plane = new CaptureObjectPlane(corner, pt1, pt2);
 	// if name is empty string, one will be generated in addObject
-	obj->setName(name);
+	plane->setName(name);
 
-	// set up plane vertices
-	osg::Vec3 opposite = pt1 + pt2 - corner;
-	osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
-	vertices->push_back(corner);
-	vertices->push_back(pt1);
-	vertices->push_back(opposite);
-	vertices->push_back(pt2);
-	obj->setVertices(vertices);
-
-	// set up face
-	osg::ref_ptr<osg::DrawElementsUInt> face = new osg::DrawElementsUInt(osg::PrimitiveSet::TRIANGLE_FAN);
-	face->push_back(0);
-	face->push_back(1);
-	face->push_back(2);
-	face->push_back(2);
-	face->push_back(3);
-	obj->addFace(face);
-
-	if (addObject(obj) < 0)
+	if (addObject(plane) < 0)
 	{
-		delete obj;
-		obj = NULL;
+		delete plane;
+		plane = NULL;
 	}
 
-	return obj;
+	return plane;
+}
+
+CaptureObject* CaptureWorld::addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, std::string name)
+{
+	// divide dimensions to get half lengths
+	osg::Vec3 hl = dimensions * 0.5;
+	// transform base from global to local coordinates
+	osg::Vec3 centre = baseCentre * getGlobalToLocalMatrix();
+	// add z to get centre of box
+	centre += osg::Vec3(0, 0, hl.z());
+	// transform back to global coordinates
+	centre = centre * getLocalToGlobalMatrix();
+
+	CaptureObjectBox* box = new CaptureObjectBox(centre, hl, getLocalToGlobalMatrix().getRotate());
+	// if name is empty string, one will be generated in addObject
+	box->setName(name);
+	
+	if (addObject(box) < 0)
+	{
+		delete box;
+		box = NULL;
+	}
+
+	return box;
 }
 
 
-osg::MatrixTransform* CaptureWorld::getAsGroup(bool renderMatrix)
+osg::MatrixTransform* CaptureWorld::getAsGroup()
 {
 	if (!node)
 		node = new osg::MatrixTransform();
 
-	if (renderMatrix)
+	if (renderMat)
 		node->setMatrix(getGlobalToLocalMatrix());
 	else
 		node->setMatrix(osg::Matrix::identity());
