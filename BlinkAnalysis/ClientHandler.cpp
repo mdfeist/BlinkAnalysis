@@ -45,7 +45,7 @@ ClientHandler::ClientHandler(void)
 
 	this->dikablisEyeVectorArray = (float*) malloc(sizeof(float) * ClientHandler::DikablisViewingSize);
 
-	this->headid = 0;
+	this->headid = -1;
 }
 
 // Cleans up the ClientHandler
@@ -74,11 +74,13 @@ osg::Vec3 ClientHandler::getRay(int x, int y) {
 		int i = x + DikablisViewingMargin;
 		int j = y + DikablisViewingMargin;
 
-		int loc = 3*((j*DikablisViewingWidth+2*DikablisViewingMargin) + i);
+		int loc = 3*((j*(DikablisViewingWidth+2*DikablisViewingMargin)) + i);
 
-		ray.x() = this->dikablisEyeVectorArray[loc + 0];
-		ray.y() = this->dikablisEyeVectorArray[loc + 1];
-		ray.z() = this->dikablisEyeVectorArray[loc + 2];
+		if (loc >= 0 && loc < DikablisViewingSize) {
+			ray.x() = this->dikablisEyeVectorArray[loc + 0];
+			ray.y() = this->dikablisEyeVectorArray[loc + 1];
+			ray.z() = this->dikablisEyeVectorArray[loc + 2];
+		}
 	}
 
 	return ray;

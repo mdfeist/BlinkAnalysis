@@ -2030,6 +2030,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 
 				WorldManager::getInstance()->clearWorlds();
 
+				Dikablis::stopServer();
+
 #if _DEBUG
 _WATCH_MEMORY
 #endif

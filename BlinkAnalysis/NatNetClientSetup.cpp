@@ -343,8 +343,14 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 			float x = -data->RigidBodies[i].x;
 			float z = data->RigidBodies[i].y;
 			float y = data->RigidBodies[i].z;
+
+			float qx = data->RigidBodies[i].qx;
+			float qy = -data->RigidBodies[i].qz;
+			float qz = -data->RigidBodies[i].qy;
+			float qw = data->RigidBodies[i].qw;
+
 			body->addFrame(osg::Vec3(x, y, z),
-					osg::Vec4(data->RigidBodies[i].qx, -data->RigidBodies[i].qz, -data->RigidBodies[i].qy, data->RigidBodies[i].qw));
+					osg::Vec4(qx, qy, qz, qw));
 
 			// Clear all the previous markers that were attached to the Rigid Body
 			body->clearMarkers();
