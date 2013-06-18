@@ -200,8 +200,9 @@ private: System::Windows::Forms::TabPage^  visualTabPage;
 
 private: System::Windows::Forms::SplitContainer^  visualMainSplitContainer;
 private: System::Windows::Forms::SplitContainer^  visualSplitContainer;
-private: System::Windows::Forms::TextBox^  visualOutputLogTextBox;
-private: System::Windows::Forms::Label^  visualOutputLogLabel;
+private: System::Windows::Forms::Label^  visualRecorderLabel;
+
+
 
 
 
@@ -271,6 +272,10 @@ private: System::Windows::Forms::ToolStrip^  visualToolStrip;
 private: System::Windows::Forms::ToolStripLabel^  visualViewerScaleLabel;
 private: System::Windows::Forms::ToolStripTextBox^  visualViewerScaleTextBox;
 private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+private: System::Windows::Forms::Panel^  visualRecorderPanel;
+private: System::Windows::Forms::Button^  stopRecordingBtn;
+private: System::Windows::Forms::Button^  startRecordingBtn;
+
 
 
 
@@ -384,8 +389,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			this->visualViewerScaleLabel = (gcnew System::Windows::Forms::ToolStripLabel());
 			this->visualViewerScaleTextBox = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
-			this->visualOutputLogTextBox = (gcnew System::Windows::Forms::TextBox());
-			this->visualOutputLogLabel = (gcnew System::Windows::Forms::Label());
+			this->visualRecorderLabel = (gcnew System::Windows::Forms::Label());
 			this->visualPropertiesTabControl = (gcnew System::Windows::Forms::TabControl());
 			this->rigidBodyTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualRigidBodyListView = (gcnew System::Windows::Forms::ListView());
@@ -419,6 +423,9 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->visualRecorderPanel = (gcnew System::Windows::Forms::Panel());
+			this->startRecordingBtn = (gcnew System::Windows::Forms::Button());
+			this->stopRecordingBtn = (gcnew System::Windows::Forms::Button());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -456,6 +463,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->objectGridView))->BeginInit();
 			this->menuStrip->SuspendLayout();
 			this->rigidBodyToolContextMenu->SuspendLayout();
+			this->visualRecorderPanel->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// mainTabControl
@@ -1384,12 +1392,14 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			// 
 			this->visualSplitContainer->Panel1->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->visualSplitContainer->Panel1->Controls->Add(this->visualToolStrip);
+			this->visualSplitContainer->Panel1MinSize = 200;
 			// 
 			// visualSplitContainer.Panel2
 			// 
 			this->visualSplitContainer->Panel2->BackColor = System::Drawing::Color::LightSlateGray;
-			this->visualSplitContainer->Panel2->Controls->Add(this->visualOutputLogTextBox);
-			this->visualSplitContainer->Panel2->Controls->Add(this->visualOutputLogLabel);
+			this->visualSplitContainer->Panel2->Controls->Add(this->visualRecorderPanel);
+			this->visualSplitContainer->Panel2->Controls->Add(this->visualRecorderLabel);
+			this->visualSplitContainer->Panel2MinSize = 100;
 			this->visualSplitContainer->Size = System::Drawing::Size(493, 503);
 			this->visualSplitContainer->SplitterDistance = 376;
 			this->visualSplitContainer->TabIndex = 0;
@@ -1428,33 +1438,15 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			this->toolStripSeparator1->Name = L"toolStripSeparator1";
 			this->toolStripSeparator1->Size = System::Drawing::Size(6, 25);
 			// 
-			// visualOutputLogTextBox
+			// visualRecorderLabel
 			// 
-			this->visualOutputLogTextBox->AcceptsReturn = true;
-			this->visualOutputLogTextBox->AcceptsTab = true;
-			this->visualOutputLogTextBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-				| System::Windows::Forms::AnchorStyles::Left) 
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->visualOutputLogTextBox->BackColor = System::Drawing::SystemColors::ControlLightLight;
-			this->visualOutputLogTextBox->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->visualOutputLogTextBox->Location = System::Drawing::Point(3, 16);
-			this->visualOutputLogTextBox->Multiline = true;
-			this->visualOutputLogTextBox->Name = L"visualOutputLogTextBox";
-			this->visualOutputLogTextBox->ReadOnly = true;
-			this->visualOutputLogTextBox->ScrollBars = System::Windows::Forms::ScrollBars::Both;
-			this->visualOutputLogTextBox->Size = System::Drawing::Size(487, 101);
-			this->visualOutputLogTextBox->TabIndex = 1;
-			// 
-			// visualOutputLogLabel
-			// 
-			this->visualOutputLogLabel->AutoSize = true;
-			this->visualOutputLogLabel->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->visualOutputLogLabel->Location = System::Drawing::Point(5, 0);
-			this->visualOutputLogLabel->Name = L"visualOutputLogLabel";
-			this->visualOutputLogLabel->Size = System::Drawing::Size(67, 13);
-			this->visualOutputLogLabel->TabIndex = 0;
-			this->visualOutputLogLabel->Text = L"Output Log";
+			this->visualRecorderLabel->AutoSize = true;
+			this->visualRecorderLabel->ForeColor = System::Drawing::SystemColors::ControlLightLight;
+			this->visualRecorderLabel->Location = System::Drawing::Point(5, 0);
+			this->visualRecorderLabel->Name = L"visualRecorderLabel";
+			this->visualRecorderLabel->Size = System::Drawing::Size(53, 13);
+			this->visualRecorderLabel->TabIndex = 0;
+			this->visualRecorderLabel->Text = L"Recorder";
 			// 
 			// visualPropertiesTabControl
 			// 
@@ -1794,6 +1786,37 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
 			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
 			// 
+			// visualRecorderPanel
+			// 
+			this->visualRecorderPanel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->visualRecorderPanel->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->visualRecorderPanel->Controls->Add(this->stopRecordingBtn);
+			this->visualRecorderPanel->Controls->Add(this->startRecordingBtn);
+			this->visualRecorderPanel->Location = System::Drawing::Point(3, 16);
+			this->visualRecorderPanel->Name = L"visualRecorderPanel";
+			this->visualRecorderPanel->Size = System::Drawing::Size(487, 101);
+			this->visualRecorderPanel->TabIndex = 1;
+			// 
+			// startRecordingBtn
+			// 
+			this->startRecordingBtn->Location = System::Drawing::Point(3, 3);
+			this->startRecordingBtn->Name = L"startRecordingBtn";
+			this->startRecordingBtn->Size = System::Drawing::Size(122, 23);
+			this->startRecordingBtn->TabIndex = 0;
+			this->startRecordingBtn->Text = L"Start Recording";
+			this->startRecordingBtn->UseVisualStyleBackColor = true;
+			// 
+			// stopRecordingBtn
+			// 
+			this->stopRecordingBtn->Location = System::Drawing::Point(131, 3);
+			this->stopRecordingBtn->Name = L"stopRecordingBtn";
+			this->stopRecordingBtn->Size = System::Drawing::Size(122, 23);
+			this->stopRecordingBtn->TabIndex = 1;
+			this->stopRecordingBtn->Text = L"Stop Recording";
+			this->stopRecordingBtn->UseVisualStyleBackColor = true;
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1860,6 +1883,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
 			this->rigidBodyToolContextMenu->ResumeLayout(false);
+			this->visualRecorderPanel->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
