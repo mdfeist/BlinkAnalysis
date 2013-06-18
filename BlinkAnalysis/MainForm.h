@@ -267,6 +267,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldPropertyColumn
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  worldValueColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectPropertyColumn;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
+private: System::Windows::Forms::ToolStrip^  visualToolStrip;
+private: System::Windows::Forms::ToolStripLabel^  visualViewerScaleLabel;
+private: System::Windows::Forms::ToolStripTextBox^  visualViewerScaleTextBox;
+private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 
 
 
@@ -376,6 +380,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->visualTabPage = (gcnew System::Windows::Forms::TabPage());
 			this->visualMainSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->visualSplitContainer = (gcnew System::Windows::Forms::SplitContainer());
+			this->visualToolStrip = (gcnew System::Windows::Forms::ToolStrip());
+			this->visualViewerScaleLabel = (gcnew System::Windows::Forms::ToolStripLabel());
+			this->visualViewerScaleTextBox = (gcnew System::Windows::Forms::ToolStripTextBox());
+			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->visualOutputLogTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->visualOutputLogLabel = (gcnew System::Windows::Forms::Label());
 			this->visualPropertiesTabControl = (gcnew System::Windows::Forms::TabControl());
@@ -436,8 +444,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->visualMainSplitContainer->Panel2->SuspendLayout();
 			this->visualMainSplitContainer->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->BeginInit();
+			this->visualSplitContainer->Panel1->SuspendLayout();
 			this->visualSplitContainer->Panel2->SuspendLayout();
 			this->visualSplitContainer->SuspendLayout();
+			this->visualToolStrip->SuspendLayout();
 			this->visualPropertiesTabControl->SuspendLayout();
 			this->rigidBodyTabPage->SuspendLayout();
 			this->worldTabPage->SuspendLayout();
@@ -1373,6 +1383,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			// visualSplitContainer.Panel1
 			// 
 			this->visualSplitContainer->Panel1->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->visualSplitContainer->Panel1->Controls->Add(this->visualToolStrip);
 			// 
 			// visualSplitContainer.Panel2
 			// 
@@ -1382,6 +1393,40 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->visualSplitContainer->Size = System::Drawing::Size(493, 503);
 			this->visualSplitContainer->SplitterDistance = 376;
 			this->visualSplitContainer->TabIndex = 0;
+			// 
+			// visualToolStrip
+			// 
+			this->visualToolStrip->BackColor = System::Drawing::SystemColors::Window;
+			this->visualToolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
+			this->visualToolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->visualViewerScaleLabel, 
+				this->visualViewerScaleTextBox, this->toolStripSeparator1});
+			this->visualToolStrip->Location = System::Drawing::Point(0, 0);
+			this->visualToolStrip->Name = L"visualToolStrip";
+			this->visualToolStrip->Size = System::Drawing::Size(493, 25);
+			this->visualToolStrip->TabIndex = 0;
+			this->visualToolStrip->Text = L"Tool Bar";
+			// 
+			// visualViewerScaleLabel
+			// 
+			this->visualViewerScaleLabel->ForeColor = System::Drawing::SystemColors::WindowText;
+			this->visualViewerScaleLabel->Name = L"visualViewerScaleLabel";
+			this->visualViewerScaleLabel->Size = System::Drawing::Size(68, 22);
+			this->visualViewerScaleLabel->Text = L"Scene Scale";
+			// 
+			// visualViewerScaleTextBox
+			// 
+			this->visualViewerScaleTextBox->BackColor = System::Drawing::SystemColors::Window;
+			this->visualViewerScaleTextBox->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->visualViewerScaleTextBox->ForeColor = System::Drawing::SystemColors::WindowText;
+			this->visualViewerScaleTextBox->Name = L"visualViewerScaleTextBox";
+			this->visualViewerScaleTextBox->Size = System::Drawing::Size(50, 25);
+			this->visualViewerScaleTextBox->Text = L"1.0";
+			this->visualViewerScaleTextBox->TextBoxTextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+			// 
+			// toolStripSeparator1
+			// 
+			this->toolStripSeparator1->Name = L"toolStripSeparator1";
+			this->toolStripSeparator1->Size = System::Drawing::Size(6, 25);
 			// 
 			// visualOutputLogTextBox
 			// 
@@ -1792,10 +1837,14 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 			this->visualMainSplitContainer->Panel2->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualMainSplitContainer))->EndInit();
 			this->visualMainSplitContainer->ResumeLayout(false);
+			this->visualSplitContainer->Panel1->ResumeLayout(false);
+			this->visualSplitContainer->Panel1->PerformLayout();
 			this->visualSplitContainer->Panel2->ResumeLayout(false);
 			this->visualSplitContainer->Panel2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->visualSplitContainer))->EndInit();
 			this->visualSplitContainer->ResumeLayout(false);
+			this->visualToolStrip->ResumeLayout(false);
+			this->visualToolStrip->PerformLayout();
 			this->visualPropertiesTabControl->ResumeLayout(false);
 			this->rigidBodyTabPage->ResumeLayout(false);
 			this->worldTabPage->ResumeLayout(false);
@@ -1981,6 +2030,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  objectValueColumn;
 				 this->optiTrackDataGridView->VirtualMode = true;
 
 				 // Visual
+				 this->visualViewerScaleTextBox->TextChanged += 
+					 gcnew System::EventHandler(this, &MainForm::visualViewerScaleTextBox_TextChanged);
+				 this->visualViewerScaleTextBox->KeyPress += 
+				 gcnew KeyPressEventHandler(this, &MainForm::visualViewerScaleTextBox_KeyPress);
 				 AppViewer::initAppViewer((HWND)this->visualSplitContainer->Panel1->Handle.ToPointer());
 
 				 this->visualRigidBodyListView->View = View::Details;
@@ -2976,6 +3029,26 @@ private: System::Void removeObjectButton_Click(System::Object^  sender, System::
 					objectUpdateList();
 				}
 			}
+		 }
+private: System::Void visualViewerScaleTextBox_KeyPress(System::Object^  sender, KeyPressEventArgs^  e) {
+			 if (!System::Char::IsControl(e->KeyChar) 
+				 && !System::Char::IsDigit(e->KeyChar) 
+				 && e->KeyChar != '.')
+			 {
+				 e->Handled = true;
+			 }
+
+			 // only allow one decimal point
+			 if (e->KeyChar == '.' 
+				 && this->visualViewerScaleTextBox->Text->IndexOf('.') > -1)
+			 {
+				 e->Handled = true;
+			 }
+		 }
+
+private: System::Void visualViewerScaleTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+			 float scale = Convert::ToSingle(this->visualViewerScaleTextBox->Text);
+			 AppViewer::setScale(scale);
 		 }
 };
 }

@@ -30,6 +30,7 @@
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
+osg::AutoTransform* sceneNode;
 
 osg::Vec3 lastRay;
 
@@ -38,10 +39,17 @@ bool visible = false;
 
 bool localMarkers = false;
 
-float VIEWER_SCALE = 5.f;
+float VIEWER_SCALE = 1.f;
 
 void AppViewer::stopAppViewer() { running = false; }
 void AppViewer::setVisible(bool bVisible) { visible = bVisible; }
+
+void AppViewer::setScale(int scale) {
+	VIEWER_SCALE = scale;
+
+	if (sceneNode)
+		sceneNode->setScale(VIEWER_SCALE);
+}
 
 void renderEyeVector(osg::Geode* node) {
 	// Get the current client
@@ -67,7 +75,7 @@ void renderEyeVector(osg::Geode* node) {
 				osg::Vec3 pos = head->getPosition();
 
 				// Add to the points array
-				points->push_back( pos * VIEWER_SCALE );
+				points->push_back( pos );
 				colors->push_back(osg::Vec4(1, 0, 0, 1));
 
 				osg::Matrixf headMatrix;
@@ -98,7 +106,7 @@ void renderEyeVector(osg::Geode* node) {
 
 				lastRay = ray;
 
-				points->push_back( (ray + pos) * VIEWER_SCALE );
+				points->push_back( (ray + pos) );
 				colors->push_back(osg::Vec4(1, 0, 0, 1));
 			}
 		}
@@ -171,7 +179,7 @@ void renderMarkers(osg::Geode* node) {
 						osg::Vec3 pos = marker.getPosition();
 
 						// Add marker to the points array
-						points->push_back( pos * VIEWER_SCALE );
+						points->push_back( pos  );
 
 						// Add colors
 						colors->push_back( marker.getColor() );
@@ -194,7 +202,7 @@ void renderMarkers(osg::Geode* node) {
 					osg::Vec3 pos = marker->getPosition(); 
 
 					// Add marker to the points array
-					points->push_back( pos * VIEWER_SCALE );
+					points->push_back( pos );
 
 					// Add colors
 					if (marker->isSelected())
@@ -224,7 +232,7 @@ void renderMarkers(osg::Geode* node) {
 			nodeState->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 			nodeState->setMode(GL_BLEND, osg::StateAttribute::ON);
 			nodeState->setMode(GL_POINT_SMOOTH, osg::StateAttribute::ON);
-			nodeState->setAttribute( new osg::Point( 10.0f ) , osg::StateAttribute::ON );
+			nodeState->setAttribute( new osg::Point( 5.0f ) , osg::StateAttribute::ON );
 			nodeState->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 			// End Create Points
 		}
@@ -254,13 +262,13 @@ void render(void *) {
 			renderEyeVector(node);
 
 			// Add Node containing all the points to the scene
-			rootNode->addChild( node );
+			sceneNode->addChild( node );
 			
 			// Render frame
 			viewer->frame();
 
 			// Remove points from the scene
-			rootNode->removeChild( node );
+			sceneNode->removeChild( node );
 		} else {
 			// View not visible so Sleep for 1000 milliseconds
 			Sleep(1000);
@@ -284,12 +292,18 @@ void AppViewer::initAppViewer(HWND hwnd)
 	// Create new root node if one doesn't exist
 	if (!rootNode)
 		rootNode = new osg::Group();
+
+	if (!sceneNode)
+		sceneNode = new osg::AutoTransform();
+
+	sceneNode->setScale(VIEWER_SCALE);
+	rootNode->addChild(sceneNode);
 	
 	// Add world, a Group node containing captured objects
 	std::map<int, CaptureWorld*> worlds = WorldManager::getInstance()->getWorlds();
 	for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 	{
-		rootNode->addChild(itr->second->getAsGroup());
+		sceneNode->addChild(itr->second->getAsGroup());
 	}
 
 	// Set the traits for the rendering view
@@ -363,9 +377,9 @@ void AppViewer::initAppViewer(HWND hwnd)
 }
 
 bool AppViewer::addNodeToViewer(osg::Node* node) {
-	return rootNode->addChild(node);
+	return sceneNode->addChild(node);
 }
 
 bool AppViewer::removeNodeFromViewer(osg::Node* node) {
-	return rootNode->removeChild(node);
+	return sceneNode->removeChild(node);
 }

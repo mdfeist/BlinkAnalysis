@@ -20,4 +20,6 @@ namespace AppViewer {
 	// Add/remove nodes from scene
 	bool addNodeToViewer(osg::Node* node);
 	bool removeNodeFromViewer(osg::Node* node);
+	// The Scale of the Viewers Scenes
+	void setScale(int scale);
 };
