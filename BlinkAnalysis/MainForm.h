@@ -1512,6 +1512,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			// 
 			// worldRemoveButton
 			// 
+			this->worldRemoveButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
 			this->worldRemoveButton->Enabled = false;
 			this->worldRemoveButton->Location = System::Drawing::Point(155, 448);
 			this->worldRemoveButton->Name = L"worldRemoveButton";
@@ -1534,7 +1535,8 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			// 
 			this->worldGridView->AllowUserToAddRows = false;
 			this->worldGridView->AllowUserToDeleteRows = false;
-			this->worldGridView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+			this->worldGridView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->worldGridView->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->worldGridView->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
@@ -1604,6 +1606,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			// 
 			// removeObjectButton
 			// 
+			this->removeObjectButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
 			this->removeObjectButton->Enabled = false;
 			this->removeObjectButton->Location = System::Drawing::Point(155, 448);
 			this->removeObjectButton->Name = L"removeObjectButton";
@@ -1673,7 +1676,8 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			// 
 			this->objectGridView->AllowUserToAddRows = false;
 			this->objectGridView->AllowUserToDeleteRows = false;
-			this->objectGridView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+			this->objectGridView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->objectGridView->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->objectGridView->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
