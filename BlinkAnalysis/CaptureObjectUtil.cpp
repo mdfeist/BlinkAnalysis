@@ -8,7 +8,7 @@ bool CaptureObjectUtil::orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double 
 }
 
 // based on MATLAB function MakeCoordSystem by J. Lanovaz
-osg::Matrix* CaptureObjectUtil::makeGlobalToLocalMatrix(
+osg::Matrix* CaptureObjectUtil::makeLocalToGlobalMatrix(
 	osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y)
 {
 	// form axis vectors
