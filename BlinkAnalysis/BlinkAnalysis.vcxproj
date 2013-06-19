@@ -85,6 +85,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalIncludeDirectories>NatNetSDK\include;</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -113,7 +114,6 @@
     <Content Include="DikablisHelpDocs\DikablisHelp.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="ClassDiagram1.cd" />
     <None Include="DikablisHelpDocs\DikablisHelp.rtf" />
     <Content Include="NatNetLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -141,7 +141,8 @@
     </ClCompile>
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="pugixml.cpp" />
-    <ClCompile Include="RecorderManager.cpp" />
+    <ClCompile Include="RecordingManager.cpp" />
+    <ClCompile Include="Recording.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="AppData.cpp" />
     <ClCompile Include="SetObjectRigidBodyForm.cpp" />
@@ -191,7 +192,8 @@
     <ClInclude Include="Objects.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
-    <ClInclude Include="RecorderManager.h" />
+    <ClInclude Include="RecordingManager.h" />
+    <ClInclude Include="Recording.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="AppData.h" />

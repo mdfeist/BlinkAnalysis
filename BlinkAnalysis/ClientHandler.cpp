@@ -76,7 +76,7 @@ osg::Vec3 ClientHandler::getRay(int x, int y) {
 
 		int loc = 3*((j*(DikablisViewingWidth+2*DikablisViewingMargin)) + i);
 
-		if (loc >= 0 && loc < DikablisViewingSize) {
+		if (loc >= 0 && loc < (int)DikablisViewingSize) {
 			ray.x() = this->dikablisEyeVectorArray[loc + 0];
 			ray.y() = this->dikablisEyeVectorArray[loc + 1];
 			ray.z() = this->dikablisEyeVectorArray[loc + 2];
