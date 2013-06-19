@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <osg/PrimitiveSet>
-#include <osg/Node>
+#include <osg/AutoTransform>
 #include <osg/Shape>
 
 #include "CaptureObjectUtil.h"
@@ -33,6 +33,7 @@ protected:
 	std::string name;
 
 	osg::ref_ptr<osg::Node> node;
+	osg::ref_ptr<osg::AutoTransform> rigidNode;
 	bool render;
 	ObjectType type;
 
@@ -47,7 +48,6 @@ public:
 	}
 
 	~CaptureObject() { 
-		node = NULL;
 	}
 
 	void setID(int id) { this->id = id; }
@@ -56,7 +56,7 @@ public:
 	void setType(ObjectType t) { type = t; }
 	ObjectType getType() { return type; }
 	
-	void setRigidBody(int rid) { rigidBody = rid; }
+	void setRigidBody(int rid, bool offset);
 	int getRigidBody() { return rigidBody; }
 
 	void setName(std::string name) { this->name = name; }
@@ -67,7 +67,7 @@ public:
 
 	// virtual functions
 	// returns a Geode representing this object
-	virtual osg::Geode* getAsGeode() = 0;
+	virtual osg::Node* getAsNode() = 0;
 	virtual int getNumVertices() = 0;
 	virtual int getNumFaces() = 0;
 
@@ -97,7 +97,7 @@ public:
 		faces.clear(); 
 	}
 
-	osg::Geode* getAsGeode();
+	osg::Node* getAsNode();
 };
 
 
@@ -125,7 +125,7 @@ public:
 
 	int getNumFaces() { return 1; }
 
-	osg::Geode* getAsGeode();
+	osg::Node* getAsNode();
 
 };
 
@@ -149,7 +149,7 @@ public:
 
 	int getNumVertices() { return 8; }
 	int getNumFaces() { return 6; }
-	osg::Geode* getAsGeode();
+	osg::Node* getAsNode();
 
 	void setCentre(osg::Vec3 centre);
 	osg::Vec3 getCentre();

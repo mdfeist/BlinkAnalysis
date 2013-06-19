@@ -9,11 +9,53 @@
 #include <osgDB/ReadFile>
 
 #include "CaptureObject.h"
+#include "AppData.h"
 
 
 ///////////////////////////
 // CaptureObject
 ///////////////////////////
+
+void CaptureObject::setRigidBody(int rid, bool offset)
+{
+	if (rigidBody == rid)
+		return;
+
+	// remove from old rigid body
+	if (rigidBody >= 0)
+	{
+		rigidNode->removeChild(node);
+		rigidNode = NULL;
+		// remove offset node if it exists
+		while (!node->asGeode())
+		{
+			osg::Group* temp = node->asGroup();
+			node = temp->getChild(0);
+			temp->removeChild(node);
+		}
+	}
+
+	// add to new rigid body
+	ClientHandler* client = AppData::getInstance()->getClient();
+	if (client && rid >= 0)
+	{
+		RigidBody* rb = client->getRigidBody(rid);
+		if (rb)
+		{
+			rigidNode = rb->getObjectTransform();
+			if (offset)
+			{
+				osg::AutoTransform* temp = new osg::AutoTransform();
+				temp->setPosition(-rigidNode->getPosition());
+				temp->setRotation(-rigidNode->getRotation());
+				temp->addChild(node);
+				node = temp;
+			}
+			rigidNode->addChild(node);
+		}
+	}
+	rigidBody = rid;
+}
 
 osg::Node* CaptureObject::setRender(bool ren)
 {
@@ -22,7 +64,8 @@ osg::Node* CaptureObject::setRender(bool ren)
 		return NULL;
 	
 	render = ren;
-	return node;
+	return (rigidNode) ? (osg::Node*) rigidNode : node; 
+	// TODO why is it forcing me to cast every time?
 }
 
 
@@ -30,12 +73,31 @@ osg::Node* CaptureObject::setRender(bool ren)
 // CaptureObjectCustom
 ///////////////////////////
 
-osg::Geode* CaptureObjectCustom::getAsGeode()
+osg::Node* CaptureObjectCustom::getAsNode()
 {
-	if (!node)
-		node = new osg::Geode();
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0)
+	{
+		if (!node)
+			node = new osg::Geode();
+		geo = node->asGeode();
+	}
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
 
-	osg::Geode* geo = node->asGeode();
 	geo->removeDrawables(0, geo->getNumDrawables());
 	osg::Geometry *geom = new osg::Geometry();
 	geom->setVertexArray(vertices.get());
@@ -59,7 +121,7 @@ osg::Geode* CaptureObjectCustom::getAsGeode()
 	}
 	*/
 
-	return geo;
+	return (rigidNode) ? (osg::Node*) rigidNode : node;
 }
 
 
@@ -102,12 +164,31 @@ void CaptureObjectPlane::setVertices(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 
 	face->push_back(3);
 }
 
-osg::Geode* CaptureObjectPlane::getAsGeode()
+osg::Node* CaptureObjectPlane::getAsNode()
 {
-	if (!node)
-		node = new osg::Geode();
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0 || !node->asGroup() )
+	{
+		if (!node)
+			node = new osg::Geode();
+		geo = node->asGeode();
+	}
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
 
-	osg::Geode* geo = node->asGeode();
 	geo->removeDrawables(0, 1);
 	osg::Geometry *geom = new osg::Geometry();
 	geom->setVertexArray(vertices.get());
@@ -117,7 +198,7 @@ osg::Geode* CaptureObjectPlane::getAsGeode()
 	osgUtil::SmoothingVisitor::smooth(*geom);
 	geo->addDrawable(geom);
 
-	return geo;
+	return (rigidNode) ? (osg::Node*) rigidNode : node;
 }
 
 
@@ -132,17 +213,36 @@ CaptureObjectBox::CaptureObjectBox(osg::Vec3 centre, osg::Vec3 halfLen, osg::Qua
 	box->setRotation(rot);
 }
 
-osg::Geode* CaptureObjectBox::getAsGeode()
+osg::Node* CaptureObjectBox::getAsNode()
 {
-	if (!node)
-		node = new osg::Geode();
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0)
+	{
+		if (!node)
+			node = new osg::Geode();
+		geo = node->asGeode();
+	}
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
 
-	osg::Geode* geo = node->asGeode();
 	geo->removeDrawables(0, 1);
 	if (box)
 		geo->addDrawable(new osg::ShapeDrawable(box));
 
-	return geo;
+	return (rigidNode) ? (osg::Node*) rigidNode : node;
 }
 
 void CaptureObjectBox::setCentre(osg::Vec3 centre)

@@ -13,7 +13,8 @@ System::Void SetObjectRigidBodyForm::attachButton_Click(System::Object^  sender,
 					 CaptureObject* object = world->getObject(objectID);
 					 if (object)
 					 {
-						 object->setRigidBody(rigidID);
+						 object->setRigidBody(rigidID, this->offsetCheckBox->Checked);
+						 world->updateObjectsNode();
 						 MainFormController::getInstance()->objectUpdateGridView(object->getID());
 					 }
 				 }
@@ -27,7 +28,8 @@ System::Void SetObjectRigidBodyForm::detachButton_Click(System::Object^  sender,
 				CaptureObject* object = world->getObject(objectID);
 				if (object)
 				{
-					object->setRigidBody(-1);
+					object->setRigidBody(-1, this->offsetCheckBox->Checked);
+					world->updateObjectsNode();
 					MainFormController::getInstance()->objectUpdateGridView(object->getID());
 				}
 			}

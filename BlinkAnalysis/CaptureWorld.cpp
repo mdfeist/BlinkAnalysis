@@ -277,14 +277,7 @@ osg::MatrixTransform* CaptureWorld::getAsGroup()
 	else
 		node->setMatrix(osg::Matrix::identity());
 
-	node->removeChild(0, node->getNumChildren());
-	for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
-	{
-		// TODO 
-		if (itr->second->renderObject())
-			node->addChild(itr->second->getAsGeode());
-	}
-
+	updateObjectsNode();
 	return node;
 }
 
@@ -297,7 +290,7 @@ void CaptureWorld::updateObjectsNode()
 		{
 			// TODO 
 			if (itr->second->renderObject())
-				node->addChild(itr->second->getAsGeode());
+				node->addChild(itr->second->getAsNode());
 		}
 	}
 }

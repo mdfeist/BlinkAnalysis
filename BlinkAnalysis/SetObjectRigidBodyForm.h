@@ -70,6 +70,7 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Label^  rigidDataLabel;
 	private: System::Windows::Forms::Button^  attachButton;
 	private: System::Windows::Forms::Button^  detachButton;
+	private: System::Windows::Forms::CheckBox^  offsetCheckBox;
 
 
 	private:
@@ -90,6 +91,7 @@ namespace BlinkAnalysis {
 			this->rigidDataLabel = (gcnew System::Windows::Forms::Label());
 			this->attachButton = (gcnew System::Windows::Forms::Button());
 			this->detachButton = (gcnew System::Windows::Forms::Button());
+			this->offsetCheckBox = (gcnew System::Windows::Forms::CheckBox());
 			this->SuspendLayout();
 			// 
 			// rigidBodyListView
@@ -102,7 +104,7 @@ namespace BlinkAnalysis {
 			this->rigidBodyListView->Location = System::Drawing::Point(12, 12);
 			this->rigidBodyListView->MultiSelect = false;
 			this->rigidBodyListView->Name = L"rigidBodyListView";
-			this->rigidBodyListView->Size = System::Drawing::Size(261, 268);
+			this->rigidBodyListView->Size = System::Drawing::Size(261, 223);
 			this->rigidBodyListView->TabIndex = 2;
 			this->rigidBodyListView->TileSize = System::Drawing::Size(100, 20);
 			this->rigidBodyListView->UseCompatibleStateImageBehavior = false;
@@ -114,7 +116,7 @@ namespace BlinkAnalysis {
 			this->positionLabel->AutoSize = true;
 			this->positionLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->positionLabel->Location = System::Drawing::Point(12, 283);
+			this->positionLabel->Location = System::Drawing::Point(14, 273);
 			this->positionLabel->Name = L"positionLabel";
 			this->positionLabel->Size = System::Drawing::Size(51, 15);
 			this->positionLabel->TabIndex = 3;
@@ -125,7 +127,7 @@ namespace BlinkAnalysis {
 			this->rigidDataLabel->AutoSize = true;
 			this->rigidDataLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->rigidDataLabel->Location = System::Drawing::Point(42, 310);
+			this->rigidDataLabel->Location = System::Drawing::Point(44, 300);
 			this->rigidDataLabel->Name = L"rigidDataLabel";
 			this->rigidDataLabel->Size = System::Drawing::Size(84, 15);
 			this->rigidDataLabel->TabIndex = 4;
@@ -153,11 +155,24 @@ namespace BlinkAnalysis {
 			this->detachButton->Visible = false;
 			this->detachButton->Click += gcnew System::EventHandler(this, &SetObjectRigidBodyForm::detachButton_Click);
 			// 
+			// offsetCheckBox
+			// 
+			this->offsetCheckBox->AutoSize = true;
+			this->offsetCheckBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->offsetCheckBox->Location = System::Drawing::Point(20, 241);
+			this->offsetCheckBox->Name = L"offsetCheckBox";
+			this->offsetCheckBox->Size = System::Drawing::Size(234, 19);
+			this->offsetCheckBox->TabIndex = 8;
+			this->offsetCheckBox->Text = L"move object relative to current position";
+			this->offsetCheckBox->UseVisualStyleBackColor = true;
+			// 
 			// SetObjectRigidBodyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(285, 379);
+			this->Controls->Add(this->offsetCheckBox);
 			this->Controls->Add(this->detachButton);
 			this->Controls->Add(this->attachButton);
 			this->Controls->Add(this->rigidDataLabel);
