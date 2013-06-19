@@ -59,7 +59,15 @@ namespace BlinkAnalysis {
 		RIGID, 
 		FACES,
 		VERTICES, 
-		RENDER
+		RENDER, 
+		POSITION,
+		POSITION_X,
+		POSITION_Y,
+		POSITION_Z,
+		ORIENT,
+		ORIENT_YAW,
+		ORIENT_PITCH,
+		ORIENT_ROLL
 	};
 
 	/// <summary>
@@ -2397,6 +2405,13 @@ _WATCH_MEMORY
 								this->optiTrackLabeledMarkerVector->push_back(it->second);
 							}
 
+							// update the objects panel (if object attached to rigid body)
+							if (this->objectGridView->Rows->Count > 0 &&
+								String::Compare((String^) 
+								this->objectGridView->Rows[(int) objectProperty::RIGID]->Cells[1]->Value,
+								"none"))
+								objectGridView_updateObjectRigid();
+
 							// Unlock client
 							client->unlock();
 						}
@@ -2953,6 +2968,32 @@ private: System::Void objectGridView_displayObject() {
 				 row = gcnew array<String^> { "Render", ren };
 				 this->objectGridView->Rows->Add(row);
 				 
+				 row = gcnew array<String^> { "Position", "" };
+				 this->objectGridView->Rows->Add(row);
+
+				 osg::Vec3 pos = object->getPosition();
+				 row = gcnew array<String^> { "X", pos.x().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Y", pos.y().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Z", pos.z().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Orientation", "" };
+				 this->objectGridView->Rows->Add(row);
+
+				 osg::Vec3 eu = CaptureObjectUtil::quaternionToEuler(object->getRotation());
+				 row = gcnew array<String^> { "Yaw", eu.x().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Pitch", eu.y().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
+				 row = gcnew array<String^> { "Roll", eu.z().ToString() };
+				 this->objectGridView->Rows->Add(row);
+
 				 // set certain rows to read only
 				 int numRows = this->objectGridView->Rows->Count;
 				 for (int i = 0; i < numRows; i++)
@@ -2962,6 +3003,38 @@ private: System::Void objectGridView_displayObject() {
 
 				 // allow name edit
 				 this->objectGridView->Rows[(int)objectProperty::NAME]->ReadOnly = false;
+
+				 // set certain rows to bold
+				 DataGridViewCellStyle^ style = gcnew DataGridViewCellStyle();
+				 style->Font = gcnew Drawing::Font(this->objectGridView->Font, FontStyle::Bold);
+
+				 this->objectGridView->Rows[(int)objectProperty::POSITION]->DefaultCellStyle = style;
+				 this->objectGridView->Rows[(int)objectProperty::ORIENT]->DefaultCellStyle = style;
+			 }
+		 }
+		 // updates only the position and orientation data
+private: System::Void objectGridView_updateObjectRigid() {
+			 if (this->objectGridView->InvokeRequired)
+			 {
+				 SetDelegate^ d = gcnew SetDelegate(this, &BlinkAnalysis::MainForm::objectGridView_updateObjectRigid);
+				 BeginInvoke(d, nullptr);
+			 }
+			 else
+			 {
+				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
+				 if (!world) return;
+				 CaptureObject* object = world->getObject(displayObject);
+				 if (!object) return;
+
+				 osg::Vec3 pos = object->getPosition();
+				 osg::Vec3 eu = CaptureObjectUtil::quaternionToEuler(object->getRotation());
+
+				 this->objectGridView->Rows[(int)objectProperty::POSITION_X]->Cells[1]->Value = pos.x().ToString();
+				 this->objectGridView->Rows[(int)objectProperty::POSITION_Y]->Cells[1]->Value = pos.y().ToString();
+				 this->objectGridView->Rows[(int)objectProperty::POSITION_Z]->Cells[1]->Value = pos.z().ToString();
+				 this->objectGridView->Rows[(int)objectProperty::ORIENT_YAW]->Cells[1]->Value = eu.x().ToString();
+				 this->objectGridView->Rows[(int)objectProperty::ORIENT_PITCH]->Cells[1]->Value = eu.y().ToString();
+				 this->objectGridView->Rows[(int)objectProperty::ORIENT_ROLL]->Cells[1]->Value = eu.z().ToString();
 			 }
 		 }
 		 		 // user edits property value for object

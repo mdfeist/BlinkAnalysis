@@ -36,4 +36,47 @@ osg::Matrix* CaptureObjectUtil::makeLocalToGlobalMatrix(
 	return mat;
 }
 
+// based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm
+osg::Vec3 CaptureObjectUtil::quaternionToEuler(osg::Quat q)
+{
+	double qx = q.x();
+	double qy = q.y();
+	double qz = q.z();
+	double qw = q.w();
 
+	if (qx*qy + qz*qw == 0.5) // north pole
+		return osg::Vec3(2*atan2(qx,qw), asin(2*qx*qy + 2*qz*qw), 0);
+	if (qx*qy + qz*qw == -0.5) // south pole
+		return osg::Vec3(-2*atan2(qx,qw), asin(2*qx*qy + 2*qz*qw), 0);
+
+	double x = atan2(2*qy*qw-2*qx*qz , 1 - 2*pow(qy,2) - 2*pow(qz,2));
+	double y = asin(2*qx*qy + 2*qz*qw);
+	double z = atan2(2*qx*qw-2*qy*qz , 1 - 2*pow(qx,2) - 2*pow(qz,2));
+
+	return osg::Vec3(x, y, z);
+}
+
+////////////////////////////////////////
+// The following method is from https://www.movesinstitute.org/Sullivan/OSGTutorials/osgGetWorldCoords.htm
+////////////////////////////////////////
+
+// Given a valid node placed in a scene under a transform, return the
+// world coordinates in an osg::Matrix.
+// Creates a visitor that will update a matrix representing world coordinates
+// of the node, return this matrix.
+// (This could be a class member for something derived from node also.
+
+osg::Matrixd* CaptureObjectUtil::getWorldCoords( osg::Node* node) 
+{
+   getWorldCoordOfNodeVisitor* ncv = new getWorldCoordOfNodeVisitor();
+   if (node && ncv)
+   {
+      node->accept(*ncv);
+      return ncv->giveUpDaMat();
+   }
+   else
+   {
+      return NULL;
+   }
+} 
+////////////////////////////////////////

@@ -70,6 +70,8 @@ public:
 	virtual osg::Node* getAsNode() = 0;
 	virtual int getNumVertices() = 0;
 	virtual int getNumFaces() = 0;
+	virtual osg::Vec3 getPosition() = 0;
+	virtual osg::Quat getRotation() = 0;
 
 };
 
@@ -98,6 +100,8 @@ public:
 	}
 
 	osg::Node* getAsNode();
+	osg::Vec3 getPosition();
+	osg::Quat getRotation();
 };
 
 
@@ -126,7 +130,8 @@ public:
 	int getNumFaces() { return 1; }
 
 	osg::Node* getAsNode();
-
+	osg::Vec3 getPosition();
+	osg::Quat getRotation();
 };
 
 
@@ -158,6 +163,9 @@ public:
 	osg::Vec3 getHalfLengths();
 
 	void setRotation(osg::Quat rot);
+	osg::Quat getRotationBox();
+	
+	osg::Vec3 getPosition();
 	osg::Quat getRotation();
 };
 

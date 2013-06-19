@@ -124,7 +124,19 @@ osg::Node* CaptureObjectCustom::getAsNode()
 	return (rigidNode) ? (osg::Node*) rigidNode : node;
 }
 
+osg::Vec3 CaptureObjectCustom::getPosition()
+{
+	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	if (vertices->size() <=0 )
+		return osg::Vec3(0,0,0) + trans;
 
+	return vertices->at(0) + trans;
+}
+
+osg::Quat CaptureObjectCustom::getRotation()
+{
+	return CaptureObjectUtil::getWorldCoords(node)->getRotate();
+}
 
 ///////////////////////////
 // CaptureObjectPlane
@@ -199,6 +211,20 @@ osg::Node* CaptureObjectPlane::getAsNode()
 	geo->addDrawable(geom);
 
 	return (rigidNode) ? (osg::Node*) rigidNode : node;
+}
+
+osg::Vec3 CaptureObjectPlane::getPosition()
+{
+	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	if (vertices->size() <=0 )
+		return osg::Vec3(0,0,0) + trans;
+
+	return vertices->at(0) + trans;
+}
+
+osg::Quat CaptureObjectPlane::getRotation()
+{
+	return CaptureObjectUtil::getWorldCoords(node)->getRotate();
 }
 
 
@@ -280,10 +306,21 @@ void CaptureObjectBox::setRotation(osg::Quat rot)
 	box->setRotation(rot);
 }
 
-osg::Quat CaptureObjectBox::getRotation()
+osg::Quat CaptureObjectBox::getRotationBox()
 {
 	if (box)
 		return box->getRotation();
 	return osg::Quat(0, 0, 0, 1); // zero rotation
 }
 
+
+osg::Vec3 CaptureObjectBox::getPosition()
+{
+	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	return getCentre() + trans;
+}
+
+osg::Quat CaptureObjectBox::getRotation()
+{
+	return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationBox();
+}
