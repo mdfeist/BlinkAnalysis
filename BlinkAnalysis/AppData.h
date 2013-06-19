@@ -13,8 +13,6 @@
 #include "NatNetTypes.h"
 #include "pugixml.hpp"
 
-
-
 public class AppData
 {
 public:
@@ -33,6 +31,8 @@ public:
 	char* getFilePath() { return this->filePath; }
 
 	char* getLastError() { return this->error; }
+
+	pugi::xml_node getNewRecording();
 
 	bool openFile(char* filePath);
 	bool saveFile();

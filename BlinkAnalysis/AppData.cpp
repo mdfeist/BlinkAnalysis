@@ -91,6 +91,19 @@ bool AppData::openFile(char* filePath) {
 	return true;
 }
 
+pugi::xml_node AppData::getNewRecording() {
+	// Get Project
+	pugi::xml_node project = doc.child("Project");
+
+	// If no Project create new Project node
+	if (!project) {
+		project = doc.append_child();
+		project.set_name("Project");
+	}
+
+	return project.append_child();
+}
+
 bool AppData::saveFile() {
 	MainFormController::getInstance()->getInfo();
 
