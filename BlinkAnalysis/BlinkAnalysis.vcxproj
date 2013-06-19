@@ -141,6 +141,7 @@
     </ClCompile>
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="pugixml.cpp" />
+    <ClCompile Include="RecorderManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="AppData.cpp" />
     <ClCompile Include="SetObjectRigidBodyForm.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Objects.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
+    <ClInclude Include="RecorderManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="AppData.h" />
