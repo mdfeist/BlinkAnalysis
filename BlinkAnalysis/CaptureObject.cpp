@@ -42,12 +42,17 @@ void CaptureObject::setRigidBody(int rid, bool offset)
 		RigidBody* rb = client->getRigidBody(rid);
 		if (rb)
 		{
-			rigidNode = rb->getObjectTransform();
+			rigidNode = rb->getTransform();
 			if (offset)
 			{
-				osg::AutoTransform* temp = new osg::AutoTransform();
-				temp->setPosition(-rigidNode->getPosition());
-				temp->setRotation(-rigidNode->getRotation());
+				osg::MatrixTransform* temp = new osg::MatrixTransform();
+
+				osg::Matrixf matrix;
+				matrix.makeIdentity();
+				matrix.setTrans(rigidNode->getPosition());
+				matrix.setRotate(rigidNode->getRotation());
+				temp->setMatrix(osg::Matrixf::inverse(matrix));
+
 				temp->addChild(node);
 				node = temp;
 			}

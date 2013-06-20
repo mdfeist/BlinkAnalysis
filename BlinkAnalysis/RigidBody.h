@@ -25,8 +25,6 @@ private:
 	osg::Quat rotation;;					// RigidBody Rotation
 
 	osg::ref_ptr<osg::AutoTransform> transform;			// RigidBody Matrix Transformation
-	osg::ref_ptr<osg::AutoTransform> objectTransform;	// Object Matrix Transformation
-														// same as RigidBody Transformation
 
 	std::vector<Marker> markers;			// Vector of all the markers
     float MeanError;                        // Mean measure-to-solve deviation
@@ -54,7 +52,6 @@ public:
 	// Getter/Setters for the auto transform of the Rigid Body.
 	void setTransform(osg::AutoTransform* transform) { this->transform = transform; }
 	osg::AutoTransform* getTransform() { return this->transform; }
-	osg::AutoTransform* getObjectTransform();
 	osg::Vec3 getPosition() { return this->position; }
 	osg::Quat getRotation() { return this->rotation; }
 	// Update the transformation of the Rigid Body
