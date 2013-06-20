@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{48428683-A37D-4FFB-94A4-2F11F3419F2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -18,6 +20,8 @@ Global
 		{7439C959-92E0-4299-A67C-FC9E32D38AEB}.Debug|Win32.Build.0 = Debug|Win32
 		{7439C959-92E0-4299-A67C-FC9E32D38AEB}.Release|Win32.ActiveCfg = Release|Win32
 		{7439C959-92E0-4299-A67C-FC9E32D38AEB}.Release|Win32.Build.0 = Release|Win32
+		{48428683-A37D-4FFB-94A4-2F11F3419F2E}.Debug|Win32.ActiveCfg = Debug
+		{48428683-A37D-4FFB-94A4-2F11F3419F2E}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
