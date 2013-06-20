@@ -7,6 +7,8 @@
 
 RecordingManager* RecordingManager::m_pInstance = NULL; 
 
+#define RECORDING_FPS 24
+
 RecordingManager::RecordingManager(void)
 {
 	this->recording = false;
@@ -24,7 +26,7 @@ RecordingManager::~RecordingManager(void)
 void recordingThread(void *) {
 	while (RecordingManager::getInstance()->isRecording()) {
 		RecordingManager::getInstance()->addFrame();
-		Sleep(1000/60);
+		Sleep(1000/RECORDING_FPS);
 	}
 
 	// Terminate thread
@@ -34,6 +36,7 @@ void recordingThread(void *) {
 void RecordingManager::addRecording() {
 	if (this->currentRecording != NULL) {
 		this->recordings.push_back(this->currentRecording);
+		this->currentRecording->closeRecording();
 		this->currentRecording = 0;
 	}
 }
@@ -53,8 +56,9 @@ void RecordingManager::startRecording() {
 
 void RecordingManager::stopRecording() {
 	if (this->recording) {
-		addRecording();
 		this->recording = false;
+
+		addRecording();
 	}
 }
 

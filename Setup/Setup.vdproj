@@ -33,13 +33,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_488106BC5BC74D4789E6A4D8C144DE2A"
-        "OwnerKey" = "8:_8E8513CA16D445B3958A033AAAAF13A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7B2EE1D6DB6D8F01DFF3993CC147A9C5"
+        "MsmKey" = "8:_7165D838F5D94FE28A9A11A80D805D7C"
         "OwnerKey" = "8:_8E8513CA16D445B3958A033AAAAF13A3"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -116,6 +110,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -227,26 +234,6 @@
             {
             "SourcePath" = "8:ot12-OpenThreads.dll"
             "TargetName" = "8:ot12-OpenThreads.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_5B2E1B03F1B9421C82AC522697881248"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7B2EE1D6DB6D8F01DFF3993CC147A9C5"
-            {
-            "SourcePath" = "8:NatNetLib.dll"
-            "TargetName" = "8:NatNetLib.dll"
             "Tag" = "8:"
             "Folder" = "8:_5B2E1B03F1B9421C82AC522697881248"
             "Condition" = "8:"
@@ -1002,7 +989,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_488106BC5BC74D4789E6A4D8C144DE2A"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_7165D838F5D94FE28A9A11A80D805D7C"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"

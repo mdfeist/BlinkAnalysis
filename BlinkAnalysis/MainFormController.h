@@ -40,5 +40,8 @@ public:
 	void worldUpdateGridView(int id) { this->form->worldUpdateGridView(id); }
 	void objectUpdateList() { this->form->objectUpdateList(); }
 	void objectUpdateGridView(int id) { this->form->objectUpdateGridView(id); }
+
+	void showError(LPCTSTR msg);
+	void getFilePath(std::string& pathBuffer);
 };
 
