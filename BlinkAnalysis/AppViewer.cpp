@@ -81,7 +81,11 @@ void renderEyeVector(osg::Geode* node) {
 				osg::Matrixf headMatrix;
 				headMatrix.makeIdentity();
 				//headMatrix.makeTranslate(head->getPosition());
-				headMatrix.makeRotate(head->getRotation());
+				float qx = -head->getRotation().x();
+				float qy = -head->getRotation().y();
+				float qz = -head->getRotation().z();
+				float qw = head->getRotation().w();
+				headMatrix.makeRotate(osg::Quat(qx, qy, qz, qw));
 
 				Dikablis::journal_struct journal = Dikablis::getJournal();
 

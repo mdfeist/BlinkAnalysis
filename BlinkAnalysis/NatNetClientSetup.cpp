@@ -344,9 +344,9 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 			float z = data->RigidBodies[i].y;
 			float y = data->RigidBodies[i].z;
 
-			float qx = data->RigidBodies[i].qx;
-			float qy = -data->RigidBodies[i].qz;
-			float qz = -data->RigidBodies[i].qy;
+			float qx = -data->RigidBodies[i].qx;
+			float qy = data->RigidBodies[i].qz;
+			float qz = data->RigidBodies[i].qy;
 			float qw = data->RigidBodies[i].qw;
 
 			body->addFrame(osg::Vec3(x, y, z),

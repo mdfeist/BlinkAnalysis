@@ -65,7 +65,11 @@ bool EyeCalibration::addPoint() {
 	osg::Matrixf headMatrix;
 	headMatrix.makeIdentity();
 	//headMatrix.makeTranslate(head->getPosition());
-	headMatrix.makeRotate(head->getRotation());
+	float qx = -head->getRotation().x();
+	float qy = -head->getRotation().y();
+	float qz = -head->getRotation().z();
+	float qw = head->getRotation().w();
+	headMatrix.makeRotate(osg::Quat(qx, qy, qz, qw));
 
 	if (!headMatrix.invert_4x4(headMatrix))
 		return false;

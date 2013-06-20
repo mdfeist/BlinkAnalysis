@@ -77,7 +77,7 @@ osg::Node* CaptureObjectCustom::getAsNode()
 {
 	osg::Geode* geo;
 	// no transformation node
-	if (rigidBody < 0)
+	if (rigidBody < 0 || !node->asGroup() )
 	{
 		if (!node)
 			node = new osg::Geode();
@@ -243,7 +243,7 @@ osg::Node* CaptureObjectBox::getAsNode()
 {
 	osg::Geode* geo;
 	// no transformation node
-	if (rigidBody < 0)
+	if (rigidBody < 0 || !node->asGroup() )
 	{
 		if (!node)
 			node = new osg::Geode();
