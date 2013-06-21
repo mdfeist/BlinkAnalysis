@@ -800,7 +800,7 @@ private: System::Void rigidSetButtons(bool enable, bool visible, ObjectType type
 			 switch (type)
 			 {
 			 // plane
-			 case PLANE :
+			 case OBJ_PLANE :
 				 this->planePt1SetButton->Visible = visible;
 				 this->planePt1SetButton->Enabled = enable;
 				 
@@ -819,12 +819,12 @@ private: System::Void markerTextBoxes(bool visible, ObjectType type) {
 			 switch (type)
 			 {
 			 // plane
-			 case PLANE :
+			 case OBJ_PLANE :
 				 this->planePt1TextBox->Visible = visible;
 				 this->planeCornerTextBox->Visible = visible;
 				 this->planePt2TextBox->Visible = visible;
 				 break;
-			 case BOX :
+			 case OBJ_BOX :
 				 this->boxCenTextBox->Visible = visible;
 				 break;
 
@@ -835,12 +835,12 @@ private: System::Void coordinateTextBoxes(bool visible, ObjectType type) {
 			 switch (type)
 			 {
 			 // plane
-			 case PLANE :
+			 case OBJ_PLANE :
 				 this->planeInPt1TextBox->Visible = visible;
 				 this->planeInCornerTextBox->Visible = visible;
 				 this->planeInPt2TextBox->Visible = visible;
 				 break;
-			 case BOX :
+			 case OBJ_BOX :
 				 this->boxInCenTextBox->Visible = visible;
 
 			 }
@@ -939,7 +939,7 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 							body->getPosition().y(), 
 							body->getPosition().z());
 					setPoint(planePos, this->planeRigidDataLabel);
-					rigidSetButtons(true, true, PLANE);
+					rigidSetButtons(true, true, OBJ_PLANE);
 					return;
 				}
 			}
@@ -965,7 +965,7 @@ private: System::Void planeSetButton_Click(System::Object^  sender, System::Even
 private: System::Void planeRigidRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->planeRigidRadio->Checked)
 			 {
-				 rigidSetButtons(false, true, PLANE);
+				 rigidSetButtons(false, true, OBJ_PLANE);
 
 				 setDefaultText(this->planeRigidDataLabel);
 				 setDefaultText(this->planeDataPt1Label);
@@ -977,7 +977,7 @@ private: System::Void planeRigidRadio_CheckedChanged(System::Object^  sender, Sy
 			 }
 			 else
 			 {
-				 rigidSetButtons(false, false, PLANE);
+				 rigidSetButtons(false, false, OBJ_PLANE);
 
 				 this->planeRigidDataLabel->Visible = false;
 			 }
@@ -985,7 +985,7 @@ private: System::Void planeRigidRadio_CheckedChanged(System::Object^  sender, Sy
 private: System::Void planeMarkersRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->planeMarkersRadio->Checked)
 			 {
-				 markerTextBoxes(true, PLANE);
+				 markerTextBoxes(true, OBJ_PLANE);
 
 				 setDefaultText(this->planeDataPt1Label);
 				 setDefaultText(this->planeDataCornerLabel);
@@ -995,13 +995,13 @@ private: System::Void planeMarkersRadio_CheckedChanged(System::Object^  sender, 
 			 }
 			 else
 			 {
-				 markerTextBoxes(false, PLANE);
+				 markerTextBoxes(false, OBJ_PLANE);
 			 }
 		 }
 private: System::Void planeCoordRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->planeCoordRadio->Checked)
 			 {
-				 coordinateTextBoxes(true, PLANE);
+				 coordinateTextBoxes(true, OBJ_PLANE);
 
 				 this->planeDataPt1Label->Text = "";
 				 this->planeDataCornerLabel->Text = "";
@@ -1012,7 +1012,7 @@ private: System::Void planeCoordRadio_CheckedChanged(System::Object^  sender, Sy
 			 }
 			 else
 			 {
-				 coordinateTextBoxes(false, PLANE);
+				 coordinateTextBoxes(false, OBJ_PLANE);
 				 this->planeDataGetButton->Visible = true;
 			 }
 		 }
@@ -1183,20 +1183,20 @@ private: System::Void boxSetButton_Click(System::Object^  sender, System::EventA
 private: System::Void boxMarkerRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->boxMarkersRadio->Checked)
 			 {
-				 markerTextBoxes(true, BOX);
+				 markerTextBoxes(true, OBJ_BOX);
 				 setDefaultText(this->boxCenDataLabel);
 
 				 this->planeSetButton->Enabled = false;
 			 }
 			 else
 			 {
-				 markerTextBoxes(false, BOX);
+				 markerTextBoxes(false, OBJ_BOX);
 			 }
 		 }
 private: System::Void boxCoordRadio_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->boxCoordRadio->Checked)
 			 {
-				 coordinateTextBoxes(true, BOX);
+				 coordinateTextBoxes(true, OBJ_BOX);
 
 				 this->boxCenDataLabel->Text = "";
 
@@ -1205,7 +1205,7 @@ private: System::Void boxCoordRadio_CheckedChanged(System::Object^  sender, Syst
 			 }
 			 else
 			 {
-				 coordinateTextBoxes(false, BOX);
+				 coordinateTextBoxes(false, OBJ_BOX);
 				 this->boxGetButton->Visible = true;
 			 }
 		 }

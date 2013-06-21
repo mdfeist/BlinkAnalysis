@@ -124,6 +124,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddObjectWizardForm.cpp" />
     <ClCompile Include="AppViewer.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlinkAnalysis.cpp" />
@@ -160,6 +161,10 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AddObjectFormController.h" />
+    <ClInclude Include="AddObjectWizardForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddObjectWizardFormController.h" />
     <ClInclude Include="AddWorldForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -214,6 +219,9 @@
   <ItemGroup>
     <EmbeddedResource Include="AddObjectForm.resx">
       <DependentUpon>AddObjectForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddObjectWizardForm.resx">
+      <DependentUpon>AddObjectWizardForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddWorldForm.resx">
       <DependentUpon>AddWorldForm.h</DependentUpon>

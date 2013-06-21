@@ -1,7 +1,7 @@
 #ifndef CAPTUREWORLD_H
 #define CAPTUREWORLD_H
 
-#include <hash_map>
+#include <map>
 #include <osg/MatrixTransform>
 
 
@@ -62,6 +62,7 @@ public:
 
 	CaptureObject* addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
 	CaptureObject* addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, std::string name);
+	CaptureObject* addCylinder(osg::Vec3 baseCentre, float radius, float height, std::string name);
 
 	CaptureObject* getObject(int oid);
 

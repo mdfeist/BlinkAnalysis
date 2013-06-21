@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 
+namespace BlinkAnalysis {
+		
 using namespace System;
 using namespace System::Collections;
 using namespace System::ComponentModel;
@@ -10,7 +12,6 @@ using namespace System::Windows::Forms;
 
 public ref class WizardPages : TabControl
 {
-	
 protected: 
 	virtual void WndProc(Message% m) override
     {
@@ -30,3 +31,4 @@ protected:
         TabControl::OnKeyDown(ke);
     }
 };
+}

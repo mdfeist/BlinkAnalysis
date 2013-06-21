@@ -266,6 +266,27 @@ CaptureObject* CaptureWorld::addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, 
 	return box;
 }
 
+CaptureObject* CaptureWorld::addCylinder(osg::Vec3 baseCentre, float radius, float height, std::string name)
+{
+	// transform base from global to local coordinates
+	osg::Vec3 centre = baseCentre * getGlobalToLocalMatrix();
+	// add half of height to get centre of box
+	centre += osg::Vec3(0, 0, height/2);
+	// transform back to global coordinates
+	centre = centre * getLocalToGlobalMatrix();
+
+	CaptureObjectCylinder* cylinder = new CaptureObjectCylinder(centre, radius, height, getLocalToGlobalMatrix().getRotate());
+	// if name is empty string, one will be generated in addObject
+	cylinder->setName(name);
+	
+	if (addObject(cylinder) < 0)
+	{
+		delete cylinder;
+		cylinder = NULL;
+	}
+
+	return cylinder;
+}
 
 osg::MatrixTransform* CaptureWorld::getAsGroup()
 {

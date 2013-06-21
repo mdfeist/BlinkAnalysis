@@ -96,6 +96,9 @@
     <ClCompile Include="RecordingManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AddObjectWizardForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -207,6 +210,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RecordingManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddObjectWizardForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddObjectWizardFormController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

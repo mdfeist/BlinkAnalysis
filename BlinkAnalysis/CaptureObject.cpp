@@ -150,7 +150,7 @@ osg::Quat CaptureObjectCustom::getRotation()
 CaptureObjectPlane::CaptureObjectPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2)
 	: CaptureObject()
 {
-	setType(PLANE);
+	setType(OBJ_PLANE);
 	setVertices(corner, pt1, pt2);
 }
 
@@ -239,6 +239,7 @@ osg::Quat CaptureObjectPlane::getRotation()
 
 CaptureObjectBox::CaptureObjectBox(osg::Vec3 centre, osg::Vec3 halfLen, osg::Quat rot)
 {
+	type = OBJ_BOX;
 	box = new osg::Box();
 	box->set(centre, halfLen);
 	box->setRotation(rot);
@@ -328,4 +329,117 @@ osg::Vec3 CaptureObjectBox::getPosition()
 osg::Quat CaptureObjectBox::getRotation()
 {
 	return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationBox();
+}
+
+
+///////////////////////////
+// CaptureObjectCylinder
+///////////////////////////
+
+CaptureObjectCylinder::CaptureObjectCylinder(osg::Vec3 centre, float radius, float height, osg::Quat rot)
+{
+	type = OBJ_CYLINDER;
+	cylinder = new osg::Cylinder();
+	cylinder->set(centre, radius, height);
+	cylinder->setRotation(rot);
+}
+
+osg::Node* CaptureObjectCylinder::getAsNode()
+{
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0 || !node->asGroup() )
+	{
+		if (!node)
+			node = new osg::Geode();
+		geo = node->asGeode();
+	}
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
+
+	geo->removeDrawables(0, 1);
+	if (cylinder)
+		geo->addDrawable(new osg::ShapeDrawable(cylinder));
+
+	return (rigidNode) ? (osg::Node*) rigidNode : node;
+}
+
+void CaptureObjectCylinder::setCentre(osg::Vec3 centre)
+{
+	if (!cylinder)
+		cylinder = new osg::Cylinder();
+	cylinder->setCenter(centre);
+}
+
+osg::Vec3 CaptureObjectCylinder::getCentre()
+{
+	if (cylinder)
+		return cylinder->getCenter();
+	return osg::Vec3(0, 0, 0); 
+}
+
+
+void CaptureObjectCylinder::setRotation(osg::Quat rot)
+{
+	if (!cylinder)
+		cylinder = new osg::Cylinder();
+	cylinder->setRotation(rot);
+}
+
+osg::Quat CaptureObjectCylinder::getRotationCylinder()
+{
+	if (cylinder)
+		return cylinder->getRotation();
+	return osg::Quat(0, 0, 0, 1); // zero rotation
+}
+
+void CaptureObjectCylinder::setRadius(float radius)
+{
+	if (!cylinder)
+		cylinder = new osg::Cylinder();
+	cylinder->setRadius(radius);
+}
+
+float CaptureObjectCylinder::getRadius()
+{
+	if (cylinder)
+		return cylinder->getRadius();
+	return -1; 
+}
+
+void CaptureObjectCylinder::setHeight(float height)
+{
+	if (!cylinder)
+		cylinder = new osg::Cylinder();
+	cylinder->setHeight(height);
+}
+
+float CaptureObjectCylinder::getHeight()
+{
+	if (cylinder)
+		return cylinder->getHeight();
+	return -1; 
+}
+
+osg::Vec3 CaptureObjectCylinder::getPosition()
+{
+	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	return getCentre() + trans;
+}
+
+osg::Quat CaptureObjectCylinder::getRotation()
+{
+	return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationCylinder();
 }

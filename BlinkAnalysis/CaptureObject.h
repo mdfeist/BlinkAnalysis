@@ -11,10 +11,11 @@
 
 
 enum ObjectType {
-	CUSTOM,
-	BOX,
-	CYLINDER,
-	PLANE
+	OBJ_PLANE,
+	OBJ_BOX,
+	OBJ_CYLINDER,
+	OBJ_CUSTOM,
+	OBJ_INVALID
 };
 
 
@@ -44,7 +45,7 @@ public:
 		id = -1;
 		rigidBody = -1;
 		render = true;
-		type = CUSTOM;
+		type = OBJ_CUSTOM;
 	}
 
 	~CaptureObject() { 
@@ -117,7 +118,7 @@ public:
 	CaptureObjectPlane()
 		: CaptureObject()
 	{
-		type = PLANE;
+		type = OBJ_PLANE;
 		vertices = NULL;
 		face = NULL;
 	}
@@ -146,7 +147,7 @@ public:
 	CaptureObjectBox()
 		: CaptureObject()
 	{
-		type = BOX;
+		type = OBJ_BOX;
 		box = NULL;
 	}
 
@@ -164,6 +165,44 @@ public:
 
 	void setRotation(osg::Quat rot);
 	osg::Quat getRotationBox();
+	
+	osg::Vec3 getPosition();
+	osg::Quat getRotation();
+};
+
+
+///////////////////////////
+
+class CaptureObjectCylinder : public CaptureObject
+{
+private:
+	osg::ref_ptr<osg::Cylinder> cylinder;
+
+public:
+	CaptureObjectCylinder()
+		: CaptureObject()
+	{
+		type = OBJ_CYLINDER;
+		cylinder = NULL;
+	}
+
+	CaptureObjectCylinder(osg::Vec3 centre, float radius, float height, osg::Quat rot);
+
+	int getNumVertices() { return 0; }
+	int getNumFaces() { return 3; }
+	osg::Node* getAsNode();
+
+	void setCentre(osg::Vec3 centre);
+	osg::Vec3 getCentre();
+
+	void setRadius(float radius);
+	float getRadius();
+
+	void setHeight(float height);
+	float getHeight();
+
+	void setRotation(osg::Quat rot);
+	osg::Quat getRotationCylinder();
 	
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();

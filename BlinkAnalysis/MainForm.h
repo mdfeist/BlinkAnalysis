@@ -19,6 +19,7 @@
 #include "Dikablis.h"
 #include "DikablisHelp.h"
 #include "AddObjectFormController.h"
+#include "AddObjectWizardFormController.h"
 #include "AddWorldForm.h" // TODO need to add controller?
 #include "DefineCoordinateFrameFormController.h"
 #include "EyeCalibrationWizardFormController.h"
@@ -57,6 +58,7 @@ namespace BlinkAnalysis {
 	{ 
 		ID,
 		NAME,
+		TYPE,
 		RIGID, 
 		FACES,
 		VERTICES, 
@@ -2021,7 +2023,7 @@ private: System::Windows::Forms::Button^  startRecordingBtn;
 				 dialog->Filter = "XML File (*.xml)|*.xml";
 				 dialog->RestoreDirectory = true;
 
-				 if (dialog->ShowDialog() == ::DialogResult::OK)
+				 if (dialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 				 {
 					 msclr::interop::marshal_context context;
 					 std::string filePath =  context.marshal_as<std::string>(dialog->FileName);
@@ -2087,10 +2089,10 @@ private: System::Windows::Forms::Button^  startRecordingBtn;
 					 System::Windows::Forms::DialogResult result;
 
 					 result = MessageBox::Show("Do you want to save any changes to the current Project?", "Closing Project", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Question);
-					 if(result == ::DialogResult::Yes){
+					 if(result == System::Windows::Forms::DialogResult::Yes){
 						 if(!saveProject())
 							 e->Cancel = true;
-					 } else if(result == ::DialogResult::Cancel){
+					 } else if(result == System::Windows::Forms::DialogResult::Cancel){
 						 e->Cancel = true;
 					 }
 				 }
@@ -2643,6 +2645,7 @@ private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, Sys
 			 this->saveAsProject();
 		 }
 private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 AddObjectWizardFormController::getInstance()->Show();
 		 }
 /*private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 			int toggled = -1;
@@ -2660,7 +2663,7 @@ private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, 
 			}
 }*/
 private: System::Void visualRigidBodyListView_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-			 if (e->Button == ::MouseButtons::Right)
+			 if (e->Button == System::Windows::Forms::MouseButtons::Right)
 			 {
 				 ListViewItem^ item = this->visualRigidBodyListView->GetItemAt(e->X, e->Y);
 				 if (item)
@@ -2883,7 +2886,7 @@ private: System::Void worldRemoveButton_Click(System::Object^  sender, System::E
 
 			System::Windows::Forms::DialogResult result = MessageBox::Show(
 				message, "Remove World", MessageBoxButtons::OKCancel, MessageBoxIcon::Question);
-			if(result == ::DialogResult::OK){
+			if(result == System::Windows::Forms::DialogResult::OK){
 				WorldManager::getInstance()->removeWorld(displayWorld);
 				displayWorld = -1;
 				worldUpdateList();
@@ -2979,6 +2982,15 @@ private: System::Void objectGridView_displayObject() {
 				 this->objectGridView->Rows->Add(row);
 
 				 row = gcnew array<String^> { "Name", gcnew String(object->getName().c_str()) };
+				 this->objectGridView->Rows->Add(row);
+
+				 ObjectType ot = object->getType();
+				 String^ otype = (ot == OBJ_PLANE ? "Plane" :
+								 ot == OBJ_BOX ? "Box" : 
+								 ot == OBJ_CYLINDER ? "Cylinder" :
+								 ot == OBJ_CUSTOM ? "Custom" :
+								 "Invalid");
+				 row = gcnew array<String^> { "Type", otype };
 				 this->objectGridView->Rows->Add(row);
 
 				 String^ iden = (object->getRigidBody() < 0) ? "none" : object->getRigidBody().ToString();
@@ -3134,7 +3146,7 @@ private: System::Void removeObjectButton_Click(System::Object^  sender, System::
 
 			System::Windows::Forms::DialogResult result = MessageBox::Show(
 				message, "Remove Object", MessageBoxButtons::OKCancel, MessageBoxIcon::Question);
-			if(result == ::DialogResult::OK){
+			if(result == System::Windows::Forms::DialogResult::OK){
 				CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
 				if (world)
 				{
