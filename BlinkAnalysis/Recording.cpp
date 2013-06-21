@@ -75,7 +75,6 @@ void Recording::initializeRecording() {
 	ClientHandler* client = AppData::getInstance()->getClient();
 
 	if (client) {
-		/*
 		UINT uRetVal = 0;
 		DWORD dwRetVal = 0;
 		// Get the temp path.
@@ -100,17 +99,9 @@ void Recording::initializeRecording() {
 			RecordingManager::getInstance()->stopRecording();
 			return;
 		}
-		*/
 
-		OutputDebugStringA(Settings::getInstance()->getLastError());
-		OutputDebugStringA(Settings::getInstance()->getDefaultProjectDirectory().c_str());
-
-		std::string filePath;
-		MainFormController::getInstance()->getFilePath(filePath, Settings::getInstance()->getDefaultProjectDirectory());
-
-		//tempFileStream.open(szTempFileName);
-		fileStream.open(filePath);
-
+		fileStream.open(szTempFileName);
+		
 		if (fileStream.is_open()) {
 			
 			fileStream << "<Recording>\n";
@@ -260,5 +251,17 @@ void Recording::closeRecording() {
 		fileStream << "</Frames>\n";
 		fileStream << "</Recording>\n";
 		fileStream.close();
+	}
+
+	std::string filePath;
+	MainFormController::getInstance()->getFilePath(filePath, Settings::getInstance()->getDefaultProjectDirectory());
+
+	if (filePath != "") {
+		TCHAR destination[MAX_PATH + 1];
+		MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, destination, filePath.length());
+
+		destination[filePath.length()] = 0;
+
+		MoveFileEx(szTempFileName, destination, MOVEFILE_REPLACE_EXISTING);
 	}
 }
