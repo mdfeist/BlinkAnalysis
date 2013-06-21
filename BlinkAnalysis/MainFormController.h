@@ -14,6 +14,7 @@
 #include "FormController.h"
 
 using namespace System;
+using namespace System::IO;
 
 public ref class MainFormController sealed :
 	public FormController<MainFormController^ volatile, BlinkAnalysis::MainForm^>
@@ -42,6 +43,8 @@ public:
 	void objectUpdateGridView(int id) { this->form->objectUpdateGridView(id); }
 
 	void showError(LPCTSTR msg);
+	std::string getSpecialFolderMyDocuments();
 	void getFilePath(std::string& pathBuffer);
+	void getFilePath(std::string& pathBuffer, std::string defaultPath);
 };
 

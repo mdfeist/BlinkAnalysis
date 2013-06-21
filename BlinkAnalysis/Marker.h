@@ -40,6 +40,9 @@ public:
 
 	void setPosition(osg::Vec3 position) { this->position = position; }
 	osg::Vec3 getPosition() { return this->position; }
+	float& x() { return this->position.x(); }
+	float& y() { return this->position.y(); }
+	float& z() { return this->position.z(); }
 
 	void setRadius(float r) { this->radius = r; }
 	float getRadius() { return this->radius; }

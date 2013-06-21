@@ -120,7 +120,7 @@ private:
 
 	void initializeRecording();
 
-	std::ofstream tempFileStream;
+	std::ofstream fileStream;
 
 	TCHAR szTempFileName[MAX_PATH];  
     TCHAR lpTempPathBuffer[MAX_PATH];

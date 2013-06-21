@@ -4,6 +4,7 @@
 #include "AppData.h"
 #include "MainFormController.h"
 #include "RecordingManager.h"
+#include "Settings.h"
 
 typedef std::map<int, RigidBody*>::iterator RigidBody_iterator;
 
@@ -59,12 +60,24 @@ void XTrace(LPCTSTR lpszFormat, ...)
     va_end(args);
 }
 
+void CTrace(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    int nBuf;
+    char szBuffer[512]; // get rid of this hard-coded buffer
+    nBuf = sprintf_s(szBuffer, 511, format, args);
+    ::OutputDebugStringA(szBuffer);
+    va_end(args);
+}
+
 
 void Recording::initializeRecording() {
 
 	ClientHandler* client = AppData::getInstance()->getClient();
 
 	if (client) {
+		/*
 		UINT uRetVal = 0;
 		DWORD dwRetVal = 0;
 		// Get the temp path.
@@ -89,28 +102,45 @@ void Recording::initializeRecording() {
 			RecordingManager::getInstance()->stopRecording();
 			return;
 		}
+		*/
+
+		OutputDebugStringA(Settings::getInstance()->getLastError());
+		OutputDebugStringA(Settings::getInstance()->getDefaultProjectDirectory().c_str());
 
 		std::string filePath;
-		MainFormController::getInstance()->getFilePath(filePath);
+		MainFormController::getInstance()->getFilePath(filePath, Settings::getInstance()->getDefaultProjectDirectory());
 
 		//tempFileStream.open(szTempFileName);
-		tempFileStream.open(filePath);
+		fileStream.open(filePath);
 
-		if (tempFileStream.is_open()) {
+		if (fileStream.is_open()) {
 			
-			tempFileStream << "<Recording>\n";
-			tempFileStream << "\t<StaticData>\n";
+			fileStream << "<Recording>\n";
+			fileStream << "<StaticData>\n";
+
+			// Lock the ClientHandler so data isn't changed
+			// by another thread.
+			if (!client->lock())
+				return;
+
 			std::map<int, RigidBody*>* rigidBodies = client->getRigidBodyMap();
 
 			for (RigidBody_iterator it = rigidBodies->begin(); it != rigidBodies->end(); ++it) {
-				tempFileStream << "\t\t<RigidBody ";
-				tempFileStream << "id=\"" << it->second->getID() << "\" ";
-				tempFileStream << "name=\"" << it->second->getName() << "\" ";
-				tempFileStream << "/>\n";
+				fileStream << "<RigidBody ";
+				fileStream << "id=\"" << it->second->getID() << "\" ";
+				fileStream << "name=\"" << it->second->getName() << "\" ";
+				fileStream << "/>\n";
 			}
 
-			tempFileStream << "\t</StaticData>\n";
-			tempFileStream << "\t<Frames>\n";
+			// Unlock the ClientHandler
+			client->unlock();
+
+			fileStream << "</StaticData>\n";
+			fileStream << "<Frames>\n";
+		} else {
+			MainFormController::getInstance()->showError(L"Failed to open file for recording.\n");
+			RecordingManager::getInstance()->stopRecording();
+			return;
 		}
 	}
 	
@@ -121,41 +151,61 @@ void Recording:: addFrame() {
 	if (!this->readyForRecording)
 		initializeRecording();
 
-	if (!tempFileStream.is_open())
+	if (!fileStream.is_open())
 		return;
 
 	ClientHandler* client = AppData::getInstance()->getClient();
 
 	if (client) {
-		tempFileStream << "\t\t<Frame>\n";
+		fileStream << "<Frame>\n";
+
+		// Lock the ClientHandler so data isn't changed
+		// by another thread.
+		if (!client->lock())
+			return;
 
 		std::map<int, RigidBody*>* rigidBodies = client->getRigidBodyMap();
 
 		for (RigidBody_iterator it = rigidBodies->begin(); it != rigidBodies->end(); ++it) {
-			tempFileStream << "\t\t\t<RigidBody \n";
+			fileStream << "<RigidBody ";
 			
-			tempFileStream << "id=\"" << it->second->getID() << "\" ";
+			fileStream << "id=\"" << it->second->getID() << "\" ";
 
-			tempFileStream << "x=\"" << it->second->getPosition().x() << "\" ";
-			tempFileStream << "y=\"" << it->second->getPosition().y() << "\" ";
-			tempFileStream << "z=\"" << it->second->getPosition().z() << "\" ";
+			fileStream << "x=\"" << it->second->getPosition().x() << "\" ";
+			fileStream << "y=\"" << it->second->getPosition().y() << "\" ";
+			fileStream << "z=\"" << it->second->getPosition().z() << "\" ";
 
-			tempFileStream << "qx=\"" << it->second->getRotation().x() << "\" ";
-			tempFileStream << "qy=\"" << it->second->getRotation().y() << "\" ";
-			tempFileStream << "qz=\"" << it->second->getRotation().z() << "\" ";
-			tempFileStream << "qw=\"" << it->second->getRotation().w() << "\" ";
+			fileStream << "qx=\"" << it->second->getRotation().x() << "\" ";
+			fileStream << "qy=\"" << it->second->getRotation().y() << "\" ";
+			fileStream << "qz=\"" << it->second->getRotation().z() << "\" ";
+			fileStream << "qw=\"" << it->second->getRotation().w() << "\" ";
 
-			tempFileStream << "/>\n";
+			fileStream << ">\n";
+
+			std::vector<Marker>* markers = it->second->getMarkersVector();
+
+			for (unsigned int i = 0; i < markers->size(); i++) {
+				fileStream << "<Marker ";
+				fileStream << "x=\"" << (*markers)[i].x() << "\" ";
+				fileStream << "y=\"" << (*markers)[i].y() << "\" ";
+				fileStream << "z=\"" << (*markers)[i].z() << "\" ";
+				fileStream << "/>\n";
+			}
+
+			fileStream << "</RigidBody>\n";
 		}
+
+		// Unlock the ClientHandler
+		client->unlock();
 		
-		tempFileStream << "\t\t</Frame>\n";
+		fileStream << "</Frame>\n";
 	}
 }
 
 void Recording::closeRecording() {
-	if (tempFileStream.is_open()) {
-		tempFileStream << "\t</Frames>\n";
-		tempFileStream << "</Recording>\n";
-		tempFileStream.close();
+	if (fileStream.is_open()) {
+		fileStream << "</Frames>\n";
+		fileStream << "</Recording>\n";
+		fileStream.close();
 	}
 }
