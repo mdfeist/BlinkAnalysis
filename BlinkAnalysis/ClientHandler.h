@@ -8,6 +8,7 @@
 #include <process.h>
 
 #include <map>
+#include <set>
 
 #include "RigidBody.h"
 
@@ -15,6 +16,7 @@
 #include "NatNetClient.h"
 
 
+typedef std::map<int, RigidBody*>::iterator RigidBody_iterator;
 typedef std::map<int, Marker*>::iterator labeledmarker_iterator;
 
 /*
@@ -40,6 +42,8 @@ private:
 	int rigidBodyTool;
 	// map to store all other markers
 	std::map<int, Marker*> labeledMarkers;
+	// Used to make sure we are not duplicating markers
+	std::set<Marker> rigidBodyMarkers;
 
 	// OptiTrack Server Settings 
 	char cLocalIPAddress[128];					// Your local IP Address
@@ -67,36 +71,10 @@ public:
 	~ClientHandler(void);						// Destructor
 
 	// Lock the client so data cannot be changed while doing updates
-	bool lock() { 
-		// Request ownership of mutex
-		DWORD  dwWaitResult;
-		while(true)
-		{
-			// Wait for Mutex to be free
-			dwWaitResult = WaitForSingleObject(g_hMutex, INFINITE);
-			switch (dwWaitResult) 
-			{
-			// The thread got ownership of the mutex
-			case WAIT_OBJECT_0: 
-				return true;
-				break; 
-
-			// The thread got ownership of an abandoned mutex
-			// The database is in an indeterminate state
-			case WAIT_ABANDONED: 
-				return false; 
-				break;
-			}
-		}
-
-		return false;
-	}
+	bool lock();
 
 	// Unlocks the client allowing threads to change its data
-	void unlock() {
-		// Release the utex
-		ReleaseMutex(g_hMutex);
-	}
+	void unlock() { ReleaseMutex(g_hMutex); }
 
 	// Set/Get the NatNetClient
 	void setClient(NatNetClient* client) { this->client = client; }
@@ -143,6 +121,11 @@ public:
 	std::map<int, Marker*>* getLabeledMarkerMap();
 	void clearLabeledMarkers();
 	void clearStaleMarkers();
+
+	// Rigid Body Markers
+	void addRigidBodyMarker(Marker marker);
+	bool doesRigidBodyMarkerExist(Marker* marker);
+	void clearRigidBodyMarkers();
 
 	// Rigid Body Tool for defining objects
 	void setRigidBodyTool(int id) { rigidBodyTool = id; }

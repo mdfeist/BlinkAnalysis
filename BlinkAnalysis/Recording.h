@@ -1,4 +1,11 @@
 #pragma once
+#include <windows.h>
+#include <tchar.h>
+#include <stdio.h>
+
+#include <iostream>
+#include <fstream>
+
 #include <string.h>
 #include <map>
 #include <vector>
@@ -110,9 +117,13 @@ private:
 
 	bool readyForRecording;
 	std::vector<Frame> frames;
-	pugi::xml_node recording;
 
 	void initializeRecording();
+
+	std::ofstream fileStream;
+
+	TCHAR szTempFileName[MAX_PATH];  
+    TCHAR lpTempPathBuffer[MAX_PATH];
 public:
 	Recording(void);
 	~Recording(void);
@@ -120,11 +131,10 @@ public:
 	void setName(std::string name) { this->name = name; }
 	std::string getName() { return this->name; }
 
+	void closeRecording();
 	void addFrame();
 	int numberOfFrames() { return this->frames.size(); }
 
 	bool loadRecording(pugi::xml_node recording);
-
-	pugi::xml_node& getXML() { return this->recording; }
 };
 

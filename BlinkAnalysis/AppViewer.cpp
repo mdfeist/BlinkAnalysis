@@ -37,7 +37,7 @@ osg::Vec3 lastRay;
 bool running = false;
 bool visible = false;
 
-bool localMarkers = false;
+bool localMarkers = true;
 
 float VIEWER_SCALE = 1.f;
 

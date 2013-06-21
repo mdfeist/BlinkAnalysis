@@ -14,7 +14,6 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace System::Diagnostics;
 
 	using namespace System::IO;
 	using namespace System::Reflection;
@@ -113,9 +112,8 @@ namespace BlinkAnalysis {
 		}
 #pragma endregion
 		private: System::Void Form_Load(System::Object^  sender, System::EventArgs^  e) {
-			String^ path = Path::GetFullPath( "DikablisHelpDocs/DikablisHelp.htm");
+			String^ path = Path::GetFullPath( "docs/DikablisHelp.htm");
 			webBrowser->Navigate("file:///" + path);
-			Debug::WriteLine(path);
 		}
 };
 }
