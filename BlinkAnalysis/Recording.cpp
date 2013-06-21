@@ -164,6 +164,48 @@ void Recording:: addFrame() {
 		if (!client->lock())
 			return;
 
+		// Get current position of head
+		RigidBody* head = client->getHead();
+
+		if (head != NULL) {
+			fileStream << "<EyeVector>\n";
+
+			osg::Vec3 pos = head->getPosition();
+
+			// Add to the head point
+			fileStream << "<Start ";
+			fileStream << "x=\"" << pos.x() << "\" ";
+			fileStream << "y=\"" << pos.y() << "\" ";
+			fileStream << "z=\"" << pos.z() << "\" ";
+			fileStream << "/>";
+
+			osg::Matrixf headMatrix;
+			headMatrix.makeIdentity();
+			float qx = -head->getRotation().x();
+			float qy = -head->getRotation().y();
+			float qz = -head->getRotation().z();
+			float qw = head->getRotation().w();
+			headMatrix.makeRotate(osg::Quat(qx, qy, qz, qw));
+
+			Dikablis::journal_struct journal = Dikablis::getJournal();
+
+			int x = journal.field_x;
+			int y = journal.field_y;
+
+			osg::Vec3 ray = client->getRay(x, y);
+
+			ray = headMatrix * ray;
+			ray = (ray + pos);
+
+			fileStream << "<End ";
+			fileStream << "x=\"" << ray.x() << "\" ";
+			fileStream << "y=\"" << ray.y() << "\" ";
+			fileStream << "z=\"" << ray.z() << "\" ";
+			fileStream << "/>";
+
+			fileStream << "</EyeVector>\n";
+		}
+
 		std::map<int, RigidBody*>* rigidBodies = client->getRigidBodyMap();
 
 		for (RigidBody_iterator it = rigidBodies->begin(); it != rigidBodies->end(); ++it) {
