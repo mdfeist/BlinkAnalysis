@@ -46,5 +46,7 @@ public:
 	std::string getSpecialFolderMyDocuments();
 	void getFilePath(std::string& pathBuffer);
 	void getFilePath(std::string& pathBuffer, std::string defaultPath);
+
+	bool propt(LPCTSTR title, LPCTSTR msg);
 };
 

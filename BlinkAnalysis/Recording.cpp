@@ -253,15 +253,28 @@ void Recording::closeRecording() {
 		fileStream.close();
 	}
 
-	std::string filePath;
-	MainFormController::getInstance()->getFilePath(filePath, Settings::getInstance()->getDefaultProjectDirectory());
+	bool save = true;
 
-	if (filePath != "") {
-		TCHAR destination[MAX_PATH + 1];
-		MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, destination, filePath.length());
+	if (!MainFormController::getInstance()->propt(L"Save Recording", L"Would you like to save the recording?"))
+		save = false;
 
-		destination[filePath.length()] = 0;
+	while (save) {
+		std::string filePath;
+		MainFormController::getInstance()->getFilePath(filePath, Settings::getInstance()->getDefaultProjectDirectory());
 
-		MoveFileEx(szTempFileName, destination, MOVEFILE_REPLACE_EXISTING);
+		if (filePath != "") {
+			TCHAR destination[MAX_PATH + 1];
+			MultiByteToWideChar(CP_ACP, 0, filePath.c_str(), -1, destination, filePath.length());
+
+			destination[filePath.length()] = 0;
+
+			MoveFileEx(szTempFileName, destination, MOVEFILE_REPLACE_EXISTING);
+
+			save = false;
+		} else {
+			if (MainFormController::getInstance()->propt(L"Save Recording", L"Are you sure you would like to continue without saving the recording?")) {
+				save = false;
+			}
+		}
 	}
 }

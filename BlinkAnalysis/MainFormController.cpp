@@ -74,3 +74,11 @@ void MainFormController::getFilePath(std::string& pathBuffer, std::string defaul
 	}
 }
 
+bool MainFormController::propt(LPCTSTR title, LPCTSTR msg) {
+	if (MessageBox::Show(gcnew String(msg), gcnew String(title), MessageBoxButtons::YesNo) == DialogResult::Yes) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
