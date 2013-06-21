@@ -15,6 +15,7 @@
 
 using namespace System;
 using namespace System::IO;
+using namespace System::Windows::Forms;
 
 public ref class MainFormController sealed :
 	public FormController<MainFormController^ volatile, BlinkAnalysis::MainForm^>
