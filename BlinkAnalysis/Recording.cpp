@@ -6,8 +6,6 @@
 #include "RecordingManager.h"
 #include "Settings.h"
 
-typedef std::map<int, RigidBody*>::iterator RigidBody_iterator;
-
 Recording::Recording(void)
 {
 	this->readyForRecording = false;
@@ -235,6 +233,19 @@ void Recording:: addFrame() {
 			}
 
 			fileStream << "</RigidBody>\n";
+		}
+
+		std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
+		for (labeledmarker_iterator it_marker = markerMap->begin(); it_marker != markerMap->end(); ++it_marker)
+		{
+			// Get Pointer to marker
+			Marker* marker = it_marker->second;
+
+			fileStream << "<Marker ";
+			fileStream << "x=\"" << (*marker).x() << "\" ";
+			fileStream << "y=\"" << (*marker).y() << "\" ";
+			fileStream << "z=\"" << (*marker).z() << "\" ";
+			fileStream << "/>\n";
 		}
 
 		// Unlock the ClientHandler

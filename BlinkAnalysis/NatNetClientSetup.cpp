@@ -325,6 +325,16 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 	// Cast user data as ClientHandler
 	ClientHandler* pClient = (ClientHandler*) pUserData;
 
+	// Lock the ClientHandler so data isn't changed
+	// by another thread.
+	if (!pClient->lock())
+		return;
+
+	pClient->clearRigidBodyMarkers();
+
+	// Unlock the ClientHandler
+	pClient->unlock();
+
 	// Rigid Bodies
 	for(int i = 0; i < data->nRigidBodies; i++)
 	{
@@ -377,6 +387,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 
 				// Add the marker to the Rigid Body
 				body->addMarker(marker);
+				pClient->addRigidBodyMarker(marker);
 			}
 
 			// Unlock the ClientHandler
@@ -407,7 +418,10 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 			marker = new Marker(data->LabeledMarkers[i].ID, x, y, z, data->LabeledMarkers[i].size);
 			marker->update();
 			marker->setColor(osg::Vec4(0, 0, 1, 1));
-			pClient->addLabeledMarker(marker->getID(), marker);
+
+			if (!pClient->doesRigidBodyMarkerExist(marker)) {
+				pClient->addLabeledMarker(marker->getID(), marker);
+			}
 		}
 		
 		pClient->unlock();

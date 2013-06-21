@@ -57,6 +57,30 @@ ClientHandler::~ClientHandler(void)
 	if (this->dikablisEyeVectorArray != NULL)
 		free(this->dikablisEyeVectorArray);
 }
+bool ClientHandler::lock() {
+	// Request ownership of mutex
+	DWORD  dwWaitResult;
+	while(true)
+	{
+		// Wait for Mutex to be free
+		dwWaitResult = WaitForSingleObject(g_hMutex, INFINITE);
+		switch (dwWaitResult) 
+		{
+			// The thread got ownership of the mutex
+		case WAIT_OBJECT_0: 
+			return true;
+			break; 
+
+			// The thread got ownership of an abandoned mutex
+			// The database is in an indeterminate state
+		case WAIT_ABANDONED: 
+			return false; 
+			break;
+		}
+	}
+
+	return false;
+}
 
 void ClientHandler::setRayCalibration(float *vectorArray) {
 	if (this->dikablisEyeVectorArray != NULL &&
@@ -193,5 +217,20 @@ void ClientHandler::clearStaleMarkers()
 			++itr;
 		}
 	}
+}
+
+void ClientHandler::addRigidBodyMarker(Marker marker) {
+	rigidBodyMarkers.insert(marker);
+}
+
+bool ClientHandler::doesRigidBodyMarkerExist(Marker* marker) {
+	std::set<Marker>::iterator ret;
+	ret = rigidBodyMarkers.find((*marker));
+
+	return (ret != rigidBodyMarkers.end());
+}
+
+void ClientHandler::clearRigidBodyMarkers() {
+	rigidBodyMarkers.clear();
 }
 

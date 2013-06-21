@@ -35,6 +35,21 @@ public:
 		this->selected = false;
 	}
 
+	inline bool operator == (const Marker& rhs) const
+	{
+		return position == rhs.position;
+	}
+
+	inline bool operator != (const Marker& rhs) const
+	{
+		return position != rhs.position;
+	}
+
+	inline bool operator < (const Marker& rhs) const
+	{
+		return position < rhs.position;
+	}
+
 	void setID(int id) { this->id = id; }
 	int getID() { return this->id; }
 
