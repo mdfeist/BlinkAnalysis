@@ -5,33 +5,29 @@
 using namespace BlinkAnalysis;
 
 System::Void SetObjectRigidBodyForm::attachButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 bool result = true;
 			 if (rigidID >= 0)
 			 {
 				 CaptureWorld* world = WorldManager::getInstance()->getWorld(worldID);
 				 if (world)
 				 {
-					 CaptureObject* object = world->getObject(objectID);
-					 if (object)
+					 result = world->setObjectRigidBody(objectID, rigidID, this->offsetCheckBox->Checked);
+					 if (!result)
 					 {
-						 object->setRigidBody(rigidID, this->offsetCheckBox->Checked);
-						 world->updateObjectsNode();
-						 MainFormController::getInstance()->objectUpdateGridView(object->getID());
+						 String^ message = "Could not attach object (ID " + objectID.ToString() + ") to rigid body (ID " + 
+							 rigidID.ToString() + "). \nIs the rigid body already attached to an object in a different world?";
+						 MessageBox::Show(message, "Could not attach rigid body", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 					 }
 				 }
 			 }
-			 this->Close();
+			 if (result)
+				this->Close();
 		 }
 System::Void SetObjectRigidBodyForm::detachButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			CaptureWorld* world = WorldManager::getInstance()->getWorld(worldID);
 			if (world)
 			{
-				CaptureObject* object = world->getObject(objectID);
-				if (object)
-				{
-					object->setRigidBody(-1, this->offsetCheckBox->Checked);
-					world->updateObjectsNode();
-					MainFormController::getInstance()->objectUpdateGridView(object->getID());
-				}
+				 world->setObjectRigidBody(objectID, rigidID, this->offsetCheckBox->Checked);
 			}
 			this->Close();
 		 }

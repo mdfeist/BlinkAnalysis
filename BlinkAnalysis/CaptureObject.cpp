@@ -11,23 +11,30 @@
 #include "CaptureObject.h"
 #include "AppData.h"
 
-
 ///////////////////////////
 // CaptureObject
 ///////////////////////////
 
-void CaptureObject::setRigidBody(int rid, bool offset)
+void CaptureObject::setRigidBody(RigidBody* rb, bool offset)
 {
-	if (rigidBody == rid)
-		return;
-
 	// remove from old rigid body
 	if (rigidBody >= 0)
 	{
 		rigidNode->removeChild(node);
+		if ( rigidNode->getNumChildren() == 0 &&
+			 (!rb || rigidBody != rb->getID()) ) // no more children attached
+		{
+			ClientHandler *client = AppData::getInstance()->getClient();
+			if (client)
+			{
+				RigidBody *oldRB = client->getRigidBody(rigidBody);
+				oldRB->setWorldID(-1);
+			}
+		}
 		rigidNode = NULL;
+
 		// remove offset node if it exists
-		while (!node->asGeode())
+		if (!node->asGeode())
 		{
 			osg::Group* temp = node->asGroup();
 			node = temp->getChild(0);
@@ -35,33 +42,33 @@ void CaptureObject::setRigidBody(int rid, bool offset)
 		}
 	}
 
-	// add to new rigid body
-	ClientHandler* client = AppData::getInstance()->getClient();
-	if (client && rid >= 0)
+	// detaching rigid body only
+	if (!rb)
 	{
-		RigidBody* rb = client->getRigidBody(rid);
-		if (rb)
-		{
-			rigidNode = rb->getTransform();
-			if (offset)
-			{
-				osg::MatrixTransform* temp = new osg::MatrixTransform();
-
-				osg::Matrixf matrix;
-				matrix.makeIdentity();
-				matrix.setTrans(rigidNode->getPosition());
-				matrix.setRotate(rigidNode->getRotation());
-				temp->setMatrix(osg::Matrixf::inverse(matrix));
-
-				temp->addChild(node);
-				node = temp;
-			}
-			rigidNode->addChild(node);
-		}
+		rigidBody = -1;
+		return;
 	}
-	rigidBody = rid;
+
+	// add to new rigid body
+	rigidNode = rb->getTransform();
+	if (offset)
+	{
+		osg::MatrixTransform* temp = new osg::MatrixTransform();
+
+		osg::Matrixf matrix;
+		matrix.makeIdentity();
+		matrix.setTrans(rigidNode->getPosition());
+		matrix.setRotate(rigidNode->getRotation());
+		temp->setMatrix(osg::Matrixf::inverse(matrix));
+
+		temp->addChild(node);
+		node = temp;
+	}
+	rigidNode->addChild(node);
+	rigidBody = rb->getID();
 }
 
+// returns node to be added/removed from world
 osg::Node* CaptureObject::setRender(bool ren)
 {
 	// state unchanged, no need to return node
@@ -69,8 +76,18 @@ osg::Node* CaptureObject::setRender(bool ren)
 		return NULL;
 	
 	render = ren;
-	return (rigidNode) ? (osg::Node*) rigidNode : node; 
-	// TODO why is it forcing me to cast every time?
+
+	// no rigid body attached
+	if (rigidBody < 0)
+		return node;
+
+	// if attached to rigid body, just remove from transformation
+	// don't remove transformation node from world
+	if (render)
+		rigidNode->addChild(node);
+	else
+		rigidNode->removeChild(node);
+	return NULL;
 }
 
 
@@ -216,6 +233,7 @@ osg::Node* CaptureObjectPlane::getAsNode()
 	geo->addDrawable(geom);
 
 	return (rigidNode) ? (osg::Node*) rigidNode : node;
+	// TODO why is it forcing me to cast every time?
 }
 
 osg::Vec3 CaptureObjectPlane::getPosition()

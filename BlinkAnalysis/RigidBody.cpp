@@ -11,6 +11,7 @@ RigidBody::RigidBody(void)
 	this->name[0] = '\0';
 
 	this->transform = new osg::AutoTransform();
+	this->worldID = -1;
     float MeanError = 0;
 }
 

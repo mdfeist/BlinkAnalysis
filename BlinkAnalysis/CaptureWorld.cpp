@@ -69,6 +69,8 @@ void CaptureWorld::setName(std::string name)
 	}
 }
 
+///////////////////////
+// Matrix
 const osg::Matrix CaptureWorld::getLocalToGlobalMatrix()
 {
 	return *_localToGlobal;
@@ -78,6 +80,24 @@ const osg::Matrix CaptureWorld::getGlobalToLocalMatrix()
 {
 	return osg::Matrix::inverse(*_localToGlobal);
 }
+
+void CaptureWorld::setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects)
+{
+	delete _localToGlobal;
+	_localToGlobal = locToGlob;
+
+	if (deleteObjects)
+	{
+		clearObjects();
+		return;
+	}
+
+	if (render && renderMat && node)
+		node->setMatrix(getGlobalToLocalMatrix());
+}
+
+///////////////////////
+// Rendering
 
 void CaptureWorld::setRenderMatrix(bool ren)
 {
@@ -114,48 +134,39 @@ bool CaptureWorld::toggleRender()
 	return render;
 }
 
-void CaptureWorld::setRenderObject(int oid, bool ren)
+osg::MatrixTransform* CaptureWorld::getAsGroup()
 {
-	CaptureObject* obj = getObject(oid);
-	// add object to currently rendering world
-	osg::Node* objNode = obj->setRender(ren);
-	if (ren && obj && node && render)
-	{
-		node->addChild(objNode);
-	}
-	// remove object from currently rendering world
-	else if (!ren && obj && node && render)
-	{
-		node->removeChild(objNode);
-	}
-}
+	if (!node)
+		node = new osg::MatrixTransform();
 
-bool CaptureWorld::toggleRenderObject(int oid)
-{
-	CaptureObject* obj = getObject(oid);
-	bool ren = !obj->renderObject();
-	setRenderObject(oid, ren);
-	return ren;
-}
-
-void CaptureWorld::setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects, bool updateObjects)
-{
-	delete _localToGlobal;
-	_localToGlobal = locToGlob;
-
-	if (deleteObjects)
-	{
-		clearObjects();
-		return;
-	}
-	if (updateObjects)
-	{
-		//TODO
-	}
-
-	if (render && renderMat && node)
+	if (renderMat)
 		node->setMatrix(getGlobalToLocalMatrix());
+	else
+		node->setMatrix(osg::Matrix::identity());
+
+	updateObjectsNode();
+	return node;
 }
+
+void CaptureWorld::updateObjectsNode()
+{
+	if (node)
+	{
+		node->removeChild(0, node->getNumChildren());
+		for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
+		{
+			if (itr->second->renderObject())
+			{
+				osg::Node* objNode = itr->second->getAsNode();
+				if (!node->containsNode(objNode))
+					node->addChild(objNode);
+			}
+		}
+	}
+}
+
+///////////////////////
+// Object Management
 
 int CaptureWorld::addObject(CaptureObject* obj)
 {
@@ -183,7 +194,6 @@ int CaptureWorld::addObject(CaptureObject* obj)
 	return -1;
 }
 
-	
 bool CaptureWorld::removeObject(int oid)
 {
 	objects_iterator itr = _objects.find(oid);
@@ -226,7 +236,63 @@ CaptureObject* CaptureWorld::getObject(int oid)
 	return itr->second;
 }
 
-// TODO: assumed static for now
+void CaptureWorld::setRenderObject(int oid, bool ren)
+{
+	CaptureObject* obj = getObject(oid);
+	if (!obj) return;
+	osg::Node* objNode = obj->setRender(ren);
+
+	// add object to currently rendering world
+	if (objNode && ren && node && render && !node->containsNode(objNode))
+	{
+		node->addChild(objNode);
+	}
+	// remove object from currently rendering world
+	else if (objNode && !ren && node && render)
+	{
+		node->removeChild(objNode);
+	}
+}
+
+bool CaptureWorld::toggleRenderObject(int oid)
+{
+	CaptureObject* obj = getObject(oid);
+	bool ren = !obj->renderObject();
+	setRenderObject(oid, ren);
+	return ren;
+}
+
+bool CaptureWorld::setObjectRigidBody(int oid, int rid, bool offset)
+{
+	ClientHandler* client = AppData::getInstance()->getClient();
+	if (!client) return false;
+
+	RigidBody* rb;
+	// detach object
+	if (rid < 0)
+	{
+		rb = NULL;
+	}
+	else 
+	{
+		// check if has ownership of rigid body transformation
+		rb = client->getRigidBody(rid);
+		if (!rb || 
+			rb->getWorldID() >=0 && rb->getWorldID() != this->id) 
+			return false;
+
+		rb->setWorldID(this->id);
+	}
+
+	CaptureObject* object = getObject(oid);
+	object->setRigidBody(rb, offset);
+	updateObjectsNode();
+	MainFormController::getInstance()->objectUpdateGridView(oid);
+	return true;
+}
+
+///////////////////////
+// Object Creation
 CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name)
 {
 	CaptureObjectPlane* plane = new CaptureObjectPlane(corner, pt1, pt2);
@@ -288,33 +354,6 @@ CaptureObject* CaptureWorld::addCylinder(osg::Vec3 baseCentre, float radius, flo
 	return cylinder;
 }
 
-osg::MatrixTransform* CaptureWorld::getAsGroup()
-{
-	if (!node)
-		node = new osg::MatrixTransform();
-
-	if (renderMat)
-		node->setMatrix(getGlobalToLocalMatrix());
-	else
-		node->setMatrix(osg::Matrix::identity());
-
-	updateObjectsNode();
-	return node;
-}
-
-void CaptureWorld::updateObjectsNode()
-{
-	if (node)
-	{
-		node->removeChild(0, node->getNumChildren());
-		for (objects_iterator itr = _objects.begin(); itr != _objects.end(); itr++)
-		{
-			// TODO 
-			if (itr->second->renderObject())
-				node->addChild(itr->second->getAsNode());
-		}
-	}
-}
 
 
 

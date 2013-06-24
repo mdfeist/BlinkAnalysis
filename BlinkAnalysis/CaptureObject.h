@@ -8,6 +8,7 @@
 #include <osg/Shape>
 
 #include "CaptureObjectUtil.h"
+#include "RigidBody.h"
 
 
 enum ObjectType {
@@ -57,7 +58,7 @@ public:
 	void setType(ObjectType t) { type = t; }
 	ObjectType getType() { return type; }
 	
-	void setRigidBody(int rid, bool offset);
+	void setRigidBody(RigidBody* rb, bool offset);
 	int getRigidBody() { return rigidBody; }
 
 	void setName(std::string name) { this->name = name; }

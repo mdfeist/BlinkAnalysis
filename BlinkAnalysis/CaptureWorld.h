@@ -41,44 +41,41 @@ public:
 		delete _localToGlobal;
 		clearObjects();
 	}
-
-	const osg::Matrix getLocalToGlobalMatrix();
-	const osg::Matrix getGlobalToLocalMatrix();
-
+	
 	std::string getName() { return name; }
 	void setName(std::string name);
 	int getID() { return id; }
-	bool renderWorld() { return render; }
+
+	// Matrix
+	const osg::Matrix getLocalToGlobalMatrix();
+	const osg::Matrix getGlobalToLocalMatrix();
+	void setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects=false);
+
+	// Rendering
 	void setRenderMatrix(bool ren);
 	bool renderMatrix() { return renderMat; }
-
+	bool renderWorld() { return render; }
 	void setRender(bool ren);
 	bool toggleRender();
+	osg::MatrixTransform* getAsGroup();
+	bool hasNode(osg::MatrixTransform* node) { return this->node == node; }
+	void updateObjectsNode();
 
+	// Object Management
+	bool removeObject(int oid);
+	void clearObjects();
+	int getNumberObjects();
+	std::map<int, CaptureObject*> getObjects() { return _objects; }
+	CaptureObject* getObject(int oid);
 	void setRenderObject(int oid, bool ren);
 	bool toggleRenderObject(int oid);
+	bool setObjectRigidBody(int oid, int rid, bool offset);
 
-	void setCoordinateFrame(osg::Matrix* locToGlob, bool deleteObjects=false, bool updateObjects=false);
-
+	// Object Creation
 	CaptureObject* addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
 	CaptureObject* addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, std::string name);
 	CaptureObject* addCylinder(osg::Vec3 baseCentre, float radius, float height, std::string name);
 
-	CaptureObject* getObject(int oid);
-
-	bool removeObject(int oid);
-
-	void clearObjects();
-
-	std::map<int, CaptureObject*> getObjects() { return _objects; }
-
-	int getNumberObjects();
-
-	osg::MatrixTransform* getAsGroup();
-
-	bool hasNode(osg::MatrixTransform* node) { return this->node == node; }
-
-	void updateObjectsNode();
 };
 
 

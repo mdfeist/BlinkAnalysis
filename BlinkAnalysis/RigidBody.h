@@ -25,6 +25,7 @@ private:
 	osg::Quat rotation;;					// RigidBody Rotation
 
 	osg::ref_ptr<osg::AutoTransform> transform;			// RigidBody Matrix Transformation
+	int worldID;											// world to which transformation belongs
 
 	std::vector<Marker> markers;			// Vector of all the markers
     float MeanError;                        // Mean measure-to-solve deviation
@@ -48,6 +49,10 @@ public:
 	// Getter/Setters for the name of the Rigid Body.
 	void setName(char* name) { strncpy_s(this->name, name, strlen(name)); }
 	char* getName() { return this->name; }
+
+	// Getter/Setter for ID of world it is attached to
+	void setWorldID(int wid) { this->worldID = wid; }
+	int getWorldID() { return this->worldID; }
 
 	// Getter/Setters for the auto transform of the Rigid Body.
 	void setTransform(osg::AutoTransform* transform) { this->transform = transform; }
