@@ -3097,7 +3097,7 @@ private: System::Void objectGridView_CellValueChanged(System::Object^  sender, S
 			 }
 		 }
 private: System::Void objectAddButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			 AddObjectFormController ^control = AddObjectFormController::getInstance();
+			 AddObjectWizardFormController ^control = AddObjectWizardFormController::getInstance();
 			 control->createForm();
 			 control->setDisplayWorld(displayObjectWorld);
 			 control->Show();

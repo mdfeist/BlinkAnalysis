@@ -28,7 +28,16 @@ namespace BlinkAnalysis {
 		AddObjectWizardForm(void)
 		{
 			InitializeComponent();
-			displayWorld = -1;
+			this->displayWorld = -1;
+			this->objType = OBJ_INVALID;
+			this->control = ControlType::INVALID;
+			this->defaultDataText = L"No data found";
+			this->inputDirty = false;
+
+			pos = new osg::Vec3();
+			pos0 = new osg::Vec3();
+			pos1 = new osg::Vec3();
+			pos2 = new osg::Vec3();
 		}
 		
 		void selectWorld(int id) {
@@ -165,6 +174,26 @@ private: System::Windows::Forms::Label^  boxDimLabel;
 
 private: System::Windows::Forms::Label^  boxMIDLabel;
 private: System::Windows::Forms::TextBox^  boxMCenText;
+private: System::Windows::Forms::Label^  cylinDimLabel;
+private: System::Windows::Forms::Label^  cylinMIDLabel;
+private: System::Windows::Forms::TextBox^  cylinMCenText;
+private: System::Windows::Forms::TextBox^  cylinCenZText;
+private: System::Windows::Forms::TextBox^  cylinCenYText;
+private: System::Windows::Forms::TextBox^  cylinCenXText;
+private: System::Windows::Forms::Label^  cylinZLabel;
+private: System::Windows::Forms::Label^  cylinYLabel;
+private: System::Windows::Forms::Label^  cylinXLabel;
+private: System::Windows::Forms::TextBox^  cylinHText;
+private: System::Windows::Forms::TextBox^  cylinRText;
+private: System::Windows::Forms::Label^  cylinHLabel;
+private: System::Windows::Forms::Label^  cylinRLabel;
+private: System::Windows::Forms::Label^  cylinCentreLabel;
+private: System::Windows::Forms::Button^  cylinDataGetButton;
+private: System::Windows::Forms::Label^  cylinInfoLabel;
+private: System::Windows::Forms::Label^  infoTitleLabel;
+private: System::Windows::Forms::Label^  infoLabel;
+private: System::Windows::Forms::Label^  paramInfoLabel;
+
 
 
 
@@ -189,10 +218,47 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(AddObjectWizardForm::typeid));
 			this->cancelButton = (gcnew System::Windows::Forms::Button());
 			this->nextButton = (gcnew System::Windows::Forms::Button());
 			this->backButton = (gcnew System::Windows::Forms::Button());
 			this->inputPage = (gcnew System::Windows::Forms::TabPage());
+			this->inputCylinderPanel1 = (gcnew System::Windows::Forms::Panel());
+			this->cylinDimLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinMIDLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinMCenText = (gcnew System::Windows::Forms::TextBox());
+			this->cylinCenZText = (gcnew System::Windows::Forms::TextBox());
+			this->cylinCenYText = (gcnew System::Windows::Forms::TextBox());
+			this->cylinCenXText = (gcnew System::Windows::Forms::TextBox());
+			this->cylinZLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinYLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinXLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinHText = (gcnew System::Windows::Forms::TextBox());
+			this->cylinRText = (gcnew System::Windows::Forms::TextBox());
+			this->cylinHLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinRLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinCentreLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinDataGetButton = (gcnew System::Windows::Forms::Button());
+			this->cylinInfoLabel = (gcnew System::Windows::Forms::Label());
+			this->inputBoxPanel1 = (gcnew System::Windows::Forms::Panel());
+			this->boxDimLabel = (gcnew System::Windows::Forms::Label());
+			this->boxMIDLabel = (gcnew System::Windows::Forms::Label());
+			this->boxMCenText = (gcnew System::Windows::Forms::TextBox());
+			this->boxCenZText = (gcnew System::Windows::Forms::TextBox());
+			this->boxCenYText = (gcnew System::Windows::Forms::TextBox());
+			this->boxCenXText = (gcnew System::Windows::Forms::TextBox());
+			this->boxZLabel = (gcnew System::Windows::Forms::Label());
+			this->boxYLabel = (gcnew System::Windows::Forms::Label());
+			this->boxXLabel = (gcnew System::Windows::Forms::Label());
+			this->boxInfoLabel = (gcnew System::Windows::Forms::Label());
+			this->boxHTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxWTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxLTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->boxHLabel = (gcnew System::Windows::Forms::Label());
+			this->boxWLabel = (gcnew System::Windows::Forms::Label());
+			this->boxLLabel = (gcnew System::Windows::Forms::Label());
+			this->boxCentreLabel = (gcnew System::Windows::Forms::Label());
+			this->boxDataGetButton = (gcnew System::Windows::Forms::Button());
 			this->inputPlanePanel = (gcnew System::Windows::Forms::Panel());
 			this->planeMIDLabel = (gcnew System::Windows::Forms::Label());
 			this->planeMPt2Text = (gcnew System::Windows::Forms::TextBox());
@@ -219,25 +285,6 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			this->planeCornerLabel = (gcnew System::Windows::Forms::Label());
 			this->planePt1Label = (gcnew System::Windows::Forms::Label());
 			this->planeDataGetButton = (gcnew System::Windows::Forms::Button());
-			this->inputBoxPanel1 = (gcnew System::Windows::Forms::Panel());
-			this->boxDimLabel = (gcnew System::Windows::Forms::Label());
-			this->boxMIDLabel = (gcnew System::Windows::Forms::Label());
-			this->boxMCenText = (gcnew System::Windows::Forms::TextBox());
-			this->boxCenZText = (gcnew System::Windows::Forms::TextBox());
-			this->boxCenYText = (gcnew System::Windows::Forms::TextBox());
-			this->boxCenXText = (gcnew System::Windows::Forms::TextBox());
-			this->boxZLabel = (gcnew System::Windows::Forms::Label());
-			this->boxYLabel = (gcnew System::Windows::Forms::Label());
-			this->boxXLabel = (gcnew System::Windows::Forms::Label());
-			this->boxInfoLabel = (gcnew System::Windows::Forms::Label());
-			this->boxHTextBox = (gcnew System::Windows::Forms::TextBox());
-			this->boxWTextBox = (gcnew System::Windows::Forms::TextBox());
-			this->boxLTextBox = (gcnew System::Windows::Forms::TextBox());
-			this->boxHLabel = (gcnew System::Windows::Forms::Label());
-			this->boxWLabel = (gcnew System::Windows::Forms::Label());
-			this->boxLLabel = (gcnew System::Windows::Forms::Label());
-			this->boxCentreLabel = (gcnew System::Windows::Forms::Label());
-			this->boxDataGetButton = (gcnew System::Windows::Forms::Button());
 			this->paramPage = (gcnew System::Windows::Forms::TabPage());
 			this->controlLabel = (gcnew System::Windows::Forms::Label());
 			this->typeLabel = (gcnew System::Windows::Forms::Label());
@@ -250,11 +297,15 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->introPage = (gcnew System::Windows::Forms::TabPage());
 			this->wizardPagesTemp = (gcnew System::Windows::Forms::TabControl());
-			this->inputCylinderPanel1 = (gcnew System::Windows::Forms::Panel());
+			this->infoTitleLabel = (gcnew System::Windows::Forms::Label());
+			this->infoLabel = (gcnew System::Windows::Forms::Label());
+			this->paramInfoLabel = (gcnew System::Windows::Forms::Label());
 			this->inputPage->SuspendLayout();
-			this->inputPlanePanel->SuspendLayout();
+			this->inputCylinderPanel1->SuspendLayout();
 			this->inputBoxPanel1->SuspendLayout();
+			this->inputPlanePanel->SuspendLayout();
 			this->paramPage->SuspendLayout();
+			this->introPage->SuspendLayout();
 			this->wizardPagesTemp->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -297,6 +348,8 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			// 
 			// inputPage
 			// 
+			this->inputPage->Controls->Add(this->inputCylinderPanel1);
+			this->inputPage->Controls->Add(this->inputBoxPanel1);
 			this->inputPage->Controls->Add(this->inputPlanePanel);
 			this->inputPage->Location = System::Drawing::Point(4, 22);
 			this->inputPage->Name = L"inputPage";
@@ -306,9 +359,388 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			this->inputPage->Text = L"Input";
 			this->inputPage->UseVisualStyleBackColor = true;
 			// 
+			// inputCylinderPanel1
+			// 
+			this->inputCylinderPanel1->Controls->Add(this->cylinDimLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinMIDLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinMCenText);
+			this->inputCylinderPanel1->Controls->Add(this->cylinCenZText);
+			this->inputCylinderPanel1->Controls->Add(this->cylinCenYText);
+			this->inputCylinderPanel1->Controls->Add(this->cylinCenXText);
+			this->inputCylinderPanel1->Controls->Add(this->cylinZLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinYLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinXLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinHText);
+			this->inputCylinderPanel1->Controls->Add(this->cylinRText);
+			this->inputCylinderPanel1->Controls->Add(this->cylinHLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinRLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinCentreLabel);
+			this->inputCylinderPanel1->Controls->Add(this->cylinDataGetButton);
+			this->inputCylinderPanel1->Controls->Add(this->cylinInfoLabel);
+			this->inputCylinderPanel1->Location = System::Drawing::Point(0, 0);
+			this->inputCylinderPanel1->Name = L"inputCylinderPanel1";
+			this->inputCylinderPanel1->Size = System::Drawing::Size(510, 219);
+			this->inputCylinderPanel1->TabIndex = 2;
+			this->inputCylinderPanel1->Visible = false;
+			// 
+			// cylinDimLabel
+			// 
+			this->cylinDimLabel->AutoSize = true;
+			this->cylinDimLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinDimLabel->Location = System::Drawing::Point(25, 160);
+			this->cylinDimLabel->Name = L"cylinDimLabel";
+			this->cylinDimLabel->Size = System::Drawing::Size(73, 15);
+			this->cylinDimLabel->TabIndex = 92;
+			this->cylinDimLabel->Text = L"Dimensions";
+			// 
+			// cylinMIDLabel
+			// 
+			this->cylinMIDLabel->AutoSize = true;
+			this->cylinMIDLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinMIDLabel->Location = System::Drawing::Point(39, 108);
+			this->cylinMIDLabel->Name = L"cylinMIDLabel";
+			this->cylinMIDLabel->Size = System::Drawing::Size(70, 15);
+			this->cylinMIDLabel->TabIndex = 91;
+			this->cylinMIDLabel->Text = L"Marker ID";
+			// 
+			// cylinMCenText
+			// 
+			this->cylinMCenText->Location = System::Drawing::Point(42, 126);
+			this->cylinMCenText->Name = L"cylinMCenText";
+			this->cylinMCenText->Size = System::Drawing::Size(76, 20);
+			this->cylinMCenText->TabIndex = 87;
+			// 
+			// cylinCenZText
+			// 
+			this->cylinCenZText->Location = System::Drawing::Point(321, 84);
+			this->cylinCenZText->Name = L"cylinCenZText";
+			this->cylinCenZText->Size = System::Drawing::Size(83, 20);
+			this->cylinCenZText->TabIndex = 83;
+			this->cylinCenZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::cylinText_Validating);
+			// 
+			// cylinCenYText
+			// 
+			this->cylinCenYText->Location = System::Drawing::Point(232, 84);
+			this->cylinCenYText->Name = L"cylinCenYText";
+			this->cylinCenYText->Size = System::Drawing::Size(83, 20);
+			this->cylinCenYText->TabIndex = 82;
+			this->cylinCenYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::cylinText_Validating);
+			// 
+			// cylinCenXText
+			// 
+			this->cylinCenXText->Location = System::Drawing::Point(143, 84);
+			this->cylinCenXText->Name = L"cylinCenXText";
+			this->cylinCenXText->Size = System::Drawing::Size(83, 20);
+			this->cylinCenXText->TabIndex = 81;
+			this->cylinCenXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::cylinText_Validating);
+			// 
+			// cylinZLabel
+			// 
+			this->cylinZLabel->AutoSize = true;
+			this->cylinZLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinZLabel->Location = System::Drawing::Point(356, 66);
+			this->cylinZLabel->Name = L"cylinZLabel";
+			this->cylinZLabel->Size = System::Drawing::Size(15, 15);
+			this->cylinZLabel->TabIndex = 86;
+			this->cylinZLabel->Text = L"Z";
+			// 
+			// cylinYLabel
+			// 
+			this->cylinYLabel->AutoSize = true;
+			this->cylinYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinYLabel->Location = System::Drawing::Point(264, 66);
+			this->cylinYLabel->Name = L"cylinYLabel";
+			this->cylinYLabel->Size = System::Drawing::Size(15, 15);
+			this->cylinYLabel->TabIndex = 85;
+			this->cylinYLabel->Text = L"Y";
+			// 
+			// cylinXLabel
+			// 
+			this->cylinXLabel->AutoSize = true;
+			this->cylinXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinXLabel->Location = System::Drawing::Point(176, 66);
+			this->cylinXLabel->Name = L"cylinXLabel";
+			this->cylinXLabel->Size = System::Drawing::Size(16, 15);
+			this->cylinXLabel->TabIndex = 84;
+			this->cylinXLabel->Text = L"X";
+			// 
+			// cylinHText
+			// 
+			this->cylinHText->Location = System::Drawing::Point(321, 178);
+			this->cylinHText->Name = L"cylinHText";
+			this->cylinHText->Size = System::Drawing::Size(83, 20);
+			this->cylinHText->TabIndex = 89;
+			this->cylinHText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::cylinText_Validating);
+			// 
+			// cylinRText
+			// 
+			this->cylinRText->Location = System::Drawing::Point(143, 178);
+			this->cylinRText->Name = L"cylinRText";
+			this->cylinRText->Size = System::Drawing::Size(83, 20);
+			this->cylinRText->TabIndex = 88;
+			this->cylinRText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::cylinText_Validating);
+			// 
+			// cylinHLabel
+			// 
+			this->cylinHLabel->AutoSize = true;
+			this->cylinHLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinHLabel->Location = System::Drawing::Point(318, 160);
+			this->cylinHLabel->Name = L"cylinHLabel";
+			this->cylinHLabel->Size = System::Drawing::Size(71, 15);
+			this->cylinHLabel->TabIndex = 80;
+			this->cylinHLabel->Text = L"Height (Z)";
+			// 
+			// cylinRLabel
+			// 
+			this->cylinRLabel->AutoSize = true;
+			this->cylinRLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinRLabel->Location = System::Drawing::Point(140, 160);
+			this->cylinRLabel->Name = L"cylinRLabel";
+			this->cylinRLabel->Size = System::Drawing::Size(91, 15);
+			this->cylinRLabel->TabIndex = 78;
+			this->cylinRLabel->Text = L"Radius (X, Y)";
+			// 
+			// cylinCentreLabel
+			// 
+			this->cylinCentreLabel->AutoSize = true;
+			this->cylinCentreLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinCentreLabel->Location = System::Drawing::Point(25, 52);
+			this->cylinCentreLabel->Name = L"cylinCentreLabel";
+			this->cylinCentreLabel->Size = System::Drawing::Size(74, 15);
+			this->cylinCentreLabel->TabIndex = 77;
+			this->cylinCentreLabel->Text = L"Base Centre";
+			// 
+			// cylinDataGetButton
+			// 
+			this->cylinDataGetButton->Location = System::Drawing::Point(42, 82);
+			this->cylinDataGetButton->Name = L"cylinDataGetButton";
+			this->cylinDataGetButton->Size = System::Drawing::Size(75, 23);
+			this->cylinDataGetButton->TabIndex = 76;
+			this->cylinDataGetButton->Text = L"Get Data";
+			this->cylinDataGetButton->UseVisualStyleBackColor = true;
+			this->cylinDataGetButton->Click += gcnew System::EventHandler(this, &AddObjectWizardForm::cylinDataGetButton_Click);
+			// 
+			// cylinInfoLabel
+			// 
+			this->cylinInfoLabel->AutoSize = true;
+			this->cylinInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinInfoLabel->Location = System::Drawing::Point(18, 19);
+			this->cylinInfoLabel->Name = L"cylinInfoLabel";
+			this->cylinInfoLabel->Size = System::Drawing::Size(149, 15);
+			this->cylinInfoLabel->TabIndex = 55;
+			this->cylinInfoLabel->Text = L"Add a cylinder to the world";
+			// 
+			// inputBoxPanel1
+			// 
+			this->inputBoxPanel1->Controls->Add(this->boxDimLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxMIDLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxMCenText);
+			this->inputBoxPanel1->Controls->Add(this->boxCenZText);
+			this->inputBoxPanel1->Controls->Add(this->boxCenYText);
+			this->inputBoxPanel1->Controls->Add(this->boxCenXText);
+			this->inputBoxPanel1->Controls->Add(this->boxZLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxYLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxXLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxInfoLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxHTextBox);
+			this->inputBoxPanel1->Controls->Add(this->boxWTextBox);
+			this->inputBoxPanel1->Controls->Add(this->boxLTextBox);
+			this->inputBoxPanel1->Controls->Add(this->boxHLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxWLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxLLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxCentreLabel);
+			this->inputBoxPanel1->Controls->Add(this->boxDataGetButton);
+			this->inputBoxPanel1->Location = System::Drawing::Point(0, 0);
+			this->inputBoxPanel1->Name = L"inputBoxPanel1";
+			this->inputBoxPanel1->Size = System::Drawing::Size(511, 219);
+			this->inputBoxPanel1->TabIndex = 1;
+			// 
+			// boxDimLabel
+			// 
+			this->boxDimLabel->AutoSize = true;
+			this->boxDimLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxDimLabel->Location = System::Drawing::Point(25, 160);
+			this->boxDimLabel->Name = L"boxDimLabel";
+			this->boxDimLabel->Size = System::Drawing::Size(73, 15);
+			this->boxDimLabel->TabIndex = 75;
+			this->boxDimLabel->Text = L"Dimensions";
+			// 
+			// boxMIDLabel
+			// 
+			this->boxMIDLabel->AutoSize = true;
+			this->boxMIDLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxMIDLabel->Location = System::Drawing::Point(39, 108);
+			this->boxMIDLabel->Name = L"boxMIDLabel";
+			this->boxMIDLabel->Size = System::Drawing::Size(70, 15);
+			this->boxMIDLabel->TabIndex = 74;
+			this->boxMIDLabel->Text = L"Marker ID";
+			// 
+			// boxMCenText
+			// 
+			this->boxMCenText->Location = System::Drawing::Point(42, 126);
+			this->boxMCenText->Name = L"boxMCenText";
+			this->boxMCenText->Size = System::Drawing::Size(76, 20);
+			this->boxMCenText->TabIndex = 73;
+			// 
+			// boxCenZText
+			// 
+			this->boxCenZText->Location = System::Drawing::Point(321, 84);
+			this->boxCenZText->Name = L"boxCenZText";
+			this->boxCenZText->Size = System::Drawing::Size(83, 20);
+			this->boxCenZText->TabIndex = 65;
+			this->boxCenZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
+			// 
+			// boxCenYText
+			// 
+			this->boxCenYText->Location = System::Drawing::Point(232, 84);
+			this->boxCenYText->Name = L"boxCenYText";
+			this->boxCenYText->Size = System::Drawing::Size(83, 20);
+			this->boxCenYText->TabIndex = 64;
+			this->boxCenYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
+			// 
+			// boxCenXText
+			// 
+			this->boxCenXText->Location = System::Drawing::Point(143, 84);
+			this->boxCenXText->Name = L"boxCenXText";
+			this->boxCenXText->Size = System::Drawing::Size(83, 20);
+			this->boxCenXText->TabIndex = 63;
+			this->boxCenXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
+			// 
+			// boxZLabel
+			// 
+			this->boxZLabel->AutoSize = true;
+			this->boxZLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxZLabel->Location = System::Drawing::Point(356, 66);
+			this->boxZLabel->Name = L"boxZLabel";
+			this->boxZLabel->Size = System::Drawing::Size(15, 15);
+			this->boxZLabel->TabIndex = 69;
+			this->boxZLabel->Text = L"Z";
+			// 
+			// boxYLabel
+			// 
+			this->boxYLabel->AutoSize = true;
+			this->boxYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxYLabel->Location = System::Drawing::Point(264, 66);
+			this->boxYLabel->Name = L"boxYLabel";
+			this->boxYLabel->Size = System::Drawing::Size(15, 15);
+			this->boxYLabel->TabIndex = 68;
+			this->boxYLabel->Text = L"Y";
+			// 
+			// boxXLabel
+			// 
+			this->boxXLabel->AutoSize = true;
+			this->boxXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxXLabel->Location = System::Drawing::Point(176, 66);
+			this->boxXLabel->Name = L"boxXLabel";
+			this->boxXLabel->Size = System::Drawing::Size(16, 15);
+			this->boxXLabel->TabIndex = 67;
+			this->boxXLabel->Text = L"X";
+			// 
+			// boxInfoLabel
+			// 
+			this->boxInfoLabel->AutoSize = true;
+			this->boxInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxInfoLabel->Location = System::Drawing::Point(25, 22);
+			this->boxInfoLabel->Name = L"boxInfoLabel";
+			this->boxInfoLabel->Size = System::Drawing::Size(127, 15);
+			this->boxInfoLabel->TabIndex = 66;
+			this->boxInfoLabel->Text = L"Add a box to the world";
+			// 
+			// boxHTextBox
+			// 
+			this->boxHTextBox->Location = System::Drawing::Point(321, 178);
+			this->boxHTextBox->Name = L"boxHTextBox";
+			this->boxHTextBox->Size = System::Drawing::Size(83, 20);
+			this->boxHTextBox->TabIndex = 72;
+			this->boxHTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
+			// 
+			// boxWTextBox
+			// 
+			this->boxWTextBox->Location = System::Drawing::Point(232, 178);
+			this->boxWTextBox->Name = L"boxWTextBox";
+			this->boxWTextBox->Size = System::Drawing::Size(83, 20);
+			this->boxWTextBox->TabIndex = 71;
+			this->boxWTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
+			// 
+			// boxLTextBox
+			// 
+			this->boxLTextBox->Location = System::Drawing::Point(143, 178);
+			this->boxLTextBox->Name = L"boxLTextBox";
+			this->boxLTextBox->Size = System::Drawing::Size(83, 20);
+			this->boxLTextBox->TabIndex = 70;
+			this->boxLTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
+			// 
+			// boxHLabel
+			// 
+			this->boxHLabel->AutoSize = true;
+			this->boxHLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxHLabel->Location = System::Drawing::Point(318, 160);
+			this->boxHLabel->Name = L"boxHLabel";
+			this->boxHLabel->Size = System::Drawing::Size(71, 15);
+			this->boxHLabel->TabIndex = 62;
+			this->boxHLabel->Text = L"Height (Z)";
+			// 
+			// boxWLabel
+			// 
+			this->boxWLabel->AutoSize = true;
+			this->boxWLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxWLabel->Location = System::Drawing::Point(229, 160);
+			this->boxWLabel->Name = L"boxWLabel";
+			this->boxWLabel->Size = System::Drawing::Size(65, 15);
+			this->boxWLabel->TabIndex = 61;
+			this->boxWLabel->Text = L"Width (Y)";
+			// 
+			// boxLLabel
+			// 
+			this->boxLLabel->AutoSize = true;
+			this->boxLLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxLLabel->Location = System::Drawing::Point(140, 160);
+			this->boxLLabel->Name = L"boxLLabel";
+			this->boxLLabel->Size = System::Drawing::Size(74, 15);
+			this->boxLLabel->TabIndex = 60;
+			this->boxLLabel->Text = L"Length (X)";
+			// 
+			// boxCentreLabel
+			// 
+			this->boxCentreLabel->AutoSize = true;
+			this->boxCentreLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->boxCentreLabel->Location = System::Drawing::Point(25, 52);
+			this->boxCentreLabel->Name = L"boxCentreLabel";
+			this->boxCentreLabel->Size = System::Drawing::Size(74, 15);
+			this->boxCentreLabel->TabIndex = 58;
+			this->boxCentreLabel->Text = L"Base Centre";
+			// 
+			// boxDataGetButton
+			// 
+			this->boxDataGetButton->Location = System::Drawing::Point(42, 82);
+			this->boxDataGetButton->Name = L"boxDataGetButton";
+			this->boxDataGetButton->Size = System::Drawing::Size(75, 23);
+			this->boxDataGetButton->TabIndex = 57;
+			this->boxDataGetButton->Text = L"Get Data";
+			this->boxDataGetButton->UseVisualStyleBackColor = true;
+			this->boxDataGetButton->Click += gcnew System::EventHandler(this, &AddObjectWizardForm::boxDataGetButton_Click);
+			// 
 			// inputPlanePanel
 			// 
-			this->inputPlanePanel->Controls->Add(this->inputBoxPanel1);
 			this->inputPlanePanel->Controls->Add(this->planeMIDLabel);
 			this->inputPlanePanel->Controls->Add(this->planeMPt2Text);
 			this->inputPlanePanel->Controls->Add(this->planeMCornText);
@@ -575,208 +1007,9 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			this->planeDataGetButton->UseVisualStyleBackColor = true;
 			this->planeDataGetButton->Click += gcnew System::EventHandler(this, &AddObjectWizardForm::planeDataGetButton_Click);
 			// 
-			// inputBoxPanel1
-			// 
-			this->inputBoxPanel1->Controls->Add(this->boxDimLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxMIDLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxMCenText);
-			this->inputBoxPanel1->Controls->Add(this->boxCenZText);
-			this->inputBoxPanel1->Controls->Add(this->boxCenYText);
-			this->inputBoxPanel1->Controls->Add(this->boxCenXText);
-			this->inputBoxPanel1->Controls->Add(this->boxZLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxYLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxXLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxInfoLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxHTextBox);
-			this->inputBoxPanel1->Controls->Add(this->boxWTextBox);
-			this->inputBoxPanel1->Controls->Add(this->boxLTextBox);
-			this->inputBoxPanel1->Controls->Add(this->boxHLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxWLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxLLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxCentreLabel);
-			this->inputBoxPanel1->Controls->Add(this->boxDataGetButton);
-			this->inputBoxPanel1->Location = System::Drawing::Point(0, 0);
-			this->inputBoxPanel1->Name = L"inputBoxPanel1";
-			this->inputBoxPanel1->Size = System::Drawing::Size(511, 219);
-			this->inputBoxPanel1->TabIndex = 1;
-			// 
-			// boxDimLabel
-			// 
-			this->boxDimLabel->AutoSize = true;
-			this->boxDimLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxDimLabel->Location = System::Drawing::Point(25, 160);
-			this->boxDimLabel->Name = L"boxDimLabel";
-			this->boxDimLabel->Size = System::Drawing::Size(73, 15);
-			this->boxDimLabel->TabIndex = 75;
-			this->boxDimLabel->Text = L"Dimensions";
-			// 
-			// boxMIDLabel
-			// 
-			this->boxMIDLabel->AutoSize = true;
-			this->boxMIDLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxMIDLabel->Location = System::Drawing::Point(39, 108);
-			this->boxMIDLabel->Name = L"boxMIDLabel";
-			this->boxMIDLabel->Size = System::Drawing::Size(70, 15);
-			this->boxMIDLabel->TabIndex = 74;
-			this->boxMIDLabel->Text = L"Marker ID";
-			// 
-			// boxMCenText
-			// 
-			this->boxMCenText->Location = System::Drawing::Point(42, 126);
-			this->boxMCenText->Name = L"boxMCenText";
-			this->boxMCenText->Size = System::Drawing::Size(76, 20);
-			this->boxMCenText->TabIndex = 73;
-			// 
-			// boxCenZText
-			// 
-			this->boxCenZText->Location = System::Drawing::Point(321, 84);
-			this->boxCenZText->Name = L"boxCenZText";
-			this->boxCenZText->Size = System::Drawing::Size(83, 20);
-			this->boxCenZText->TabIndex = 72;
-			this->boxCenZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
-			// 
-			// boxCenYText
-			// 
-			this->boxCenYText->Location = System::Drawing::Point(232, 84);
-			this->boxCenYText->Name = L"boxCenYText";
-			this->boxCenYText->Size = System::Drawing::Size(83, 20);
-			this->boxCenYText->TabIndex = 71;
-			this->boxCenYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
-			// 
-			// boxCenXText
-			// 
-			this->boxCenXText->Location = System::Drawing::Point(143, 84);
-			this->boxCenXText->Name = L"boxCenXText";
-			this->boxCenXText->Size = System::Drawing::Size(83, 20);
-			this->boxCenXText->TabIndex = 70;
-			this->boxCenXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
-			// 
-			// boxZLabel
-			// 
-			this->boxZLabel->AutoSize = true;
-			this->boxZLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxZLabel->Location = System::Drawing::Point(356, 66);
-			this->boxZLabel->Name = L"boxZLabel";
-			this->boxZLabel->Size = System::Drawing::Size(15, 15);
-			this->boxZLabel->TabIndex = 69;
-			this->boxZLabel->Text = L"Z";
-			// 
-			// boxYLabel
-			// 
-			this->boxYLabel->AutoSize = true;
-			this->boxYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxYLabel->Location = System::Drawing::Point(264, 66);
-			this->boxYLabel->Name = L"boxYLabel";
-			this->boxYLabel->Size = System::Drawing::Size(15, 15);
-			this->boxYLabel->TabIndex = 68;
-			this->boxYLabel->Text = L"Y";
-			// 
-			// boxXLabel
-			// 
-			this->boxXLabel->AutoSize = true;
-			this->boxXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxXLabel->Location = System::Drawing::Point(176, 66);
-			this->boxXLabel->Name = L"boxXLabel";
-			this->boxXLabel->Size = System::Drawing::Size(16, 15);
-			this->boxXLabel->TabIndex = 67;
-			this->boxXLabel->Text = L"X";
-			// 
-			// boxInfoLabel
-			// 
-			this->boxInfoLabel->AutoSize = true;
-			this->boxInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxInfoLabel->Location = System::Drawing::Point(25, 22);
-			this->boxInfoLabel->Name = L"boxInfoLabel";
-			this->boxInfoLabel->Size = System::Drawing::Size(127, 15);
-			this->boxInfoLabel->TabIndex = 66;
-			this->boxInfoLabel->Text = L"Add a box to the world";
-			// 
-			// boxHTextBox
-			// 
-			this->boxHTextBox->Location = System::Drawing::Point(321, 178);
-			this->boxHTextBox->Name = L"boxHTextBox";
-			this->boxHTextBox->Size = System::Drawing::Size(83, 20);
-			this->boxHTextBox->TabIndex = 65;
-			this->boxHTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
-			// 
-			// boxWTextBox
-			// 
-			this->boxWTextBox->Location = System::Drawing::Point(232, 178);
-			this->boxWTextBox->Name = L"boxWTextBox";
-			this->boxWTextBox->Size = System::Drawing::Size(83, 20);
-			this->boxWTextBox->TabIndex = 64;
-			this->boxWTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
-			// 
-			// boxLTextBox
-			// 
-			this->boxLTextBox->Location = System::Drawing::Point(143, 178);
-			this->boxLTextBox->Name = L"boxLTextBox";
-			this->boxLTextBox->Size = System::Drawing::Size(83, 20);
-			this->boxLTextBox->TabIndex = 63;
-			this->boxLTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::boxText_Validating);
-			// 
-			// boxHLabel
-			// 
-			this->boxHLabel->AutoSize = true;
-			this->boxHLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxHLabel->Location = System::Drawing::Point(318, 160);
-			this->boxHLabel->Name = L"boxHLabel";
-			this->boxHLabel->Size = System::Drawing::Size(71, 15);
-			this->boxHLabel->TabIndex = 62;
-			this->boxHLabel->Text = L"Height (Z)";
-			// 
-			// boxWLabel
-			// 
-			this->boxWLabel->AutoSize = true;
-			this->boxWLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxWLabel->Location = System::Drawing::Point(229, 160);
-			this->boxWLabel->Name = L"boxWLabel";
-			this->boxWLabel->Size = System::Drawing::Size(65, 15);
-			this->boxWLabel->TabIndex = 61;
-			this->boxWLabel->Text = L"Width (Y)";
-			// 
-			// boxLLabel
-			// 
-			this->boxLLabel->AutoSize = true;
-			this->boxLLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxLLabel->Location = System::Drawing::Point(140, 160);
-			this->boxLLabel->Name = L"boxLLabel";
-			this->boxLLabel->Size = System::Drawing::Size(74, 15);
-			this->boxLLabel->TabIndex = 60;
-			this->boxLLabel->Text = L"Length (X)";
-			// 
-			// boxCentreLabel
-			// 
-			this->boxCentreLabel->AutoSize = true;
-			this->boxCentreLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->boxCentreLabel->Location = System::Drawing::Point(25, 52);
-			this->boxCentreLabel->Name = L"boxCentreLabel";
-			this->boxCentreLabel->Size = System::Drawing::Size(74, 15);
-			this->boxCentreLabel->TabIndex = 58;
-			this->boxCentreLabel->Text = L"Base Centre";
-			// 
-			// boxDataGetButton
-			// 
-			this->boxDataGetButton->Location = System::Drawing::Point(42, 82);
-			this->boxDataGetButton->Name = L"boxDataGetButton";
-			this->boxDataGetButton->Size = System::Drawing::Size(75, 23);
-			this->boxDataGetButton->TabIndex = 57;
-			this->boxDataGetButton->Text = L"Get Data";
-			this->boxDataGetButton->UseVisualStyleBackColor = true;
-			this->boxDataGetButton->Click += gcnew System::EventHandler(this, &AddObjectWizardForm::boxDataGetButton_Click);
-			// 
 			// paramPage
 			// 
+			this->paramPage->Controls->Add(this->paramInfoLabel);
 			this->paramPage->Controls->Add(this->controlLabel);
 			this->paramPage->Controls->Add(this->typeLabel);
 			this->paramPage->Controls->Add(this->worldLabel);
@@ -896,6 +1129,8 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			// 
 			// introPage
 			// 
+			this->introPage->Controls->Add(this->infoTitleLabel);
+			this->introPage->Controls->Add(this->infoLabel);
 			this->introPage->Location = System::Drawing::Point(4, 22);
 			this->introPage->Name = L"introPage";
 			this->introPage->Padding = System::Windows::Forms::Padding(3);
@@ -915,41 +1150,69 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			this->wizardPagesTemp->Size = System::Drawing::Size(519, 245);
 			this->wizardPagesTemp->TabIndex = 0;
 			// 
-			// inputCylinderPanel1
+			// infoTitleLabel
 			// 
-			this->inputCylinderPanel1->Location = System::Drawing::Point(545, 22);
-			this->inputCylinderPanel1->Name = L"inputCylinderPanel1";
-			this->inputCylinderPanel1->Size = System::Drawing::Size(510, 219);
-			this->inputCylinderPanel1->TabIndex = 2;
-			this->inputCylinderPanel1->Visible = false;
+			this->infoTitleLabel->AutoSize = true;
+			this->infoTitleLabel->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->infoTitleLabel->Location = System::Drawing::Point(8, 3);
+			this->infoTitleLabel->Name = L"infoTitleLabel";
+			this->infoTitleLabel->Size = System::Drawing::Size(199, 30);
+			this->infoTitleLabel->TabIndex = 4;
+			this->infoTitleLabel->Text = L"Add Object Wizard";
+			// 
+			// infoLabel
+			// 
+			this->infoLabel->AutoSize = true;
+			this->infoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->infoLabel->Location = System::Drawing::Point(8, 52);
+			this->infoLabel->Name = L"infoLabel";
+			this->infoLabel->Size = System::Drawing::Size(358, 135);
+			this->infoLabel->TabIndex = 3;
+			this->infoLabel->Text = resources->GetString(L"infoLabel.Text");
+			// 
+			// paramInfoLabel
+			// 
+			this->paramInfoLabel->AutoSize = true;
+			this->paramInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->paramInfoLabel->Location = System::Drawing::Point(12, 14);
+			this->paramInfoLabel->Name = L"paramInfoLabel";
+			this->paramInfoLabel->Size = System::Drawing::Size(301, 15);
+			this->paramInfoLabel->TabIndex = 31;
+			this->paramInfoLabel->Text = L"Complete information for the object you wish to create.";
 			// 
 			// AddObjectWizardForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1074, 294);
-			this->Controls->Add(this->inputCylinderPanel1);
+			this->ClientSize = System::Drawing::Size(518, 286);
 			this->Controls->Add(this->cancelButton);
 			this->Controls->Add(this->nextButton);
 			this->Controls->Add(this->backButton);
 			this->Controls->Add(this->wizardPagesTemp);
 			this->Name = L"AddObjectWizardForm";
 			this->Text = L"Add Object Wizard";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &AddObjectWizardForm::AddObjectWizardForm_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &AddObjectWizardForm::AddObjectWizardForm_Load);
 			this->inputPage->ResumeLayout(false);
-			this->inputPlanePanel->ResumeLayout(false);
-			this->inputPlanePanel->PerformLayout();
+			this->inputCylinderPanel1->ResumeLayout(false);
+			this->inputCylinderPanel1->PerformLayout();
 			this->inputBoxPanel1->ResumeLayout(false);
 			this->inputBoxPanel1->PerformLayout();
+			this->inputPlanePanel->ResumeLayout(false);
+			this->inputPlanePanel->PerformLayout();
 			this->paramPage->ResumeLayout(false);
 			this->paramPage->PerformLayout();
+			this->introPage->ResumeLayout(false);
+			this->introPage->PerformLayout();
 			this->wizardPagesTemp->ResumeLayout(false);
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: WizardPages^ wizardPages;
-	//private: int currentPage;
 	private: int displayWorld;
 	private: ObjectType objType;
 	private: ControlType control;
@@ -961,17 +1224,6 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 	private: osg::Vec3* pos2;
 
 	private: System::Void AddObjectWizardForm_Load(System::Object^  sender, System::EventArgs^  e) {
-			this->displayWorld = -1;
-			this->objType = OBJ_INVALID;
-			this->control = ControlType::INVALID;
-			this->defaultDataText = L"No data found";
-			this->inputDirty = false;
-
-			pos = new osg::Vec3();
-			pos0 = new osg::Vec3();
-			pos1 = new osg::Vec3();
-			pos2 = new osg::Vec3();
-			 
 			this->Controls->Remove(this->wizardPagesTemp);
 			this->wizardPages = gcnew WizardPages();
 			 // TODO: populate this with info from wizardPagesTemp
@@ -995,6 +1247,12 @@ private: System::Windows::Forms::TextBox^  boxMCenText;
 			 typePopulateList();
 			 controlPopulateList();
 		}
+private: System::Void AddObjectWizardForm_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+			 if (pos) delete pos;
+			 if (pos0) delete pos0;
+			 if (pos1) delete pos1;
+			 if (pos2) delete pos2;
+		 }
 
 /////////////////////
 // Util Functions
@@ -1200,8 +1458,24 @@ private: System::Void XYZTextBox(bool readonly, ObjectType type) {
 				 }
 				 break;
 
+			 // cylinder
+			 case OBJ_CYLINDER :
+				 // read only
+				 this->cylinCenXText->ReadOnly = readonly;
+				 this->cylinCenYText->ReadOnly = readonly;
+				 this->cylinCenZText->ReadOnly = readonly;
+
+				 // reset textbox info
+				 if (inputDirty)
+				 {
+					 this->cylinCenXText->Text = "";
+					 this->cylinCenYText->Text = "";
+					 this->cylinCenZText->Text = "";
+				 }
+				 break;
 			 }
 		 }
+		 // set visible/not visible for get data label
 private: System::Void getDataLabel(bool visible, ObjectType type) {
 			 switch (type)
 			 {
@@ -1219,6 +1493,7 @@ private: System::Void getDataLabel(bool visible, ObjectType type) {
 
 			 }
 		 }
+		 // set visible/not visible for get data button
 private: System::Void getDataButton(bool visible, ObjectType type) {
 			 switch (type)
 			 {
@@ -1230,9 +1505,13 @@ private: System::Void getDataButton(bool visible, ObjectType type) {
 			 case OBJ_BOX :
 				 this->boxDataGetButton->Visible = visible;
 				 break;
-
+			 // cylinder
+			 case OBJ_CYLINDER :
+				 this->cylinDataGetButton->Visible = visible;
+				 break;
 			 }
 		 }
+		 // set visible/not visible for text boxes to input marker IDs
 private: System::Void markerIDTextBox(bool visible, ObjectType type) {
 			 switch (type)
 			 {
@@ -1264,9 +1543,21 @@ private: System::Void markerIDTextBox(bool visible, ObjectType type) {
 					 this->boxMCenText->Text = "";
 				 }
 				 break;
+			 // cylinder
+			 case OBJ_CYLINDER :
+				 // visibility
+				 this->cylinMCenText->Visible = visible;
+				 this->cylinMIDLabel->Visible = visible;
 
+				 // reset textbox info
+				 if (inputDirty)
+				 {
+					 this->cylinMCenText->Text = "";
+				 }
+				 break;
 			 }
 		 }
+		 // set visible/not visible plane input panel
 private: System::Void planePanel(ControlType ct, bool visible) {
 			 if (!visible)
 			 {
@@ -1302,6 +1593,7 @@ private: System::Void planePanel(ControlType ct, bool visible) {
 
 			 inputDirty = false;
 		 }
+		 // set visible/not visible box input panel
 private: System::Void boxPanel(ControlType ct, bool visible) {
 			 if (!visible)
 			 {
@@ -1337,12 +1629,40 @@ private: System::Void boxPanel(ControlType ct, bool visible) {
 
 			 inputDirty = false;
 		 }
+		 // set visible/not visible cylinder input panel
 private: System::Void cylinderPanel(ControlType ct, bool visible) {
 			 if (!visible)
 			 {
 				 this->inputCylinderPanel1->Visible = false;
 				 return;
 			 }
+
+			 this->inputCylinderPanel1->Visible = true;
+			 if (ct == ControlType::MARKER)
+			 {
+				 XYZTextBox(true, OBJ_CYLINDER);
+				 getDataButton(true, OBJ_CYLINDER);
+				 markerIDTextBox(true, OBJ_CYLINDER);
+			 }
+			 else if (ct == ControlType::RIGID)
+			 {
+				 XYZTextBox(true, OBJ_CYLINDER);
+				 getDataButton(true, OBJ_CYLINDER);
+				 markerIDTextBox(false, OBJ_CYLINDER);
+			 }
+			 else if (ct == ControlType::INPUT)
+			 {
+				 XYZTextBox(false, OBJ_CYLINDER);
+				 getDataButton(false, OBJ_CYLINDER);
+				 markerIDTextBox(false, OBJ_CYLINDER);
+			 }
+			 if (inputDirty)
+			 {
+				 this->cylinRText->Text = "";
+				 this->cylinHText->Text = "";
+			 }
+
+			 inputDirty = false;
 		 }
 /////////////////////
 // Wizard Navigation
@@ -1395,6 +1715,13 @@ private: System::Void nextButton_Click(System::Object^  sender, System::EventArg
 			 // create object and close wizard
 			 if (this->wizardPages->SelectedIndex == this->wizardPages->TabCount - 1)
 			 {
+				 if (objType == OBJ_PLANE)
+					 createPlane();
+				 else if (objType == OBJ_BOX)
+					 createBox();
+				 else if (objType == OBJ_CYLINDER)
+					 createCylinder();
+
 				 this->Close();
 			 }
 			 else
@@ -1451,7 +1778,12 @@ private: bool validateBox() {
 					  isFloat(this->boxHTextBox->Text) );
 		 }
 private: bool validateCylinder() {
-			 return true;
+			 return ( isFloat(this->cylinCenXText->Text) &&
+					  isFloat(this->cylinCenYText->Text) &&
+					  isFloat(this->cylinCenZText->Text) &&
+
+					  isFloat(this->cylinRText->Text) &&
+					  isFloat(this->cylinHText->Text) );
 		 }
 
 private: System::Void planeText_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
@@ -1462,6 +1794,12 @@ private: System::Void planeText_Validating(System::Object^  sender, System::Comp
 		 }
 private: System::Void boxText_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
 			 if (validateBox())
+				 this->nextButton->Enabled = true;
+			 else
+				 this->nextButton->Enabled = false;
+		 }
+private: System::Void cylinText_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
+			 if (validateCylinder())
 				 this->nextButton->Enabled = true;
 			 else
 				 this->nextButton->Enabled = false;
@@ -1532,6 +1870,69 @@ private: System::Void populateTextFromPosition(int posVec, int posIdx) {
 					 this->boxCenZText->Text = "";
 				 }
 				 break;
+				 // cylinder
+			 case OBJ_CYLINDER :
+				 temp = posVec < 0 ? NULL : pos0;
+				 
+				 if (temp)
+				 {
+					 this->cylinCenXText->Text = temp->x().ToString();
+					 this->cylinCenYText->Text = temp->y().ToString();
+					 this->cylinCenZText->Text = temp->z().ToString();
+				 }
+				 else // reset to zero
+				 {
+					 this->cylinCenXText->Text = "";
+					 this->cylinCenYText->Text = "";
+					 this->cylinCenZText->Text = "";
+				 }
+				 break;
+			 }
+		 }
+		 // if input control type, extract coordinates from fields
+private: bool extractCoordinates() {
+			 float x, y, z;
+			 
+			 switch (objType) {
+				 // plane
+			 case OBJ_PLANE : 
+				 if (!Single::TryParse(this->planePt1XText->Text, x) || 
+					 !Single::TryParse(this->planePt1YText->Text, y) ||
+					 !Single::TryParse(this->planePt1ZText->Text, z))
+					 return false;
+				 pos1->set(x, y, z);
+
+				 if (!Single::TryParse(this->planeCornXText->Text, x) || 
+					 !Single::TryParse(this->planeCornYText->Text, y) ||
+					 !Single::TryParse(this->planeCornZText->Text, z))
+					 return false;
+				 pos0->set(x, y, z);
+
+				 if (!Single::TryParse(this->planePt2XText->Text, x) || 
+					 !Single::TryParse(this->planePt2YText->Text, y) ||
+					 !Single::TryParse(this->planePt2ZText->Text, z))
+					 return false;
+				 pos2->set(x, y, z);
+
+				 return true;
+				 // box
+			 case OBJ_BOX :
+				 if (!Single::TryParse(this->boxCenXText->Text, x) || 
+					 !Single::TryParse(this->boxCenYText->Text, y) ||
+					 !Single::TryParse(this->boxCenZText->Text, z))
+					 return false;
+				 pos0->set(x, y, z);
+				 return true;
+				 // cylinder
+			 case OBJ_CYLINDER :
+				 if (!Single::TryParse(this->cylinCenXText->Text, x) || 
+					 !Single::TryParse(this->cylinCenYText->Text, y) ||
+					 !Single::TryParse(this->cylinCenZText->Text, z))
+					 return false;
+				 pos0->set(x, y, z);
+				 return true;
+			 default :
+				 return false;
 			 }
 		 }
 /////////////////////
@@ -1681,5 +2082,101 @@ private: System::Void boxDataGetButton_Click(System::Object^  sender, System::Ev
 			else
 				this->nextButton->Enabled = false;
 	 }
+private: System::Void cylinDataGetButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			ClientHandler* client = AppData::getInstance()->getClient();
+			// use markers
+			if (control == ControlType::MARKER && client->lock())
+			{
+				Marker* marker;
+				bool result;
+				int id;
+
+				// base centre
+				result = Int32::TryParse(this->cylinMCenText->Text, id);
+				marker = client->getLabeledMarker(id);
+				if (!result || !marker)
+				{
+					populateTextFromPosition(-1, 0);
+				}
+				else
+				{
+					osg::Vec3 pt = marker->getPosition();
+					pos0->set(pt.x(), pt.y(), pt.z());
+					populateTextFromPosition(0, 0);
+				}
+				client->unlock();
+			}
+			// use rigid tool
+			else if (control == ControlType::RIGID && client)
+			{
+				RigidBody* body = client->getRigidBody(client->getRigidBodyTool());
+				if (body)
+				{
+					pos0->set(body->getPosition().x(), 
+							body->getPosition().y(), 
+							body->getPosition().z());
+					populateTextFromPosition(0, 0);
+				}
+			}
+
+			if (validateCylinder())
+				this->nextButton->Enabled = true;
+			else
+				this->nextButton->Enabled = false;
+		 }
+
+/////////////////////
+// object creation
+
+private: System::Void createPlane() {
+			 if (control == ControlType::INPUT && !extractCoordinates())
+				 return;
+
+			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+			 if (world)
+			 {
+				 std::string* str = managedToStdString(this->nameTextBox->Text);
+				 world->addPlane(*pos0, *pos1, *pos2, *str);
+			 }
+			 this->Close();
+		 }
+private: System::Void createBox() {
+			 if (control == ControlType::INPUT && !extractCoordinates())
+				 return;
+
+			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+			 if (world)
+			 {
+				 std::string* str = managedToStdString(this->nameTextBox->Text);
+				 float l, w, h;
+				 
+				 if (!Single::TryParse(this->boxLTextBox->Text, l) ||
+					 !Single::TryParse(this->boxWTextBox->Text, w) ||
+					 !Single::TryParse(this->boxHTextBox->Text, h))
+					 return;
+
+				 world->addBox(*pos0, osg::Vec3(l, w, h), *str);
+			 }
+			 this->Close();
+		 }
+private: System::Void createCylinder() {
+			 if (control == ControlType::INPUT && !extractCoordinates())
+				 return;
+
+			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+			 if (world)
+			 {
+				 std::string* str = managedToStdString(this->nameTextBox->Text);
+				 float r, h;
+				 
+				 if (!Single::TryParse(this->cylinRText->Text, r) ||
+					 !Single::TryParse(this->cylinHText->Text, h))
+					 return;
+
+				 world->addCylinder(*pos0, r, h, *str);
+			 }
+			 this->Close();
+		 }
+
 };
 }

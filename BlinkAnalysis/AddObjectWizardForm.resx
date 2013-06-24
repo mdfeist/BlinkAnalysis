@@ -117,4 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="infoLabel.Text" xml:space="preserve">
+    <value>Use this tool to add objects to worlds
+
+Controls
+   Labeled Markers:   Define points using labeled marker data.
+   Rigid Body Tool:   Define points using the Rigid Body Tool data.
+   Input Coordinates:   Define points using manually input data.
+
+
+Click on the "Next" button to proceed.</value>
+  </data>
 </root>

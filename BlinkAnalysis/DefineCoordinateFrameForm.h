@@ -92,8 +92,27 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Label^  inputXLabel;
 	private: System::Windows::Forms::Label^  inputOLabel;
 	private: System::Windows::Forms::Button^  inputSetButton;
-	private: System::Windows::Forms::TextBox^  inputXTextBox;
-	private: System::Windows::Forms::TextBox^  inputYTextBox;
+	private: System::Windows::Forms::TextBox^  inputYZText;
+
+	private: System::Windows::Forms::TextBox^  inputYYText;
+
+	private: System::Windows::Forms::TextBox^  inputYXText;
+
+	private: System::Windows::Forms::TextBox^  inputXZText;
+
+	private: System::Windows::Forms::TextBox^  inputXYText;
+
+	private: System::Windows::Forms::TextBox^  inputXXText;
+
+	private: System::Windows::Forms::TextBox^  inputOZText;
+
+	private: System::Windows::Forms::TextBox^  inputOYText;
+
+	private: System::Windows::Forms::TextBox^  inputOXText;
+
+	private: System::Windows::Forms::Label^  cylinZLabel;
+	private: System::Windows::Forms::Label^  cylinYLabel;
+	private: System::Windows::Forms::Label^  cylinXLabel;
 
 
 
@@ -104,7 +123,9 @@ namespace BlinkAnalysis {
 
 
 
-	private: System::Windows::Forms::TextBox^  inputOTextBox;
+
+
+
 
 
 
@@ -123,14 +144,23 @@ namespace BlinkAnalysis {
 		{
 			System::Windows::Forms::TabPage^  inputPage;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(DefineCoordinateFrameForm::typeid));
+			this->inputYZText = (gcnew System::Windows::Forms::TextBox());
+			this->inputYYText = (gcnew System::Windows::Forms::TextBox());
+			this->inputYXText = (gcnew System::Windows::Forms::TextBox());
+			this->inputXZText = (gcnew System::Windows::Forms::TextBox());
+			this->inputXYText = (gcnew System::Windows::Forms::TextBox());
+			this->inputXXText = (gcnew System::Windows::Forms::TextBox());
+			this->inputOZText = (gcnew System::Windows::Forms::TextBox());
+			this->inputOYText = (gcnew System::Windows::Forms::TextBox());
+			this->inputOXText = (gcnew System::Windows::Forms::TextBox());
+			this->cylinZLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinYLabel = (gcnew System::Windows::Forms::Label());
+			this->cylinXLabel = (gcnew System::Windows::Forms::Label());
 			this->inputInfoLabel = (gcnew System::Windows::Forms::Label());
 			this->inputYLabel = (gcnew System::Windows::Forms::Label());
 			this->inputXLabel = (gcnew System::Windows::Forms::Label());
 			this->inputOLabel = (gcnew System::Windows::Forms::Label());
 			this->inputSetButton = (gcnew System::Windows::Forms::Button());
-			this->inputXTextBox = (gcnew System::Windows::Forms::TextBox());
-			this->inputYTextBox = (gcnew System::Windows::Forms::TextBox());
-			this->inputOTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->CoordinateFramePages = (gcnew System::Windows::Forms::TabControl());
 			this->infoPage = (gcnew System::Windows::Forms::TabPage());
 			this->infoTitleLabel = (gcnew System::Windows::Forms::Label());
@@ -171,14 +201,23 @@ namespace BlinkAnalysis {
 			// 
 			// inputPage
 			// 
+			inputPage->Controls->Add(this->inputYZText);
+			inputPage->Controls->Add(this->inputYYText);
+			inputPage->Controls->Add(this->inputYXText);
+			inputPage->Controls->Add(this->inputXZText);
+			inputPage->Controls->Add(this->inputXYText);
+			inputPage->Controls->Add(this->inputXXText);
+			inputPage->Controls->Add(this->inputOZText);
+			inputPage->Controls->Add(this->inputOYText);
+			inputPage->Controls->Add(this->inputOXText);
+			inputPage->Controls->Add(this->cylinZLabel);
+			inputPage->Controls->Add(this->cylinYLabel);
+			inputPage->Controls->Add(this->cylinXLabel);
 			inputPage->Controls->Add(this->inputInfoLabel);
 			inputPage->Controls->Add(this->inputYLabel);
 			inputPage->Controls->Add(this->inputXLabel);
 			inputPage->Controls->Add(this->inputOLabel);
 			inputPage->Controls->Add(this->inputSetButton);
-			inputPage->Controls->Add(this->inputXTextBox);
-			inputPage->Controls->Add(this->inputYTextBox);
-			inputPage->Controls->Add(this->inputOTextBox);
 			inputPage->Location = System::Drawing::Point(4, 22);
 			inputPage->Name = L"inputPage";
 			inputPage->Padding = System::Windows::Forms::Padding(3);
@@ -186,6 +225,111 @@ namespace BlinkAnalysis {
 			inputPage->TabIndex = 2;
 			inputPage->Text = L"Input";
 			inputPage->UseVisualStyleBackColor = true;
+			// 
+			// inputYZText
+			// 
+			this->inputYZText->Location = System::Drawing::Point(247, 185);
+			this->inputYZText->Name = L"inputYZText";
+			this->inputYZText->Size = System::Drawing::Size(83, 20);
+			this->inputYZText->TabIndex = 98;
+			this->inputYZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputYYText
+			// 
+			this->inputYYText->Location = System::Drawing::Point(158, 185);
+			this->inputYYText->Name = L"inputYYText";
+			this->inputYYText->Size = System::Drawing::Size(83, 20);
+			this->inputYYText->TabIndex = 97;
+			this->inputYYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputYXText
+			// 
+			this->inputYXText->Location = System::Drawing::Point(69, 185);
+			this->inputYXText->Name = L"inputYXText";
+			this->inputYXText->Size = System::Drawing::Size(83, 20);
+			this->inputYXText->TabIndex = 96;
+			this->inputYXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputXZText
+			// 
+			this->inputXZText->Location = System::Drawing::Point(247, 144);
+			this->inputXZText->Name = L"inputXZText";
+			this->inputXZText->Size = System::Drawing::Size(83, 20);
+			this->inputXZText->TabIndex = 95;
+			this->inputXZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputXYText
+			// 
+			this->inputXYText->Location = System::Drawing::Point(158, 144);
+			this->inputXYText->Name = L"inputXYText";
+			this->inputXYText->Size = System::Drawing::Size(83, 20);
+			this->inputXYText->TabIndex = 94;
+			this->inputXYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputXXText
+			// 
+			this->inputXXText->Location = System::Drawing::Point(69, 144);
+			this->inputXXText->Name = L"inputXXText";
+			this->inputXXText->Size = System::Drawing::Size(83, 20);
+			this->inputXXText->TabIndex = 93;
+			this->inputXXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputOZText
+			// 
+			this->inputOZText->Location = System::Drawing::Point(247, 98);
+			this->inputOZText->Name = L"inputOZText";
+			this->inputOZText->Size = System::Drawing::Size(83, 20);
+			this->inputOZText->TabIndex = 92;
+			this->inputOZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputOYText
+			// 
+			this->inputOYText->Location = System::Drawing::Point(158, 98);
+			this->inputOYText->Name = L"inputOYText";
+			this->inputOYText->Size = System::Drawing::Size(83, 20);
+			this->inputOYText->TabIndex = 91;
+			this->inputOYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// inputOXText
+			// 
+			this->inputOXText->Location = System::Drawing::Point(69, 98);
+			this->inputOXText->Name = L"inputOXText";
+			this->inputOXText->Size = System::Drawing::Size(83, 20);
+			this->inputOXText->TabIndex = 90;
+			this->inputOXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
+			// 
+			// cylinZLabel
+			// 
+			this->cylinZLabel->AutoSize = true;
+			this->cylinZLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinZLabel->Location = System::Drawing::Point(282, 80);
+			this->cylinZLabel->Name = L"cylinZLabel";
+			this->cylinZLabel->Size = System::Drawing::Size(15, 15);
+			this->cylinZLabel->TabIndex = 89;
+			this->cylinZLabel->Text = L"Z";
+			// 
+			// cylinYLabel
+			// 
+			this->cylinYLabel->AutoSize = true;
+			this->cylinYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinYLabel->Location = System::Drawing::Point(190, 80);
+			this->cylinYLabel->Name = L"cylinYLabel";
+			this->cylinYLabel->Size = System::Drawing::Size(15, 15);
+			this->cylinYLabel->TabIndex = 88;
+			this->cylinYLabel->Text = L"Y";
+			// 
+			// cylinXLabel
+			// 
+			this->cylinXLabel->AutoSize = true;
+			this->cylinXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->cylinXLabel->Location = System::Drawing::Point(102, 80);
+			this->cylinXLabel->Name = L"cylinXLabel";
+			this->cylinXLabel->Size = System::Drawing::Size(16, 15);
+			this->cylinXLabel->TabIndex = 87;
+			this->cylinXLabel->Text = L"X";
 			// 
 			// inputInfoLabel
 			// 
@@ -237,34 +381,10 @@ namespace BlinkAnalysis {
 			this->inputSetButton->Location = System::Drawing::Point(291, 241);
 			this->inputSetButton->Name = L"inputSetButton";
 			this->inputSetButton->Size = System::Drawing::Size(103, 23);
-			this->inputSetButton->TabIndex = 18;
+			this->inputSetButton->TabIndex = 99;
 			this->inputSetButton->Text = L"Set Coordinates";
 			this->inputSetButton->UseVisualStyleBackColor = true;
 			this->inputSetButton->Click += gcnew System::EventHandler(this, &DefineCoordinateFrameForm::coordinateSetButton_Click);
-			// 
-			// inputXTextBox
-			// 
-			this->inputXTextBox->Location = System::Drawing::Point(69, 144);
-			this->inputXTextBox->Name = L"inputXTextBox";
-			this->inputXTextBox->Size = System::Drawing::Size(230, 20);
-			this->inputXTextBox->TabIndex = 14;
-			this->inputXTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
-			// 
-			// inputYTextBox
-			// 
-			this->inputYTextBox->Location = System::Drawing::Point(69, 185);
-			this->inputYTextBox->Name = L"inputYTextBox";
-			this->inputYTextBox->Size = System::Drawing::Size(230, 20);
-			this->inputYTextBox->TabIndex = 13;
-			this->inputYTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
-			// 
-			// inputOTextBox
-			// 
-			this->inputOTextBox->Location = System::Drawing::Point(69, 99);
-			this->inputOTextBox->Name = L"inputOTextBox";
-			this->inputOTextBox->Size = System::Drawing::Size(230, 20);
-			this->inputOTextBox->TabIndex = 12;
-			this->inputOTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &DefineCoordinateFrameForm::inputTextBox_Validating);
 			// 
 			// CoordinateFramePages
 			// 
@@ -640,33 +760,37 @@ namespace BlinkAnalysis {
 	private: osg::Vec3* posY;
 	private: osg::Vec3* pos;
 
-
-		 // checks if input string is a valid coordinate (x, y, z)
-private: bool isCoordinate(String^ str) {
-			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*," + 
-							"\\s*-?\\d+(.\\d+)?\\s*," +
-							"\\s*-?\\d+(.\\d+)?\\s*$";
+		 // checks if input string is a valid float
+private: bool isFloat(String^ str) {
+			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*$";
 			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
 			 return regex->IsMatch(str);
 		 }
-		 // extracts coordinates from input text box
-private: bool extractCoordinates(TextBox^ tb, osg::Vec3* pt) {
-			 if (!pt || !tb)
-				 return false;
+		 // populate vectors based on coordinate input
+private: bool extractCoordinates()
+		 {
+			float x, y, z;
 
-			 float x, y, z;
-			 array<String^>^ split = tb->Text->Split(gcnew array<wchar_t> {','});
-			 if (!Single::TryParse(split[0], x))
-				 return false;
-			 if (!Single::TryParse(split[1], y))
-				 return false;
-			 if (!Single::TryParse(split[2], z))
-				 return false;
+			if (!Single::TryParse(this->inputOXText->Text, x) || 
+				!Single::TryParse(this->inputOYText->Text, y) ||
+				!Single::TryParse(this->inputOZText->Text, z))
+				return false;
+			posO->set(x, y, z);
 
-			 pt->set(x, y, z);
-			 return true;
+			if (!Single::TryParse(this->inputXXText->Text, x) || 
+				!Single::TryParse(this->inputXYText->Text, y) ||
+				!Single::TryParse(this->inputXZText->Text, z))
+				return false;
+			posX->set(x, y, z);
+
+			if (!Single::TryParse(this->inputYXText->Text, x) || 
+				!Single::TryParse(this->inputYYText->Text, y) ||
+				!Single::TryParse(this->inputYZText->Text, z))
+				return false;
+			posY->set(x, y, z);
+
+			return true;
 		 }
-
 	private: System::Void DefineCoordinateFrameForm_Load(System::Object^  sender, System::EventArgs^  e) {
 				this->defaultDataText = L"No data found";
 				posO = new osg::Vec3();
@@ -818,26 +942,21 @@ private: bool extractCoordinates(TextBox^ tb, osg::Vec3* pt) {
 				 }
 			 }
 private: System::Void inputTextBox_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
-			 if (isCoordinate(this->inputOTextBox->Text) &&
-				 isCoordinate(this->inputXTextBox->Text) &&
-				 isCoordinate(this->inputYTextBox->Text) )
+			 if (isFloat(this->inputOXText->Text) &&
+				 isFloat(this->inputOYText->Text) &&
+				 isFloat(this->inputOZText->Text) &&
+
+				 isFloat(this->inputXXText->Text) &&
+				 isFloat(this->inputXYText->Text) &&
+				 isFloat(this->inputXZText->Text) &&
+
+				 isFloat(this->inputYXText->Text) &&
+				 isFloat(this->inputYYText->Text) &&
+				 isFloat(this->inputYZText->Text) )
 				 this->inputSetButton->Enabled = true;
 			 else
 				 this->inputSetButton->Enabled = false;
 		 }
-		 // populate vectors based on coordinate input
-private: bool extractCoordinates()
-		 {
-			 if (!extractCoordinates(this->inputOTextBox, posO))
-				 return false;
 
-			 if (!extractCoordinates(this->inputXTextBox, posX))
-				 return false;
-
-			 if (!extractCoordinates(this->inputYTextBox, posY))
-				 return false;
-
-			 return true;
-		 }
 };
 }
