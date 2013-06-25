@@ -18,7 +18,6 @@
 
 #include "Dikablis.h"
 #include "DikablisHelp.h"
-#include "AddObjectFormController.h"
 #include "AddObjectWizardFormController.h"
 #include "AddWorldForm.h" // TODO need to add controller?
 #include "DefineCoordinateFrameFormController.h"

@@ -148,7 +148,13 @@ osg::Node* CaptureObjectCustom::getAsNode()
 
 osg::Vec3 CaptureObjectCustom::getPosition()
 {
-	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	osg::Vec3 trans;
+	if (!rigidNode || rigidNode->containsNode(node))
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	else
+		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+
 	if (vertices->size() <=0 )
 		return osg::Vec3(0,0,0) + trans;
 
@@ -157,7 +163,11 @@ osg::Vec3 CaptureObjectCustom::getPosition()
 
 osg::Quat CaptureObjectCustom::getRotation()
 {
-	return CaptureObjectUtil::getWorldCoords(node)->getRotate();
+	if (!rigidNode || rigidNode->containsNode(node))
+		return CaptureObjectUtil::getWorldCoords(node)->getRotate();
+	else 
+		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
 }
 
 ///////////////////////////
@@ -238,7 +248,13 @@ osg::Node* CaptureObjectPlane::getAsNode()
 
 osg::Vec3 CaptureObjectPlane::getPosition()
 {
-	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	osg::Vec3 trans;
+	if (!rigidNode || rigidNode->containsNode(node))
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	else
+		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+
 	if (vertices->size() <=0 )
 		return osg::Vec3(0,0,0) + trans;
 
@@ -247,7 +263,11 @@ osg::Vec3 CaptureObjectPlane::getPosition()
 
 osg::Quat CaptureObjectPlane::getRotation()
 {
-	return CaptureObjectUtil::getWorldCoords(node)->getRotate();
+	if (!rigidNode || rigidNode->containsNode(node))
+		return CaptureObjectUtil::getWorldCoords(node)->getRotate();
+	else 
+		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
 }
 
 
@@ -340,13 +360,23 @@ osg::Quat CaptureObjectBox::getRotationBox()
 
 osg::Vec3 CaptureObjectBox::getPosition()
 {
-	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	osg::Vec3 trans;
+	if (!rigidNode || rigidNode->containsNode(node))
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	else
+		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+
 	return getCentre() + trans;
 }
 
 osg::Quat CaptureObjectBox::getRotation()
 {
-	return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationBox();
+	if (!rigidNode || rigidNode->containsNode(node))
+		return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationBox();
+	else 
+		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationBox();
 }
 
 
@@ -453,11 +483,21 @@ float CaptureObjectCylinder::getHeight()
 
 osg::Vec3 CaptureObjectCylinder::getPosition()
 {
-	osg::Vec3 trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	osg::Vec3 trans;
+	if (!rigidNode || rigidNode->containsNode(node))
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	else
+		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+
 	return getCentre() + trans;
 }
 
 osg::Quat CaptureObjectCylinder::getRotation()
 {
-	return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationCylinder();
+	if (!rigidNode || rigidNode->containsNode(node))
+		return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationCylinder();
+	else 
+		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
+				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationCylinder();
 }
