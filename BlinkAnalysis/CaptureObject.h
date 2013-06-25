@@ -19,6 +19,10 @@ enum ObjectType {
 	OBJ_INVALID
 };
 
+enum CentreType {
+	CENTRE_BASE,
+	CENTRE_TOP
+};
 
 typedef std::vector<osg::ref_ptr<osg::DrawElementsUInt>>::iterator faces_iterator;
 

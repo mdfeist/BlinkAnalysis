@@ -124,6 +124,7 @@ Controls
    Labeled Markers:   Define points using labeled marker data.
    Rigid Body Tool:   Define points using the Rigid Body Tool data.
    Input Coordinates:   Define points using manually input data.
+   Add at Rigid Body:   Use position and orientation of Rigid Body to define object.
 
 
 Click on the "Next" button to proceed.</value>

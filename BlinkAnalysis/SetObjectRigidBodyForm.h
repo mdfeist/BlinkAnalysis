@@ -100,6 +100,7 @@ namespace BlinkAnalysis {
 			this->rigidBodyListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->rigidBodyListView->FullRowSelect = true;
+			this->rigidBodyListView->HideSelection = false;
 			this->rigidBodyListView->LabelWrap = false;
 			this->rigidBodyListView->Location = System::Drawing::Point(12, 12);
 			this->rigidBodyListView->MultiSelect = false;

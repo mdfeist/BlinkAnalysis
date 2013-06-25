@@ -374,7 +374,7 @@ CaptureObject* CaptureWorld::addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, 
 	return box;
 }
 	
-CaptureObject* CaptureWorld::addBoxRigid(int rigidID, osg::Vec3 dimensions, bool attachRigid, std::string name)
+CaptureObject* CaptureWorld::addBoxRigid(int rigidID, osg::Vec3 dimensions, bool attachRigid, CentreType ct, std::string name)
 {
 	ClientHandler* client = AppData::getInstance()->getClient();
 	if (client)
@@ -389,7 +389,10 @@ CaptureObject* CaptureWorld::addBoxRigid(int rigidID, osg::Vec3 dimensions, bool
 			osg::Vec3 pos = rb->getPosition();
 			osg::Quat rot = rb->getRotation();
 			// add rotated z to get centre of box
-			pos += rot * osg::Vec3(0, 0, hl.z());
+			if (ct == CENTRE_BASE)
+				pos += rot * osg::Vec3(0, 0, hl.z());
+			else if (ct == CENTRE_TOP)
+				pos += rot * osg::Vec3(0, 0, -hl.z());
 
 			CaptureObjectBox* box = new CaptureObjectBox(pos, hl, rot);
 			// if name is empty string, one will be generated in addObject
@@ -438,7 +441,7 @@ CaptureObject* CaptureWorld::addCylinder(osg::Vec3 baseCentre, float radius, flo
 	return cylinder;
 }
 
-CaptureObject* CaptureWorld::addCylinderRigid(int rigidID, float radius, float height, bool attachRigid, std::string name)
+CaptureObject* CaptureWorld::addCylinderRigid(int rigidID, float radius, float height, bool attachRigid, CentreType ct, std::string name)
 {
 	ClientHandler* client = AppData::getInstance()->getClient();
 	if (client)
@@ -450,7 +453,10 @@ CaptureObject* CaptureWorld::addCylinderRigid(int rigidID, float radius, float h
 			osg::Vec3 pos = rb->getPosition();
 			osg::Quat rot = rb->getRotation();
 			// add rotated z to get centre of box
-			pos += rot * osg::Vec3(0, 0, height/2);
+			if (ct == CENTRE_BASE)
+				pos += rot * osg::Vec3(0, 0, height/2);
+			else if (ct == CENTRE_TOP)
+				pos += rot * osg::Vec3(0, 0, -height/2);
 
 			CaptureObjectCylinder* cylinder = new CaptureObjectCylinder(pos, radius, height, rot);
 			// if name is empty string, one will be generated in addObject
