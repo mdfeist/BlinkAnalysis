@@ -2644,7 +2644,10 @@ private: System::Void saveAsToolStripMenuItem_Click(System::Object^  sender, Sys
 			 this->saveAsProject();
 		 }
 private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 AddObjectWizardFormController::getInstance()->Show();
+			 AddObjectWizardFormController ^control = AddObjectWizardFormController::getInstance();
+			 control->createForm();
+			 control->setRigidBodyVector(optiTrackRigidBodyVector);
+			 control->Show();
 		 }
 /*private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 			int toggled = -1;
@@ -3099,6 +3102,7 @@ private: System::Void objectAddButton_Click(System::Object^  sender, System::Eve
 			 AddObjectWizardFormController ^control = AddObjectWizardFormController::getInstance();
 			 control->createForm();
 			 control->setDisplayWorld(displayObjectWorld);
+			 control->setRigidBodyVector(optiTrackRigidBodyVector);
 			 control->Show();
 		 }
 private: System::Void resetObjectGridView() {

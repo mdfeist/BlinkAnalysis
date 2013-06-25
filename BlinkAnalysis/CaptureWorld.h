@@ -73,8 +73,13 @@ public:
 
 	// Object Creation
 	CaptureObject* addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2, std::string name);
+	CaptureObject* addPlaneRigid(int rigidID, bool attachRigid, std::string name);
+
 	CaptureObject* addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, std::string name);
+	CaptureObject* addBoxRigid(int rigidID, osg::Vec3 dimensions, bool attachRigid, std::string name);
+
 	CaptureObject* addCylinder(osg::Vec3 baseCentre, float radius, float height, std::string name);
+	CaptureObject* addCylinderRigid(int rigidID, float radius, float height, bool attachRigid, std::string name);
 
 };
 

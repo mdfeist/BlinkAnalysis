@@ -308,6 +308,48 @@ CaptureObject* CaptureWorld::addPlane(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3
 	return plane;
 }
 
+CaptureObject* CaptureWorld::addPlaneRigid(int rigidID, bool attachRigid, std::string name)
+{
+	ClientHandler* client = AppData::getInstance()->getClient();
+	if (client)
+	{
+		RigidBody* rb = client->getRigidBody(rigidID);
+		// if attempting to attach to rigid body, make sure it belongs to the world
+		if (rb && (!attachRigid || (rb->getWorldID() < 0 || rb->getWorldID() == this->id) )) 
+		{
+			std::vector<Marker>* markers = rb->getMarkersVector();
+			if (markers)
+			{
+				osg::Vec3 corner = markers->at(0).getPosition();
+				osg::Vec3 pt1 = markers->at(1).getPosition();
+				osg::Vec3 pt2 = markers->at(2).getPosition();
+				CaptureObjectPlane* plane = new CaptureObjectPlane(corner, pt1, pt2);
+				
+				// if name is empty string, one will be generated in addObject
+				plane->setName(name);
+				int oid = addObject(plane);
+				if (oid < 0)
+				{
+					delete plane;
+					plane = NULL;
+				}
+				else if (attachRigid)
+				{
+					if (rb->getWorldID() < 0)
+						rb->setWorldID(this->id);
+
+					// use relative transformation w.r.t. rigid body
+					// so when rigid body detached, will keep initial position
+					plane->setRigidBody(rb, true);
+					updateObjectsNode();
+				}
+				return plane;
+			}
+		}
+	}
+	return NULL;
+}
+
 CaptureObject* CaptureWorld::addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, std::string name)
 {
 	// divide dimensions to get half lengths
@@ -330,6 +372,48 @@ CaptureObject* CaptureWorld::addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, 
 	}
 
 	return box;
+}
+	
+CaptureObject* CaptureWorld::addBoxRigid(int rigidID, osg::Vec3 dimensions, bool attachRigid, std::string name)
+{
+	ClientHandler* client = AppData::getInstance()->getClient();
+	if (client)
+	{
+		RigidBody* rb = client->getRigidBody(rigidID);
+		// if attempting to attach to rigid body, make sure it belongs to the world
+		if (rb && (!attachRigid || (rb->getWorldID() < 0 || rb->getWorldID() == this->id) )) 
+		{
+			// divide dimensions to get half lengths
+			osg::Vec3 hl = dimensions * 0.5;
+
+			osg::Vec3 pos = rb->getPosition();
+			osg::Quat rot = rb->getRotation();
+			// add rotated z to get centre of box
+			pos += rot * osg::Vec3(0, 0, hl.z());
+
+			CaptureObjectBox* box = new CaptureObjectBox(pos, hl, rot);
+			// if name is empty string, one will be generated in addObject
+			box->setName(name);
+			int oid = addObject(box);
+			if (oid < 0)
+			{
+				delete box;
+				box = NULL;
+			}
+			else if (attachRigid)
+			{
+				if (rb->getWorldID() < 0)
+					rb->setWorldID(this->id);
+
+				// use relative transformation w.r.t. rigid body
+				// so when rigid body detached, will keep initial position
+				box->setRigidBody(rb, true);
+				updateObjectsNode();
+			}
+			return box;
+		}
+	}
+	return NULL;
 }
 
 CaptureObject* CaptureWorld::addCylinder(osg::Vec3 baseCentre, float radius, float height, std::string name)
@@ -354,6 +438,44 @@ CaptureObject* CaptureWorld::addCylinder(osg::Vec3 baseCentre, float radius, flo
 	return cylinder;
 }
 
+CaptureObject* CaptureWorld::addCylinderRigid(int rigidID, float radius, float height, bool attachRigid, std::string name)
+{
+	ClientHandler* client = AppData::getInstance()->getClient();
+	if (client)
+	{
+		RigidBody* rb = client->getRigidBody(rigidID);
+		// if attempting to attach to rigid body, make sure it belongs to the world
+		if (rb && (!attachRigid || (rb->getWorldID() < 0 || rb->getWorldID() == this->id) )) 
+		{
+			osg::Vec3 pos = rb->getPosition();
+			osg::Quat rot = rb->getRotation();
+			// add rotated z to get centre of box
+			pos += rot * osg::Vec3(0, 0, height/2);
+
+			CaptureObjectCylinder* cylinder = new CaptureObjectCylinder(pos, radius, height, rot);
+			// if name is empty string, one will be generated in addObject
+			cylinder->setName(name);
+			int oid = addObject(cylinder);
+			if (oid < 0)
+			{
+				delete cylinder;
+				cylinder = NULL;
+			}
+			else if (attachRigid)
+			{
+				if (rb->getWorldID() < 0)
+					rb->setWorldID(this->id);
+
+				// use relative transformation w.r.t. rigid body
+				// so when rigid body detached, will keep initial position
+				cylinder->setRigidBody(rb, true);
+				updateObjectsNode();
+			}
+			return cylinder;
+		}
+	}
+	return NULL;
+}
 
 
 

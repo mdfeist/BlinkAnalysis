@@ -14,8 +14,9 @@ namespace BlinkAnalysis {
 
 	enum class ControlType {
 		MARKER,
-		RIGID,
+		RIGID_TOOL,
 		INPUT,
+		RIGID_ATTACH,
 		INVALID
 	};
 
@@ -38,13 +39,20 @@ namespace BlinkAnalysis {
 			pos0 = new osg::Vec3();
 			pos1 = new osg::Vec3();
 			pos2 = new osg::Vec3();
+
+			this->rigidBodyVector = NULL;
+			this->rigidID = -1;
 		}
 		
 		void selectWorld(int id) {
 			displayWorld = id; 
 		}
 		int getDisplayWorld() { return displayWorld; }
-
+		
+		void setRigidBodyVector(std::vector<RigidBody*>* vector)
+		{
+			rigidBodyVector = vector;
+		}
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -193,6 +201,44 @@ private: System::Windows::Forms::Label^  cylinInfoLabel;
 private: System::Windows::Forms::Label^  infoTitleLabel;
 private: System::Windows::Forms::Label^  infoLabel;
 private: System::Windows::Forms::Label^  paramInfoLabel;
+private: System::Windows::Forms::Panel^  inputRigidPanel;
+
+
+private: System::Windows::Forms::TextBox^  rigidWText;
+
+
+
+private: System::Windows::Forms::Label^  rigidWLabel;
+
+private: System::Windows::Forms::Label^  rigidDimLabel;
+
+private: System::Windows::Forms::TextBox^  rigidCenZText;
+
+private: System::Windows::Forms::TextBox^  rigidCenYText;
+
+private: System::Windows::Forms::TextBox^  rigidCenXText;
+
+private: System::Windows::Forms::Label^  rigidZLabel;
+
+private: System::Windows::Forms::Label^  rigidYLabel;
+
+private: System::Windows::Forms::Label^  rigidXLabel;
+private: System::Windows::Forms::TextBox^  rigidHText;
+
+
+private: System::Windows::Forms::TextBox^  rigidLText;
+private: System::Windows::Forms::Label^  rigidHLabel;
+
+
+private: System::Windows::Forms::Label^  rigidLLabel;
+
+private: System::Windows::Forms::Label^  rigidCentreLabel;
+
+private: System::Windows::Forms::Label^  rigidObjInfoLabel;
+private: System::Windows::Forms::ListView^  rigidListView;
+private: System::Windows::Forms::CheckBox^  rigidAttachCheck;
+
+
 
 
 
@@ -285,7 +331,26 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->planeCornerLabel = (gcnew System::Windows::Forms::Label());
 			this->planePt1Label = (gcnew System::Windows::Forms::Label());
 			this->planeDataGetButton = (gcnew System::Windows::Forms::Button());
+			this->inputRigidPanel = (gcnew System::Windows::Forms::Panel());
+			this->rigidAttachCheck = (gcnew System::Windows::Forms::CheckBox());
+			this->rigidListView = (gcnew System::Windows::Forms::ListView());
+			this->rigidWText = (gcnew System::Windows::Forms::TextBox());
+			this->rigidWLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidDimLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidCenZText = (gcnew System::Windows::Forms::TextBox());
+			this->rigidCenYText = (gcnew System::Windows::Forms::TextBox());
+			this->rigidCenXText = (gcnew System::Windows::Forms::TextBox());
+			this->rigidZLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidYLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidXLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidHText = (gcnew System::Windows::Forms::TextBox());
+			this->rigidLText = (gcnew System::Windows::Forms::TextBox());
+			this->rigidHLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidLLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidCentreLabel = (gcnew System::Windows::Forms::Label());
+			this->rigidObjInfoLabel = (gcnew System::Windows::Forms::Label());
 			this->paramPage = (gcnew System::Windows::Forms::TabPage());
+			this->paramInfoLabel = (gcnew System::Windows::Forms::Label());
 			this->controlLabel = (gcnew System::Windows::Forms::Label());
 			this->typeLabel = (gcnew System::Windows::Forms::Label());
 			this->worldLabel = (gcnew System::Windows::Forms::Label());
@@ -296,14 +361,14 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->typeComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->introPage = (gcnew System::Windows::Forms::TabPage());
-			this->wizardPagesTemp = (gcnew System::Windows::Forms::TabControl());
 			this->infoTitleLabel = (gcnew System::Windows::Forms::Label());
 			this->infoLabel = (gcnew System::Windows::Forms::Label());
-			this->paramInfoLabel = (gcnew System::Windows::Forms::Label());
+			this->wizardPagesTemp = (gcnew System::Windows::Forms::TabControl());
 			this->inputPage->SuspendLayout();
 			this->inputCylinderPanel1->SuspendLayout();
 			this->inputBoxPanel1->SuspendLayout();
 			this->inputPlanePanel->SuspendLayout();
+			this->inputRigidPanel->SuspendLayout();
 			this->paramPage->SuspendLayout();
 			this->introPage->SuspendLayout();
 			this->wizardPagesTemp->SuspendLayout();
@@ -351,6 +416,7 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->inputPage->Controls->Add(this->inputCylinderPanel1);
 			this->inputPage->Controls->Add(this->inputBoxPanel1);
 			this->inputPage->Controls->Add(this->inputPlanePanel);
+			this->inputPage->Controls->Add(this->inputRigidPanel);
 			this->inputPage->Location = System::Drawing::Point(4, 22);
 			this->inputPage->Name = L"inputPage";
 			this->inputPage->Padding = System::Windows::Forms::Padding(3);
@@ -379,7 +445,7 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->inputCylinderPanel1->Controls->Add(this->cylinInfoLabel);
 			this->inputCylinderPanel1->Location = System::Drawing::Point(0, 0);
 			this->inputCylinderPanel1->Name = L"inputCylinderPanel1";
-			this->inputCylinderPanel1->Size = System::Drawing::Size(510, 219);
+			this->inputCylinderPanel1->Size = System::Drawing::Size(511, 219);
 			this->inputCylinderPanel1->TabIndex = 2;
 			this->inputCylinderPanel1->Visible = false;
 			// 
@@ -1007,6 +1073,208 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->planeDataGetButton->UseVisualStyleBackColor = true;
 			this->planeDataGetButton->Click += gcnew System::EventHandler(this, &AddObjectWizardForm::planeDataGetButton_Click);
 			// 
+			// inputRigidPanel
+			// 
+			this->inputRigidPanel->Controls->Add(this->rigidAttachCheck);
+			this->inputRigidPanel->Controls->Add(this->rigidListView);
+			this->inputRigidPanel->Controls->Add(this->rigidWText);
+			this->inputRigidPanel->Controls->Add(this->rigidWLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidDimLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidCenZText);
+			this->inputRigidPanel->Controls->Add(this->rigidCenYText);
+			this->inputRigidPanel->Controls->Add(this->rigidCenXText);
+			this->inputRigidPanel->Controls->Add(this->rigidZLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidYLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidXLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidHText);
+			this->inputRigidPanel->Controls->Add(this->rigidLText);
+			this->inputRigidPanel->Controls->Add(this->rigidHLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidLLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidCentreLabel);
+			this->inputRigidPanel->Controls->Add(this->rigidObjInfoLabel);
+			this->inputRigidPanel->Location = System::Drawing::Point(0, 0);
+			this->inputRigidPanel->Name = L"inputRigidPanel";
+			this->inputRigidPanel->Size = System::Drawing::Size(511, 219);
+			this->inputRigidPanel->TabIndex = 6;
+			this->inputRigidPanel->Visible = false;
+			// 
+			// rigidAttachCheck
+			// 
+			this->rigidAttachCheck->AutoSize = true;
+			this->rigidAttachCheck->Location = System::Drawing::Point(32, 193);
+			this->rigidAttachCheck->Name = L"rigidAttachCheck";
+			this->rigidAttachCheck->Size = System::Drawing::Size(117, 17);
+			this->rigidAttachCheck->TabIndex = 96;
+			this->rigidAttachCheck->Text = L"Attach to rigid body";
+			this->rigidAttachCheck->UseVisualStyleBackColor = true;
+			// 
+			// rigidListView
+			// 
+			this->rigidListView->Alignment = System::Windows::Forms::ListViewAlignment::Left;
+			this->rigidListView->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->rigidListView->FullRowSelect = true;
+			this->rigidListView->LabelWrap = false;
+			this->rigidListView->Location = System::Drawing::Point(21, 43);
+			this->rigidListView->MultiSelect = false;
+			this->rigidListView->Name = L"rigidListView";
+			this->rigidListView->Size = System::Drawing::Size(203, 144);
+			this->rigidListView->TabIndex = 95;
+			this->rigidListView->TileSize = System::Drawing::Size(100, 20);
+			this->rigidListView->UseCompatibleStateImageBehavior = false;
+			this->rigidListView->View = System::Windows::Forms::View::SmallIcon;
+			this->rigidListView->SelectedIndexChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::rigidListView_SelectedIndexChanged);
+			// 
+			// rigidWText
+			// 
+			this->rigidWText->Location = System::Drawing::Point(321, 178);
+			this->rigidWText->Name = L"rigidWText";
+			this->rigidWText->Size = System::Drawing::Size(83, 20);
+			this->rigidWText->TabIndex = 89;
+			this->rigidWText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::rigidText_Validating);
+			// 
+			// rigidWLabel
+			// 
+			this->rigidWLabel->AutoSize = true;
+			this->rigidWLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidWLabel->Location = System::Drawing::Point(318, 160);
+			this->rigidWLabel->Name = L"rigidWLabel";
+			this->rigidWLabel->Size = System::Drawing::Size(65, 15);
+			this->rigidWLabel->TabIndex = 94;
+			this->rigidWLabel->Text = L"Width (Y)";
+			// 
+			// rigidDimLabel
+			// 
+			this->rigidDimLabel->AutoSize = true;
+			this->rigidDimLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidDimLabel->Location = System::Drawing::Point(229, 131);
+			this->rigidDimLabel->Name = L"rigidDimLabel";
+			this->rigidDimLabel->Size = System::Drawing::Size(73, 15);
+			this->rigidDimLabel->TabIndex = 92;
+			this->rigidDimLabel->Text = L"Dimensions";
+			// 
+			// rigidCenZText
+			// 
+			this->rigidCenZText->Location = System::Drawing::Point(410, 85);
+			this->rigidCenZText->Name = L"rigidCenZText";
+			this->rigidCenZText->ReadOnly = true;
+			this->rigidCenZText->Size = System::Drawing::Size(83, 20);
+			this->rigidCenZText->TabIndex = 83;
+			this->rigidCenZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::rigidText_Validating);
+			// 
+			// rigidCenYText
+			// 
+			this->rigidCenYText->Location = System::Drawing::Point(321, 85);
+			this->rigidCenYText->Name = L"rigidCenYText";
+			this->rigidCenYText->ReadOnly = true;
+			this->rigidCenYText->Size = System::Drawing::Size(83, 20);
+			this->rigidCenYText->TabIndex = 82;
+			this->rigidCenYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::rigidText_Validating);
+			// 
+			// rigidCenXText
+			// 
+			this->rigidCenXText->Location = System::Drawing::Point(232, 85);
+			this->rigidCenXText->Name = L"rigidCenXText";
+			this->rigidCenXText->ReadOnly = true;
+			this->rigidCenXText->Size = System::Drawing::Size(83, 20);
+			this->rigidCenXText->TabIndex = 81;
+			this->rigidCenXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::rigidText_Validating);
+			// 
+			// rigidZLabel
+			// 
+			this->rigidZLabel->AutoSize = true;
+			this->rigidZLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidZLabel->Location = System::Drawing::Point(445, 67);
+			this->rigidZLabel->Name = L"rigidZLabel";
+			this->rigidZLabel->Size = System::Drawing::Size(15, 15);
+			this->rigidZLabel->TabIndex = 86;
+			this->rigidZLabel->Text = L"Z";
+			// 
+			// rigidYLabel
+			// 
+			this->rigidYLabel->AutoSize = true;
+			this->rigidYLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidYLabel->Location = System::Drawing::Point(353, 67);
+			this->rigidYLabel->Name = L"rigidYLabel";
+			this->rigidYLabel->Size = System::Drawing::Size(15, 15);
+			this->rigidYLabel->TabIndex = 85;
+			this->rigidYLabel->Text = L"Y";
+			// 
+			// rigidXLabel
+			// 
+			this->rigidXLabel->AutoSize = true;
+			this->rigidXLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidXLabel->Location = System::Drawing::Point(265, 67);
+			this->rigidXLabel->Name = L"rigidXLabel";
+			this->rigidXLabel->Size = System::Drawing::Size(16, 15);
+			this->rigidXLabel->TabIndex = 84;
+			this->rigidXLabel->Text = L"X";
+			// 
+			// rigidHText
+			// 
+			this->rigidHText->Location = System::Drawing::Point(410, 178);
+			this->rigidHText->Name = L"rigidHText";
+			this->rigidHText->Size = System::Drawing::Size(83, 20);
+			this->rigidHText->TabIndex = 90;
+			this->rigidHText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::rigidText_Validating);
+			// 
+			// rigidLText
+			// 
+			this->rigidLText->Location = System::Drawing::Point(232, 178);
+			this->rigidLText->Name = L"rigidLText";
+			this->rigidLText->Size = System::Drawing::Size(83, 20);
+			this->rigidLText->TabIndex = 88;
+			this->rigidLText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::rigidText_Validating);
+			// 
+			// rigidHLabel
+			// 
+			this->rigidHLabel->AutoSize = true;
+			this->rigidHLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidHLabel->Location = System::Drawing::Point(407, 160);
+			this->rigidHLabel->Name = L"rigidHLabel";
+			this->rigidHLabel->Size = System::Drawing::Size(71, 15);
+			this->rigidHLabel->TabIndex = 80;
+			this->rigidHLabel->Text = L"Height (Z)";
+			// 
+			// rigidLLabel
+			// 
+			this->rigidLLabel->AutoSize = true;
+			this->rigidLLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidLLabel->Location = System::Drawing::Point(229, 160);
+			this->rigidLLabel->Name = L"rigidLLabel";
+			this->rigidLLabel->Size = System::Drawing::Size(74, 15);
+			this->rigidLLabel->TabIndex = 78;
+			this->rigidLLabel->Text = L"Length (X)";
+			// 
+			// rigidCentreLabel
+			// 
+			this->rigidCentreLabel->AutoSize = true;
+			this->rigidCentreLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidCentreLabel->Location = System::Drawing::Point(229, 43);
+			this->rigidCentreLabel->Name = L"rigidCentreLabel";
+			this->rigidCentreLabel->Size = System::Drawing::Size(74, 15);
+			this->rigidCentreLabel->TabIndex = 77;
+			this->rigidCentreLabel->Text = L"Base Centre";
+			// 
+			// rigidObjInfoLabel
+			// 
+			this->rigidObjInfoLabel->AutoSize = true;
+			this->rigidObjInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->rigidObjInfoLabel->Location = System::Drawing::Point(18, 19);
+			this->rigidObjInfoLabel->Name = L"rigidObjInfoLabel";
+			this->rigidObjInfoLabel->Size = System::Drawing::Size(149, 15);
+			this->rigidObjInfoLabel->TabIndex = 55;
+			this->rigidObjInfoLabel->Text = L"Add a cylinder to the world";
+			// 
 			// paramPage
 			// 
 			this->paramPage->Controls->Add(this->paramInfoLabel);
@@ -1026,6 +1294,17 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->paramPage->TabIndex = 1;
 			this->paramPage->Text = L"Parameters";
 			this->paramPage->UseVisualStyleBackColor = true;
+			// 
+			// paramInfoLabel
+			// 
+			this->paramInfoLabel->AutoSize = true;
+			this->paramInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->paramInfoLabel->Location = System::Drawing::Point(12, 14);
+			this->paramInfoLabel->Name = L"paramInfoLabel";
+			this->paramInfoLabel->Size = System::Drawing::Size(301, 15);
+			this->paramInfoLabel->TabIndex = 31;
+			this->paramInfoLabel->Text = L"Complete information for the object you wish to create.";
 			// 
 			// controlLabel
 			// 
@@ -1139,17 +1418,6 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->introPage->Text = L"Info";
 			this->introPage->UseVisualStyleBackColor = true;
 			// 
-			// wizardPagesTemp
-			// 
-			this->wizardPagesTemp->Controls->Add(this->introPage);
-			this->wizardPagesTemp->Controls->Add(this->paramPage);
-			this->wizardPagesTemp->Controls->Add(this->inputPage);
-			this->wizardPagesTemp->Location = System::Drawing::Point(0, 0);
-			this->wizardPagesTemp->Name = L"wizardPagesTemp";
-			this->wizardPagesTemp->SelectedIndex = 0;
-			this->wizardPagesTemp->Size = System::Drawing::Size(519, 245);
-			this->wizardPagesTemp->TabIndex = 0;
-			// 
 			// infoTitleLabel
 			// 
 			this->infoTitleLabel->AutoSize = true;
@@ -1172,22 +1440,22 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->infoLabel->TabIndex = 3;
 			this->infoLabel->Text = resources->GetString(L"infoLabel.Text");
 			// 
-			// paramInfoLabel
+			// wizardPagesTemp
 			// 
-			this->paramInfoLabel->AutoSize = true;
-			this->paramInfoLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->paramInfoLabel->Location = System::Drawing::Point(12, 14);
-			this->paramInfoLabel->Name = L"paramInfoLabel";
-			this->paramInfoLabel->Size = System::Drawing::Size(301, 15);
-			this->paramInfoLabel->TabIndex = 31;
-			this->paramInfoLabel->Text = L"Complete information for the object you wish to create.";
+			this->wizardPagesTemp->Controls->Add(this->introPage);
+			this->wizardPagesTemp->Controls->Add(this->paramPage);
+			this->wizardPagesTemp->Controls->Add(this->inputPage);
+			this->wizardPagesTemp->Location = System::Drawing::Point(0, 0);
+			this->wizardPagesTemp->Name = L"wizardPagesTemp";
+			this->wizardPagesTemp->SelectedIndex = 0;
+			this->wizardPagesTemp->Size = System::Drawing::Size(519, 245);
+			this->wizardPagesTemp->TabIndex = 0;
 			// 
 			// AddObjectWizardForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(518, 286);
+			this->ClientSize = System::Drawing::Size(520, 286);
 			this->Controls->Add(this->cancelButton);
 			this->Controls->Add(this->nextButton);
 			this->Controls->Add(this->backButton);
@@ -1203,6 +1471,8 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->inputBoxPanel1->PerformLayout();
 			this->inputPlanePanel->ResumeLayout(false);
 			this->inputPlanePanel->PerformLayout();
+			this->inputRigidPanel->ResumeLayout(false);
+			this->inputRigidPanel->PerformLayout();
 			this->paramPage->ResumeLayout(false);
 			this->paramPage->PerformLayout();
 			this->introPage->ResumeLayout(false);
@@ -1222,6 +1492,8 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 	private: osg::Vec3* pos0;
 	private: osg::Vec3* pos1;
 	private: osg::Vec3* pos2;
+	private: std::vector<RigidBody*>* rigidBodyVector;
+	private: int rigidID;
 
 	private: System::Void AddObjectWizardForm_Load(System::Object^  sender, System::EventArgs^  e) {
 			this->Controls->Remove(this->wizardPagesTemp);
@@ -1242,7 +1514,10 @@ private: System::Windows::Forms::Label^  paramInfoLabel;
 			this->Controls->Add(this->wizardPages);
 			this->wizardPages->ResumeLayout(false);
 
-
+			 this->rigidListView->View = View::Details;
+			 this->rigidListView->Columns->Add("Id", 50, HorizontalAlignment::Left ); 
+			 this->rigidListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
+			 
 			 worldPopulateList();
 			 typePopulateList();
 			 controlPopulateList();
@@ -1339,7 +1614,10 @@ private: System::Void controlPopulateList() {
 
 				control = gcnew String("Input Coordinates");
 				this->controlComboBox->Items->Add(control);
-		}
+
+		 		control = gcnew String("Add at Rigid Body");
+				this->controlComboBox->Items->Add(control);
+		 }
 private: System::Void worldComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (!this->worldComboBox->SelectedItem)
 			 {
@@ -1574,7 +1852,7 @@ private: System::Void planePanel(ControlType ct, bool visible) {
 				 getDataButton(true, OBJ_PLANE);
 				 markerIDTextBox(true, OBJ_PLANE);
 			 }
-			 else if (ct == ControlType::RIGID)
+			 else if (ct == ControlType::RIGID_TOOL)
 			 {
 				 rigidSetButton(!inputDirty, true, OBJ_PLANE);
 				 XYZTextBox(true, OBJ_PLANE);
@@ -1608,7 +1886,7 @@ private: System::Void boxPanel(ControlType ct, bool visible) {
 				 getDataButton(true, OBJ_BOX);
 				 markerIDTextBox(true, OBJ_BOX);
 			 }
-			 else if (ct == ControlType::RIGID)
+			 else if (ct == ControlType::RIGID_TOOL)
 			 {
 				 XYZTextBox(true, OBJ_BOX);
 				 getDataButton(true, OBJ_BOX);
@@ -1644,7 +1922,7 @@ private: System::Void cylinderPanel(ControlType ct, bool visible) {
 				 getDataButton(true, OBJ_CYLINDER);
 				 markerIDTextBox(true, OBJ_CYLINDER);
 			 }
-			 else if (ct == ControlType::RIGID)
+			 else if (ct == ControlType::RIGID_TOOL)
 			 {
 				 XYZTextBox(true, OBJ_CYLINDER);
 				 getDataButton(true, OBJ_CYLINDER);
@@ -1664,6 +1942,68 @@ private: System::Void cylinderPanel(ControlType ct, bool visible) {
 
 			 inputDirty = false;
 		 }
+private: System::Void rigidPanel(ObjectType ot, bool visible) {
+			 if (!visible)
+			 {
+				 this->inputRigidPanel->Visible = false;
+				 return;
+			 }
+
+			 this->inputRigidPanel->Visible = true;
+			 if (ot == OBJ_PLANE)
+			 {
+				 this->rigidDimLabel->Visible = false;
+				 this->rigidLLabel->Visible = false;
+				 this->rigidWLabel->Visible = false;
+				 this->rigidHLabel->Visible = false;
+				 this->rigidObjInfoLabel->Text = L"Add a plane to the world";
+
+				 this->rigidLText->Visible = false;
+				 this->rigidWText->Visible = false;
+				 this->rigidHText->Visible = false;
+
+			 }
+			 else if (ot == OBJ_BOX)
+			 {
+				 this->rigidDimLabel->Visible = true;
+				 this->rigidLLabel->Visible = true;
+				 this->rigidWLabel->Visible = true;
+				 this->rigidHLabel->Visible = true;
+				 this->rigidObjInfoLabel->Text = L"Add a box to the world";
+				 this->rigidLLabel->Text = L"Length (X)";
+
+				 this->rigidLText->Visible = true;
+				 this->rigidWText->Visible = true;
+				 this->rigidHText->Visible = true;
+			 }
+			 else if (ot == OBJ_CYLINDER)
+			 {
+				 this->rigidDimLabel->Visible = true;
+				 this->rigidLLabel->Visible = true;
+				 this->rigidWLabel->Visible = false;
+				 this->rigidHLabel->Visible = true;
+				 this->rigidObjInfoLabel->Text = L"Add a cylinder to the world";
+				 this->rigidLLabel->Text = L"Radius (X, Y)";
+
+				 this->rigidLText->Visible = true;
+				 this->rigidWText->Visible = false;
+				 this->rigidHText->Visible = true;
+			 }
+
+			 this->rigidCenXText->Text = "";
+			 this->rigidCenYText->Text = "";
+			 this->rigidCenZText->Text = "";
+
+			 this->rigidLText->Text = "";
+			 this->rigidWText->Text = "";
+			 this->rigidHText->Text = "";
+
+			 inputDirty = false;
+
+			 loadRigidBodyList();
+		 }
+
+
 /////////////////////
 // Wizard Navigation
 private: System::Void page_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -1683,8 +2023,11 @@ private: System::Void page_SelectedIndexChanged(System::Object^  sender, System:
 					 planePanel(control, false);
 					 boxPanel(control, false);
 					 cylinderPanel(control, false);
+					 rigidPanel(objType, false);
 
-					 if (objType == OBJ_PLANE)
+					 if (control == ControlType::RIGID_ATTACH)
+						 rigidPanel(objType, true);
+					 else if (objType == OBJ_PLANE)
 						 planePanel(control, true);
 					 else if (objType == OBJ_BOX)
 						 boxPanel(control, true);
@@ -1715,7 +2058,9 @@ private: System::Void nextButton_Click(System::Object^  sender, System::EventArg
 			 // create object and close wizard
 			 if (this->wizardPages->SelectedIndex == this->wizardPages->TabCount - 1)
 			 {
-				 if (objType == OBJ_PLANE)
+				 if (control == ControlType::RIGID_ATTACH)
+					 createAtRigid();
+				 else if (objType == OBJ_PLANE)
 					 createPlane();
 				 else if (objType == OBJ_BOX)
 					 createBox();
@@ -1785,7 +2130,34 @@ private: bool validateCylinder() {
 					  isFloat(this->cylinRText->Text) &&
 					  isFloat(this->cylinHText->Text) );
 		 }
+private: bool validateRigid() {
+			 switch (objType)
+			 {
+			 case OBJ_PLANE :
+				 return ( isFloat(this->rigidCenXText->Text) &&
+						  isFloat(this->rigidCenYText->Text) &&
+						  isFloat(this->rigidCenZText->Text) );
 
+			 case OBJ_BOX : 
+				 return ( isFloat(this->rigidCenXText->Text) &&
+						  isFloat(this->rigidCenYText->Text) &&
+						  isFloat(this->rigidCenZText->Text) &&
+
+						  isFloat(this->rigidLText->Text) &&
+						  isFloat(this->rigidWText->Text) &&
+						  isFloat(this->rigidHText->Text) );
+				 
+			 case OBJ_CYLINDER : 
+				 return ( isFloat(this->rigidCenXText->Text) &&
+						  isFloat(this->rigidCenYText->Text) &&
+						  isFloat(this->rigidCenZText->Text) &&
+
+						  isFloat(this->rigidLText->Text) &&
+						  isFloat(this->rigidHText->Text) );
+			 default :
+				 return false;
+			 }
+		 }
 private: System::Void planeText_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
 			 if (validatePlane())
 				 this->nextButton->Enabled = true;
@@ -1804,12 +2176,38 @@ private: System::Void cylinText_Validating(System::Object^  sender, System::Comp
 			 else
 				 this->nextButton->Enabled = false;
 		 }
+private: System::Void rigidText_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
+			 if (validateRigid())
+				 this->nextButton->Enabled = true;
+			 else
+				 this->nextButton->Enabled = false;
+		 }
+
 /////////////////////
 // populate fields
 		 // posVec: which vector to get data from (0-2)
 		 // posIdx: which set of coordinates to populate 
 private: System::Void populateTextFromPosition(int posVec, int posIdx) {
 			 osg::Vec3* temp;
+			 if (control == ControlType::RIGID_ATTACH)
+			 {
+				 temp = posVec < 0 ? NULL : pos0;
+				 
+				 if (temp)
+				 {
+					 this->rigidCenXText->Text = temp->x().ToString();
+					 this->rigidCenYText->Text = temp->y().ToString();
+					 this->rigidCenZText->Text = temp->z().ToString();
+				 }
+				 else // reset to zero
+				 {
+					 this->rigidCenXText->Text = "";
+					 this->rigidCenYText->Text = "";
+					 this->rigidCenZText->Text = "";
+				 }
+				 return;
+			 }
+
 			 switch (objType) {
 				 // plane
 			 case OBJ_PLANE :
@@ -1935,6 +2333,23 @@ private: bool extractCoordinates() {
 				 return false;
 			 }
 		 }
+private: System::Void loadRigidBodyList() {
+			this->rigidListView->Items->Clear();
+			
+			if (!rigidBodyVector) return;
+
+			for (std::vector<RigidBody*>::iterator itr = rigidBodyVector->begin(); 
+				itr != rigidBodyVector->end(); itr++)
+			{
+				RigidBody* body = *itr;
+				String^ rigidBodyID = Convert::ToString(body->getID());
+				String^ rigidBodyName = gcnew String(body->getName());
+				ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
+				listViewItem->SubItems->Add(rigidBodyName);
+				this->rigidListView->Items->Add(listViewItem);
+			}
+		 }
+
 /////////////////////
 // input data buttons
 private: System::Void planeDataGetButton_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -1994,7 +2409,7 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				client->unlock();
 			}
 			// use rigid tool
-			else if (control == ControlType::RIGID && client)
+			else if (control == ControlType::RIGID_TOOL && client)
 			{
 				RigidBody* body = client->getRigidBody(client->getRigidBodyTool());
 				if (body)
@@ -2065,7 +2480,7 @@ private: System::Void boxDataGetButton_Click(System::Object^  sender, System::Ev
 				client->unlock();
 			}
 			// use rigid tool
-			else if (control == ControlType::RIGID && client)
+			else if (control == ControlType::RIGID_TOOL && client)
 			{
 				RigidBody* body = client->getRigidBody(client->getRigidBodyTool());
 				if (body)
@@ -2107,7 +2522,7 @@ private: System::Void cylinDataGetButton_Click(System::Object^  sender, System::
 				client->unlock();
 			}
 			// use rigid tool
-			else if (control == ControlType::RIGID && client)
+			else if (control == ControlType::RIGID_TOOL && client)
 			{
 				RigidBody* body = client->getRigidBody(client->getRigidBodyTool());
 				if (body)
@@ -2123,6 +2538,29 @@ private: System::Void cylinDataGetButton_Click(System::Object^  sender, System::
 				this->nextButton->Enabled = true;
 			else
 				this->nextButton->Enabled = false;
+		 }
+private: System::Void rigidListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->rigidListView->SelectedItems->Count <= 0)
+				 return;
+
+			 ListViewItem^ item = this->rigidListView->SelectedItems->default[0];
+			 if (item && Int32::TryParse(item->Text, rigidID))
+			 {
+				ClientHandler* client = AppData::getInstance()->getClient();
+				if (client)
+				{
+					RigidBody* body = client->getRigidBody(rigidID);
+					if (body)
+					{
+						pos0->set(body->getPosition().x(), body->getPosition().y(), body->getPosition().z());
+						populateTextFromPosition(0, 0);
+						this->nextButton->Enabled = true;
+						return;
+					}
+				}
+			 }
+			 populateTextFromPosition(-1, 0);
+			 this->nextButton->Enabled = false;	
 		 }
 
 /////////////////////
@@ -2174,6 +2612,39 @@ private: System::Void createCylinder() {
 					 return;
 
 				 world->addCylinder(*pos0, r, h, *str);
+			 }
+			 this->Close();
+		 }
+private: System::Void createAtRigid() {
+			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
+			 if (world)
+			 {
+				 std::string* str = managedToStdString(this->nameTextBox->Text);
+				 float l, w, h;
+				 
+				 switch (objType)
+				 {
+				 case OBJ_PLANE :
+					 world->addPlaneRigid(rigidID, this->rigidAttachCheck->Checked, *str);
+					 break;
+
+				 case OBJ_BOX : 
+					 if (!Single::TryParse(this->rigidLText->Text, l) ||
+						 !Single::TryParse(this->rigidWText->Text, w) ||
+						 !Single::TryParse(this->rigidHText->Text, h))
+					 return;
+
+					 world->addBoxRigid(rigidID, osg::Vec3(l, w, h), this->rigidAttachCheck->Checked, *str);
+					 break;
+
+				 case OBJ_CYLINDER :
+					 if (!Single::TryParse(this->rigidLText->Text, l) ||
+						 !Single::TryParse(this->rigidHText->Text, h))
+					 return;
+
+					 world->addCylinderRigid(rigidID, l, h, this->rigidAttachCheck->Checked, *str);
+					 break;
+				 }
 			 }
 			 this->Close();
 		 }

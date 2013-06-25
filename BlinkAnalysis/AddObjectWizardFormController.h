@@ -25,4 +25,9 @@ public:
 		return -1;
 	}
 
+	void setRigidBodyVector(std::vector<RigidBody*>* vector)
+	{
+		if (form && !form->IsDisposed)
+			form->setRigidBodyVector(vector);
+	}
 };
