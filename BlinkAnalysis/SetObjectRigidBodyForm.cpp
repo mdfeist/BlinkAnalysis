@@ -27,7 +27,7 @@ System::Void SetObjectRigidBodyForm::detachButton_Click(System::Object^  sender,
 			CaptureWorld* world = WorldManager::getInstance()->getWorld(worldID);
 			if (world)
 			{
-				 world->setObjectRigidBody(objectID, rigidID, this->offsetCheckBox->Checked);
+				 world->setObjectRigidBody(objectID, -1, this->offsetCheckBox->Checked);
 			}
 			this->Close();
 		 }

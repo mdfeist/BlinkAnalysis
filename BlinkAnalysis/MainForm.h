@@ -23,6 +23,7 @@
 #include "DefineCoordinateFrameFormController.h"
 #include "EyeCalibrationWizardFormController.h"
 #include "SetObjectRigidBodyFormController.h"
+#include "SetRigidBodyObjectForm.h"
 #include "AppData.h"
 #include "AppViewer.h"
 #include "WorldManager.h"
@@ -285,6 +286,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 private: System::Windows::Forms::Panel^  visualRecorderPanel;
 private: System::Windows::Forms::Button^  stopRecordingBtn;
 private: System::Windows::Forms::Button^  startRecordingBtn;
+private: System::Windows::Forms::ToolStripMenuItem^  attachToExistingObjectToolStripMenuItem;
 
 
 
@@ -436,6 +438,7 @@ private: System::Windows::Forms::Button^  startRecordingBtn;
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->attachToExistingObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->mainTabControl->SuspendLayout();
 			this->OptiTrackPage->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->optiTrackMainSplitContainer))->BeginInit();
@@ -1818,16 +1821,24 @@ private: System::Windows::Forms::Button^  startRecordingBtn;
 			// 
 			// rigidBodyToolContextMenu
 			// 
-			this->rigidBodyToolContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->setAsRigidBodyToolToolStripMenuItem});
+			this->rigidBodyToolContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->setAsRigidBodyToolToolStripMenuItem, 
+				this->attachToExistingObjectToolStripMenuItem});
 			this->rigidBodyToolContextMenu->Name = L"contextMenuStrip1";
-			this->rigidBodyToolContextMenu->Size = System::Drawing::Size(192, 26);
+			this->rigidBodyToolContextMenu->Size = System::Drawing::Size(205, 70);
 			// 
 			// setAsRigidBodyToolToolStripMenuItem
 			// 
 			this->setAsRigidBodyToolToolStripMenuItem->Name = L"setAsRigidBodyToolToolStripMenuItem";
-			this->setAsRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(191, 22);
+			this->setAsRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(204, 22);
 			this->setAsRigidBodyToolToolStripMenuItem->Text = L"Set as Rigid Body Tool";
 			this->setAsRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setAsRigidBodyToolToolStripMenuItem_Click);
+			// 
+			// attachToExistingObjectToolStripMenuItem
+			// 
+			this->attachToExistingObjectToolStripMenuItem->Name = L"attachToExistingObjectToolStripMenuItem";
+			this->attachToExistingObjectToolStripMenuItem->Size = System::Drawing::Size(204, 22);
+			this->attachToExistingObjectToolStripMenuItem->Text = L"Attach to Existing Object";
+			this->attachToExistingObjectToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::attachToExistingObjectToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -2683,6 +2694,13 @@ private: System::Void setAsRigidBodyToolToolStripMenuItem_Click(System::Object^ 
 			 setRigidBodyTool = -1;
 			 this->rigidBodyToolContextMenu->Close();
 		 }
+private: System::Void attachToExistingObjectToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 SetRigidBodyObjectForm^ rbForm = gcnew SetRigidBodyObjectForm();
+			 rbForm->setRigidBody(setRigidBodyTool);
+			 setRigidBodyTool = -1;
+			 this->rigidBodyToolContextMenu->Close();
+			 rbForm->Show();
+		 }
 
 	//////////////////////
 	// Capture World and Objects
@@ -3185,6 +3203,7 @@ private: System::Void startRecordingBtn_Click(System::Object^  sender, System::E
 private: System::Void stopRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 RecordingManager::getInstance()->stopRecording();
 		 }
+
 };
 }
 
