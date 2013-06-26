@@ -24,6 +24,7 @@
 #include "EyeCalibrationWizardFormController.h"
 #include "SetObjectRigidBodyFormController.h"
 #include "SetRigidBodyObjectForm.h"
+#include "SetRigidBodyToolForm.h"
 #include "AppData.h"
 #include "AppViewer.h"
 #include "WorldManager.h"
@@ -287,6 +288,7 @@ private: System::Windows::Forms::Panel^  visualRecorderPanel;
 private: System::Windows::Forms::Button^  stopRecordingBtn;
 private: System::Windows::Forms::Button^  startRecordingBtn;
 private: System::Windows::Forms::ToolStripMenuItem^  attachToExistingObjectToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  setRigidBodyToolToolStripMenuItem;
 
 
 
@@ -436,6 +438,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  attachToExistingObjectToolS
 			this->eyeCalibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->objectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->setRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->attachToExistingObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -1807,7 +1810,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  attachToExistingObjectToolS
 			// 
 			// objectToolStripMenuItem
 			// 
-			this->objectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->addObjectToolStripMenuItem});
+			this->objectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->addObjectToolStripMenuItem, 
+				this->setRigidBodyToolToolStripMenuItem});
 			this->objectToolStripMenuItem->Name = L"objectToolStripMenuItem";
 			this->objectToolStripMenuItem->Size = System::Drawing::Size(54, 20);
 			this->objectToolStripMenuItem->Text = L"Object";
@@ -1815,16 +1819,23 @@ private: System::Windows::Forms::ToolStripMenuItem^  attachToExistingObjectToolS
 			// addObjectToolStripMenuItem
 			// 
 			this->addObjectToolStripMenuItem->Name = L"addObjectToolStripMenuItem";
-			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(134, 22);
+			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(177, 22);
 			this->addObjectToolStripMenuItem->Text = L"Add Object";
 			this->addObjectToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addObjectToolStripMenuItem_Click);
+			// 
+			// setRigidBodyToolToolStripMenuItem
+			// 
+			this->setRigidBodyToolToolStripMenuItem->Name = L"setRigidBodyToolToolStripMenuItem";
+			this->setRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(177, 22);
+			this->setRigidBodyToolToolStripMenuItem->Text = L"Set Rigid Body Tool";
+			this->setRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setRigidBodyToolToolStripMenuItem_Click);
 			// 
 			// rigidBodyToolContextMenu
 			// 
 			this->rigidBodyToolContextMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->setAsRigidBodyToolToolStripMenuItem, 
 				this->attachToExistingObjectToolStripMenuItem});
 			this->rigidBodyToolContextMenu->Name = L"contextMenuStrip1";
-			this->rigidBodyToolContextMenu->Size = System::Drawing::Size(205, 70);
+			this->rigidBodyToolContextMenu->Size = System::Drawing::Size(205, 48);
 			// 
 			// setAsRigidBodyToolToolStripMenuItem
 			// 
@@ -2660,6 +2671,11 @@ private: System::Void addObjectToolStripMenuItem_Click(System::Object^  sender, 
 			 control->setRigidBodyVector(optiTrackRigidBodyVector);
 			 control->Show();
 		 }
+private: System::Void setRigidBodyToolToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 SetRigidBodyToolForm^ rbtForm = gcnew SetRigidBodyToolForm();
+			 rbtForm->setRigidBodyVector(optiTrackRigidBodyVector);
+			 rbtForm->Show();
+		 }
 /*private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 			int toggled = -1;
 
@@ -3203,6 +3219,7 @@ private: System::Void startRecordingBtn_Click(System::Object^  sender, System::E
 private: System::Void stopRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 RecordingManager::getInstance()->stopRecording();
 		 }
+
 
 };
 }

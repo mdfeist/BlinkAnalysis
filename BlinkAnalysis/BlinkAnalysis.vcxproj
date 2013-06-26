@@ -208,6 +208,9 @@
     <ClInclude Include="SetRigidBodyObjectForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="SetRigidBodyToolForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Split.h" />
     <ClInclude Include="stdafx.h" />
@@ -244,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SetRigidBodyObjectForm.resx">
       <DependentUpon>SetRigidBodyObjectForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetRigidBodyToolForm.resx">
+      <DependentUpon>SetRigidBodyToolForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

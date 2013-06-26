@@ -1456,6 +1456,8 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			// 
 			// wizardPagesTemp
 			// 
+			this->wizardPagesTemp->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->wizardPagesTemp->Controls->Add(this->introPage);
 			this->wizardPagesTemp->Controls->Add(this->paramPage);
 			this->wizardPagesTemp->Controls->Add(this->inputPage);
