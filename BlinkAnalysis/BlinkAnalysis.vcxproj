@@ -143,6 +143,7 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="PickHandler.cpp" />
     <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RecordingManager.cpp" />
     <ClCompile Include="Recording.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Marker.h" />
     <ClInclude Include="NatNetClientSetup.h" />
     <ClInclude Include="Objects.h" />
+    <ClInclude Include="PickHandler.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="RecordingManager.h" />

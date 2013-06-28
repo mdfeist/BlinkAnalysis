@@ -95,14 +95,22 @@ osg::Node* CaptureObject::setRender(bool ren)
 // CaptureObjectCustom
 ///////////////////////////
 
-osg::Node* CaptureObjectCustom::getAsNode()
+osg::Node* CaptureObjectCustom::getAsNode(int wid)
 {
 	osg::Geode* geo;
 	// no transformation node
 	if (rigidBody < 0 || !node->asGroup() )
 	{
 		if (!node)
+		{
 			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
 		geo = node->asGeode();
 	}
 	// has transformation node
@@ -112,6 +120,12 @@ osg::Node* CaptureObjectCustom::getAsNode()
 		if (group->getNumChildren() <= 0)
 		{
 			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
 			group->addChild(geo);
 		}
 		else
@@ -208,14 +222,22 @@ void CaptureObjectPlane::setVertices(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 
 	face->push_back(3);
 }
 
-osg::Node* CaptureObjectPlane::getAsNode()
+osg::Node* CaptureObjectPlane::getAsNode(int wid)
 {
 	osg::Geode* geo;
 	// no transformation node
 	if (rigidBody < 0 || !node->asGroup() )
 	{
 		if (!node)
+		{
 			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
 		geo = node->asGeode();
 	}
 	// has transformation node
@@ -225,6 +247,12 @@ osg::Node* CaptureObjectPlane::getAsNode()
 		if (group->getNumChildren() <= 0)
 		{
 			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
 			group->addChild(geo);
 		}
 		else
@@ -283,14 +311,22 @@ CaptureObjectBox::CaptureObjectBox(osg::Vec3 centre, osg::Vec3 halfLen, osg::Qua
 	box->setRotation(rot);
 }
 
-osg::Node* CaptureObjectBox::getAsNode()
+osg::Node* CaptureObjectBox::getAsNode(int wid)
 {
 	osg::Geode* geo;
 	// no transformation node
 	if (rigidBody < 0 || !node->asGroup() )
 	{
 		if (!node)
+		{
 			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
 		geo = node->asGeode();
 	}
 	// has transformation node
@@ -300,6 +336,12 @@ osg::Node* CaptureObjectBox::getAsNode()
 		if (group->getNumChildren() <= 0)
 		{
 			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
 			group->addChild(geo);
 		}
 		else
@@ -392,14 +434,22 @@ CaptureObjectCylinder::CaptureObjectCylinder(osg::Vec3 centre, float radius, flo
 	cylinder->setRotation(rot);
 }
 
-osg::Node* CaptureObjectCylinder::getAsNode()
+osg::Node* CaptureObjectCylinder::getAsNode(int wid)
 {
 	osg::Geode* geo;
 	// no transformation node
 	if (rigidBody < 0 || !node->asGroup() )
 	{
 		if (!node)
+		{
 			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
 		geo = node->asGeode();
 	}
 	// has transformation node
@@ -409,6 +459,12 @@ osg::Node* CaptureObjectCylinder::getAsNode()
 		if (group->getNumChildren() <= 0)
 		{
 			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
 			group->addChild(geo);
 		}
 		else

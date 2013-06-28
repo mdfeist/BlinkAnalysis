@@ -73,7 +73,7 @@ public:
 
 	// virtual functions
 	// returns a Geode representing this object
-	virtual osg::Node* getAsNode() = 0;
+	virtual osg::Node* getAsNode(int wid) = 0;
 	virtual int getNumVertices() = 0;
 	virtual int getNumFaces() = 0;
 	virtual osg::Vec3 getPosition() = 0;
@@ -105,7 +105,7 @@ public:
 		faces.clear(); 
 	}
 
-	osg::Node* getAsNode();
+	osg::Node* getAsNode(int wid);
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
 };
@@ -135,7 +135,7 @@ public:
 
 	int getNumFaces() { return 1; }
 
-	osg::Node* getAsNode();
+	osg::Node* getAsNode(int wid);
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
 };
@@ -160,7 +160,7 @@ public:
 
 	int getNumVertices() { return 8; }
 	int getNumFaces() { return 6; }
-	osg::Node* getAsNode();
+	osg::Node* getAsNode(int wid);
 
 	void setCentre(osg::Vec3 centre);
 	osg::Vec3 getCentre();
@@ -195,7 +195,7 @@ public:
 
 	int getNumVertices() { return 0; }
 	int getNumFaces() { return 3; }
-	osg::Node* getAsNode();
+	osg::Node* getAsNode(int wid);
 
 	void setCentre(osg::Vec3 centre);
 	osg::Vec3 getCentre();

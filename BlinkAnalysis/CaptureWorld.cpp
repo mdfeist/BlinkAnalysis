@@ -157,7 +157,7 @@ void CaptureWorld::updateObjectsNode()
 		{
 			if (itr->second->renderObject())
 			{
-				osg::Node* objNode = itr->second->getAsNode();
+				osg::Node* objNode = itr->second->getAsNode(this->id);
 				if (!node->containsNode(objNode))
 					node->addChild(objNode);
 			}

@@ -27,6 +27,7 @@
 #include "AppData.h"
 #include "Dikablis.h"
 #include "WorldManager.h"
+#include "PickHandler.h"
 
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
@@ -148,7 +149,7 @@ void renderMarkers(osg::Geode* node) {
 		if (client->lock())
 		{
 			// Create Points
-			// Create geo to store points
+			// Create geo to store rigid body points
 			osg::Geometry* geo = new osg::Geometry(); 
 
 			// Create array to hold points
@@ -205,14 +206,28 @@ void renderMarkers(osg::Geode* node) {
 					// Get current position of marker
 					osg::Vec3 pos = marker->getPosition(); 
 
-					// Add marker to the points array
-					points->push_back( pos );
+					// Add marker to the point array
+					osg::Vec3Array* point = new osg::Vec3Array();
+					point->push_back(pos);
 
-					// Add colors
+					// Add color
+					osg::Vec4Array* colour = new osg::Vec4Array();
 					if (marker->isSelected())
-						colors->push_back(osg::Vec4(0, 1, 0, 1));
+						colour->push_back(osg::Vec4(0, 1, 0, 1));
 					else
-						colors->push_back(osg::Vec4(0, 0, 1, 1));
+						colour->push_back(osg::Vec4(0, 0, 1, 1));
+
+					osg::Geometry* geom = new osg::Geometry();
+					geom->setVertexArray(point);
+					geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, 1));
+					geom->setColorArray(colour);
+					geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+
+					std::stringstream sstr;
+					sstr << "LM ";
+					sstr << marker->getID();
+					geom->setName(sstr.str());
+					node->addDrawable(geom);
 				}
 			}
 			// Unlock Client so marker data can be updated
@@ -256,23 +271,24 @@ void render(void *) {
 
 		// Check if view is visible
 		if (visible) {
-			// Add Geode to store all the marker points
-			osg::Geode* node = new osg::Geode(); 
+			// Add Group to store all the marker points
+			osg::Geode* markerNode = new osg::Geode(); 
+			markerNode->setName("Markers");
 
 			// Render the OptiTrack Markers
-			renderMarkers(node);
+			renderMarkers(markerNode);
 
 			// Render Eye Vector
-			renderEyeVector(node);
+			renderEyeVector(markerNode);
 
 			// Add Node containing all the points to the scene
-			sceneNode->addChild( node );
+			sceneNode->addChild( markerNode );
 			
 			// Render frame
 			viewer->frame();
 
 			// Remove points from the scene
-			sceneNode->removeChild( node );
+			sceneNode->removeChild( markerNode );
 		} else {
 			// View not visible so Sleep for 1000 milliseconds
 			Sleep(1000);
@@ -344,6 +360,7 @@ void AppViewer::initAppViewer(HWND hwnd)
 
 	// Add the ground plane
 	osg::Geode* planeNode = Objects::createPlane();
+	planeNode->setName("Grid Plane");
 	Objects::applyTexture("Images/PlaneGrid.png", planeNode);
 	osg::ref_ptr<osg::StateSet> planeNodeState = planeNode->getOrCreateStateSet();
 	planeNodeState->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
@@ -375,6 +392,17 @@ void AppViewer::initAppViewer(HWND hwnd)
 	// Set the max frame rate to 60 frames per second
 	viewer->setRunMaxFrameRate(60.f);
 	viewer->realize();
+
+	// For object picking
+	osg::ref_ptr<osgText::Text> updateText = new osgText::Text;
+	PickMarkerHandler* pmHandler = new PickMarkerHandler(updateText);
+	rootNode->addChild(pmHandler->createHUD(traits));
+
+	PickObjectHandler* poHandler = new PickObjectHandler(updateText);
+	rootNode->addChild(poHandler->createHUD(traits));
+
+	viewer->addEventHandler(pmHandler);
+	viewer->addEventHandler(poHandler);
 
 	// Begin rendering on new thread
 	_beginthread( render, 0, NULL );
