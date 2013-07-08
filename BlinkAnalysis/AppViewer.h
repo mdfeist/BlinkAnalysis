@@ -22,4 +22,11 @@ namespace AppViewer {
 	bool removeNodeFromViewer(osg::Node* node);
 	// The Scale of the Viewers Scenes
 	void setScale(int scale);
+	// Set pick handlers
+	void useMarkerPickHandler();
+	void useObjectPickHandler();
+	// Display setting for labeled markers
+	void setDisplayLabeledMarkers(bool display);
+	// Display setting for capture objects
+	void setDisplayCaptureObjects(bool display);
 };

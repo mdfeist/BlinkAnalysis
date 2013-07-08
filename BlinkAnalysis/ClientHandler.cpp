@@ -56,6 +56,9 @@ ClientHandler::~ClientHandler(void)
 
 	if (this->dikablisEyeVectorArray != NULL)
 		free(this->dikablisEyeVectorArray);
+
+	clearLabeledMarkers();
+	clearRigidBodyMap();
 }
 bool ClientHandler::lock() {
 	// Request ownership of mutex
@@ -171,6 +174,14 @@ void ClientHandler::transformRigidBody(int id, osg::Vec3 pos, osg::Vec4 rot)
 std::map<int, RigidBody*>* ClientHandler::getRigidBodyMap()
 {
 	return &this->rigidBodies;
+}
+
+void ClientHandler::clearRigidBodyMap()
+{
+	for (std::map<int, RigidBody*>::iterator it=rigidBodies.begin(); it!=rigidBodies.end(); ++it)
+	{
+		delete it->second;
+	}
 }
 
 bool ClientHandler::addLabeledMarker(int id, Marker* marker)

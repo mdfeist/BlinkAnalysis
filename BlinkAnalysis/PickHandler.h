@@ -12,8 +12,11 @@
 class PickHandler : public osgGA::GUIEventHandler {
 public: 
 
-    PickHandler(osgText::Text* updateText) :
-	_updateText(updateText) { }
+    PickHandler(int width, int height) {
+		winWidth = width;
+		winHeight = height;
+		_updateText = new osgText::Text();
+	}
         
     ~PickHandler() {}
     
@@ -28,19 +31,22 @@ public:
 	}
 
     bool handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& aa);
-	osg::Node* createHUD(osg::GraphicsContext::Traits* traits);
+	osg::Node* getOrCreateHUD();
 
     virtual void pick(osgViewer::View* view, const osgGA::GUIEventAdapter& ea) = 0;
 	virtual void reset() = 0;
 
 protected:
+	int winWidth;
+	int winHeight;
 	osg::ref_ptr<osgText::Text>  _updateText;
+	osg::ref_ptr<osg::Camera> hudCamera;
 };
 
 class PickObjectHandler : public PickHandler {
 public:
-	PickObjectHandler(osgText::Text* updateText) :
-		PickHandler(updateText) {
+	PickObjectHandler(int width, int height) :
+		PickHandler(width, height) {
 		pickedGeode = NULL;
 	}
 
@@ -54,8 +60,8 @@ private:
 class PickMarkerHandler : public PickHandler {
 public:
 
-	PickMarkerHandler(osgText::Text* updateText) :
-		PickHandler(updateText) {
+	PickMarkerHandler(int width, int height) :
+		PickHandler(width, height) {
 		pickedMarker = -1;
 	}
 

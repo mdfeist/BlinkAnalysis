@@ -10,6 +10,7 @@ WorldManager* WorldManager::m_pInstance = NULL;
 
 WorldManager::WorldManager(void)
 {
+	worldNode = new osg::Group();
 }
 
 WorldManager::~WorldManager(void)
@@ -77,4 +78,19 @@ void WorldManager::clearWorlds(bool stopRender)
 	worlds.clear();
 }
 
+bool WorldManager::addWorldNode(osg::Node* wNode)
+{
+	if (!worldNode.valid()) return false;
+	return worldNode->addChild(wNode);
+}
 
+bool WorldManager::removeWorldNode(osg::Node* wNode)
+{
+	if (!worldNode.valid()) return false;
+	return worldNode->removeChild(wNode);
+}
+
+osg::Node* WorldManager::getWorldNode()
+{
+	return worldNode.get();
+}

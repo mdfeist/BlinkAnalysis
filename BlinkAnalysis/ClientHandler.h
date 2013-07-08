@@ -114,6 +114,7 @@ public:
 	std::map<int, RigidBody*>* getRigidBodyMap();
 	// Updates the RigidBody's transformation based on it's id
 	void transformRigidBody(int id, osg::Vec3 pos, osg::Vec4 rot);
+	void clearRigidBodyMap();
 
 	// Labeled Markers
 	bool addLabeledMarker(int id, Marker* marker);

@@ -20,13 +20,14 @@ bool PickHandler::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapte
 	return false;
 }
 
-osg::Node* PickHandler::createHUD(osg::GraphicsContext::Traits* traits)
+osg::Node* PickHandler::getOrCreateHUD()
 {
-    osg::Camera* hudCamera = new osg::Camera;
+	if (hudCamera.valid())
+		return hudCamera;
+
+    hudCamera = new osg::Camera;
 	hudCamera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
-	hudCamera->setProjectionMatrixAsOrtho2D(0,traits->width,0,traits->height);
-	osg::ref_ptr<osg::GraphicsContext> gc = osg::GraphicsContext::createGraphicsContext( traits );
-	hudCamera->setGraphicsContext( gc.get() );
+	hudCamera->setProjectionMatrixAsOrtho2D(0,winWidth,0,winHeight);
     hudCamera->setViewMatrix(osg::Matrix::identity());
     hudCamera->setRenderOrder(osg::Camera::POST_RENDER);
     hudCamera->setClearMask(GL_DEPTH_BUFFER_BIT);

@@ -22,6 +22,10 @@ public:
 	bool removeWorld(int id);
 	void clearWorlds(bool stopRender = false);
 
+	bool addWorldNode(osg::Node* wNode);
+	bool removeWorldNode(osg::Node* wNode);
+	osg::Node* getWorldNode();
+
 protected:
 	WorldManager(void);
 	~WorldManager(void);
@@ -32,6 +36,8 @@ private:
 
 	static WorldManager* m_pInstance;
 	std::map<int, CaptureWorld*> worlds;
+
+	osg::ref_ptr<osg::Group> worldNode;
 };
 
 

@@ -119,18 +119,18 @@ void CaptureWorld::setRender(bool ren)
 
 	render = ren;
 	if (render)
-		AppViewer::addNodeToViewer(getAsGroup());
+		WorldManager::getInstance()->addWorldNode(getAsGroup());
 	else
-		AppViewer::removeNodeFromViewer(node);
+		WorldManager::getInstance()->removeWorldNode(node);
 }
 
 bool CaptureWorld::toggleRender()
 {
 	render = !render;
 	if (render)
-		AppViewer::addNodeToViewer(getAsGroup());
+		WorldManager::getInstance()->addWorldNode(getAsGroup());
 	else
-		AppViewer::removeNodeFromViewer(node);
+		WorldManager::getInstance()->removeWorldNode(node);
 	return render;
 }
 

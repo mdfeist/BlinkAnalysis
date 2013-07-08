@@ -38,9 +38,12 @@ osg::Vec3 lastRay;
 bool running = false;
 bool visible = false;
 
-bool localMarkers = true;
+bool localMarkers = false;
 
 float VIEWER_SCALE = 1.f;
+
+osg::ref_ptr<osgGA::GUIEventHandler> pickMarkerHandler;
+osg::ref_ptr<osgGA::GUIEventHandler> pickObjectHandler;
 
 void AppViewer::stopAppViewer() { running = false; }
 void AppViewer::setVisible(bool bVisible) { visible = bVisible; }
@@ -318,13 +321,6 @@ void AppViewer::initAppViewer(HWND hwnd)
 
 	sceneNode->setScale(VIEWER_SCALE);
 	rootNode->addChild(sceneNode);
-	
-	// Add world, a Group node containing captured objects
-	std::map<int, CaptureWorld*> worlds = WorldManager::getInstance()->getWorlds();
-	for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
-	{
-		sceneNode->addChild(itr->second->getAsGroup());
-	}
 
 	// Set the traits for the rendering view
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits();
@@ -394,15 +390,10 @@ void AppViewer::initAppViewer(HWND hwnd)
 	viewer->realize();
 
 	// For object picking
-	osg::ref_ptr<osgText::Text> updateText = new osgText::Text;
-	PickMarkerHandler* pmHandler = new PickMarkerHandler(updateText);
-	rootNode->addChild(pmHandler->createHUD(traits));
-
-	PickObjectHandler* poHandler = new PickObjectHandler(updateText);
-	rootNode->addChild(poHandler->createHUD(traits));
-
-	viewer->addEventHandler(pmHandler);
-	viewer->addEventHandler(poHandler);
+	pickMarkerHandler = new PickMarkerHandler(traits->width, traits->height);
+	pickObjectHandler = new PickObjectHandler(traits->width, traits->height);
+	rootNode->addChild(((PickMarkerHandler*)pickMarkerHandler.get())->getOrCreateHUD());
+	rootNode->addChild(((PickObjectHandler*)pickObjectHandler.get())->getOrCreateHUD());
 
 	// Begin rendering on new thread
 	_beginthread( render, 0, NULL );
@@ -416,4 +407,44 @@ bool AppViewer::addNodeToViewer(osg::Node* node) {
 bool AppViewer::removeNodeFromViewer(osg::Node* node) {
 	if (!sceneNode) return false;
 	return sceneNode->removeChild(node);
+}
+
+void AppViewer::useMarkerPickHandler() {
+	if (!viewer) return;
+
+	if (pickObjectHandler.valid())
+		((PickObjectHandler*)pickObjectHandler.get())->reset();
+	viewer->removeEventHandler(pickObjectHandler);
+	viewer->addEventHandler(pickMarkerHandler);
+}
+
+void AppViewer::useObjectPickHandler() {
+	if (!viewer) return;
+	
+	if (pickMarkerHandler.valid())
+		((PickMarkerHandler*)pickMarkerHandler.get())->reset();
+	viewer->removeEventHandler(pickMarkerHandler);
+	viewer->addEventHandler(pickObjectHandler);
+}
+
+void AppViewer::setDisplayLabeledMarkers(bool display)
+{
+	localMarkers = display;
+	if (!display && pickMarkerHandler.valid())
+		((PickMarkerHandler*)pickMarkerHandler.get())->reset();
+}
+
+void AppViewer::setDisplayCaptureObjects(bool display)
+{
+	osg::Node* worldNode = WorldManager::getInstance()->getWorldNode();
+	if (display && !sceneNode->containsNode(worldNode))
+	{
+		sceneNode->addChild(worldNode);
+	}
+	else if (!display)
+	{
+		if (pickObjectHandler.valid())
+			((PickObjectHandler*)pickObjectHandler.get())->reset();
+		sceneNode->removeChild(worldNode);
+	}
 }

@@ -289,6 +289,14 @@ private: System::Windows::Forms::Button^  stopRecordingBtn;
 private: System::Windows::Forms::Button^  startRecordingBtn;
 private: System::Windows::Forms::ToolStripMenuItem^  attachToExistingObjectToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  setRigidBodyToolToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  viewerToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  showLabeledMarkersToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  showCaptureObjectsToolStripMenuItem;
+
+private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+private: System::Windows::Forms::ToolStripMenuItem^  selectMarkersToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  selectObjectsToolStripMenuItem;
+
 
 
 
@@ -439,6 +447,12 @@ private: System::Windows::Forms::ToolStripMenuItem^  setRigidBodyToolToolStripMe
 			this->objectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->setRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->viewerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->showLabeledMarkersToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->showCaptureObjectsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->selectMarkersToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->selectObjectsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->attachToExistingObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -1747,8 +1761,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  setRigidBodyToolToolStripMe
 			// 
 			// menuStrip
 			// 
-			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->projectToolStripMenuItem, 
-				this->calibrationToolStripMenuItem, this->objectToolStripMenuItem});
+			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->projectToolStripMenuItem, 
+				this->calibrationToolStripMenuItem, this->objectToolStripMenuItem, this->viewerToolStripMenuItem});
 			this->menuStrip->Location = System::Drawing::Point(0, 0);
 			this->menuStrip->Name = L"menuStrip";
 			this->menuStrip->Size = System::Drawing::Size(784, 24);
@@ -1829,6 +1843,51 @@ private: System::Windows::Forms::ToolStripMenuItem^  setRigidBodyToolToolStripMe
 			this->setRigidBodyToolToolStripMenuItem->Size = System::Drawing::Size(177, 22);
 			this->setRigidBodyToolToolStripMenuItem->Text = L"Set Rigid Body Tool";
 			this->setRigidBodyToolToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::setRigidBodyToolToolStripMenuItem_Click);
+			// 
+			// viewerToolStripMenuItem
+			// 
+			this->viewerToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->showLabeledMarkersToolStripMenuItem, 
+				this->showCaptureObjectsToolStripMenuItem, this->toolStripSeparator2, this->selectMarkersToolStripMenuItem, this->selectObjectsToolStripMenuItem});
+			this->viewerToolStripMenuItem->Name = L"viewerToolStripMenuItem";
+			this->viewerToolStripMenuItem->Size = System::Drawing::Size(54, 20);
+			this->viewerToolStripMenuItem->Text = L"Viewer";
+			// 
+			// showLabeledMarkersToolStripMenuItem
+			// 
+			this->showLabeledMarkersToolStripMenuItem->Name = L"showLabeledMarkersToolStripMenuItem";
+			this->showLabeledMarkersToolStripMenuItem->Size = System::Drawing::Size(192, 22);
+			this->showLabeledMarkersToolStripMenuItem->Text = L"Show Labeled Markers";
+			this->showLabeledMarkersToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::showLabeledMarkersToolStripMenuItem_CheckedChanged);
+			this->showLabeledMarkersToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::showLabeledMarkersToolStripMenuItem_Click);
+			// 
+			// showCaptureObjectsToolStripMenuItem
+			// 
+			this->showCaptureObjectsToolStripMenuItem->Name = L"showCaptureObjectsToolStripMenuItem";
+			this->showCaptureObjectsToolStripMenuItem->Size = System::Drawing::Size(192, 22);
+			this->showCaptureObjectsToolStripMenuItem->Text = L"Show Capture Objects";
+			this->showCaptureObjectsToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::showCaptureObjectsToolStripMenuItem_CheckedChanged);
+			this->showCaptureObjectsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::showCaptureObjectsToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this->toolStripSeparator2->Name = L"toolStripSeparator2";
+			this->toolStripSeparator2->Size = System::Drawing::Size(189, 6);
+			// 
+			// selectMarkersToolStripMenuItem
+			// 
+			this->selectMarkersToolStripMenuItem->Name = L"selectMarkersToolStripMenuItem";
+			this->selectMarkersToolStripMenuItem->Size = System::Drawing::Size(192, 22);
+			this->selectMarkersToolStripMenuItem->Text = L"Select Markers";
+			this->selectMarkersToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::selectMarkersToolStripMenuItem_CheckedChanged);
+			this->selectMarkersToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::selectMarkersToolStripMenuItem_Click);
+			// 
+			// selectObjectsToolStripMenuItem
+			// 
+			this->selectObjectsToolStripMenuItem->Name = L"selectObjectsToolStripMenuItem";
+			this->selectObjectsToolStripMenuItem->Size = System::Drawing::Size(192, 22);
+			this->selectObjectsToolStripMenuItem->Text = L"Select Objects";
+			this->selectObjectsToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::selectObjectsToolStripMenuItem_CheckedChanged);
+			this->selectObjectsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::selectObjectsToolStripMenuItem_Click);
 			// 
 			// rigidBodyToolContextMenu
 			// 
@@ -2103,6 +2162,11 @@ private: System::Windows::Forms::ToolStripMenuItem^  setRigidBodyToolToolStripMe
 				 this->visualRigidBodyListView->Columns->Add("Name", 150, HorizontalAlignment::Left ); 
 
 				 this->rigidBodyToolContextMenu->Close();
+
+				 // default global viewer settings
+				 this->selectObjectsToolStripMenuItem->Checked = true;
+				 this->showLabeledMarkersToolStripMenuItem->Checked = false;
+				 this->showCaptureObjectsToolStripMenuItem->Checked = true;
 			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::Windows::Forms::FormClosingEventArgs^ e) 
 			 {
@@ -2125,14 +2189,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  setRigidBodyToolToolStripMe
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
 					NatNetClientSetup::deleteClient(&client);
-
-					client->clearLabeledMarkers();
-					std::map<int, RigidBody*>* bodyMap = client->getRigidBodyMap();
-					
-					for (std::map<int, RigidBody*>::iterator it=bodyMap->begin(); it!=bodyMap->end(); ++it)
-					{
-						delete it->second;
-					}
 
 					if (optiTrackRigidBodyVector)
 						delete optiTrackRigidBodyVector;
@@ -3220,7 +3276,50 @@ private: System::Void stopRecordingBtn_Click(System::Object^  sender, System::Ev
 			 RecordingManager::getInstance()->stopRecording();
 		 }
 
+/////////////////////
+// Global Viewer Settings
 
+private: System::Void showLabeledMarkersToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->showLabeledMarkersToolStripMenuItem->Checked)
+				this->showLabeledMarkersToolStripMenuItem->Checked = false;
+			 else
+				this->showLabeledMarkersToolStripMenuItem->Checked = true;
+		 }
+private: System::Void showCaptureObjectsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->showCaptureObjectsToolStripMenuItem->Checked)
+				this->showCaptureObjectsToolStripMenuItem->Checked = false;
+			 else
+				this->showCaptureObjectsToolStripMenuItem->Checked = true;
+		 }
+private: System::Void selectMarkersToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (!this->selectMarkersToolStripMenuItem->Checked)
+			 {
+				 this->selectMarkersToolStripMenuItem->Checked = true;
+				 this->selectObjectsToolStripMenuItem->Checked = false;
+			 }
+		 }
+private: System::Void selectObjectsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (!this->selectObjectsToolStripMenuItem->Checked)
+			 {
+				 this->selectMarkersToolStripMenuItem->Checked = false;
+				 this->selectObjectsToolStripMenuItem->Checked = true;
+			 }
+		 }
+
+private: System::Void showLabeledMarkersToolStripMenuItem_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 AppViewer::setDisplayLabeledMarkers(this->showLabeledMarkersToolStripMenuItem->Checked);
+		 }
+private: System::Void showCaptureObjectsToolStripMenuItem_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 AppViewer::setDisplayCaptureObjects(this->showCaptureObjectsToolStripMenuItem->Checked);
+		 }
+private: System::Void selectMarkersToolStripMenuItem_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->selectMarkersToolStripMenuItem->Checked)
+				 AppViewer::useMarkerPickHandler();
+		 }
+private: System::Void selectObjectsToolStripMenuItem_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->selectObjectsToolStripMenuItem->Checked)
+				 AppViewer::useObjectPickHandler();
+		 }
 };
 }
 
