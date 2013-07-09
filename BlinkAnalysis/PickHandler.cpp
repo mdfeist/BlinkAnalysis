@@ -34,7 +34,7 @@ osg::Node* PickHandler::getOrCreateHUD()
     
     // turn lighting off for the text and disable depth test to ensure it's always on top.
 	osg::Vec3 position(3.0f,20.0f,0.0f);
-	osg::Vec4 colour(1.0f,1.0f,1.0f,1.0f);
+	osg::Vec4 colour(1.0f,1.0f,1.0f,1.0f);	// white
    
     {
         osg::Geode* geode = new osg::Geode();
@@ -44,10 +44,12 @@ osg::Node* PickHandler::getOrCreateHUD()
         geode->addDrawable( _updateText );
         hudCamera->addChild(geode);
         
+		// draw box around text
 		_updateText->setDrawMode(osgText::Text::TEXT | osgText::Text::BOUNDINGBOX);
 		_updateText->setBoundingBoxColor(colour);
 		_updateText->setBoundingBoxMargin(2);
         _updateText->setCharacterSize(20.0f);
+		// internally scales text to have consistent size
 		_updateText->setCharacterSizeMode(osgText::Text::SCREEN_COORDS);
         _updateText->setColor(colour);
         _updateText->setText("");
@@ -78,6 +80,8 @@ void PickObjectHandler::pick(osgViewer::View* view, const osgGA::GUIEventAdapter
 			{
 				osg::Geode* geo = hitr->nodePath.back()->asGeode();
 				std::string name = geo->getName();
+				// geode containing captured object has the following name format
+				// OBJ wid,oid
 				if (!name.substr(0, 3).compare("OBJ"))
 				{
 					geo->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
@@ -118,6 +122,7 @@ void PickObjectHandler::reset()
 
 void PickMarkerHandler::pick(osgViewer::View* view, const osgGA::GUIEventAdapter& ea)
 {
+	// since points have no area to pick, must use bounding box intersection
 	osgUtil::PolytopeIntersector::Intersections intersections;
 
 	float x = ea.getX();
@@ -139,6 +144,8 @@ void PickMarkerHandler::pick(osgViewer::View* view, const osgGA::GUIEventAdapter
 			{
 				osg::Geometry* geom = hitr->drawable->asGeometry();
 				std::string name = geom->getName();
+				// drawable containing labeled marker has the following name format
+				// LM #
 				if (geom && !name.substr(0, 2).compare("LM"))
 				{
 					pickedMarker = atoi(name.substr(3, name.length()-3).c_str());

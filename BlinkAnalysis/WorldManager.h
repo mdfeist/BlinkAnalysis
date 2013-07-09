@@ -22,6 +22,7 @@ public:
 	bool removeWorld(int id);
 	void clearWorlds(bool stopRender = false);
 
+	// all worlds contained under one Group node
 	bool addWorldNode(osg::Node* wNode);
 	bool removeWorldNode(osg::Node* wNode);
 	osg::Node* getWorldNode();

@@ -31,9 +31,12 @@ public:
 	}
 
     bool handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& aa);
+	// camera for projecting text onto viewer
 	osg::Node* getOrCreateHUD();
 
+	// handling clicked geodes
     virtual void pick(osgViewer::View* view, const osgGA::GUIEventAdapter& ea) = 0;
+	// clear text associated with handler
 	virtual void reset() = 0;
 
 protected:
@@ -42,6 +45,7 @@ protected:
 	osg::ref_ptr<osgText::Text>  _updateText;
 	osg::ref_ptr<osg::Camera> hudCamera;
 };
+
 
 class PickObjectHandler : public PickHandler {
 public:
@@ -54,8 +58,10 @@ public:
 	void reset();
 
 private:
+	// geode currently selected
 	osg::ref_ptr<osg::Geode> pickedGeode;
 };
+
 
 class PickMarkerHandler : public PickHandler {
 public:
@@ -69,6 +75,7 @@ public:
 	void reset();
 
 private:
+	// ID of marker currently selected
 	int pickedMarker;
 };
 

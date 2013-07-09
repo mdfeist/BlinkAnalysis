@@ -127,6 +127,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddObjectDistanceForm.cpp" />
     <ClCompile Include="AppViewer.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlinkAnalysis.cpp" />
@@ -161,6 +162,9 @@
     <ClCompile Include="WorldManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddObjectDistanceForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AddObjectWizardForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -225,6 +229,9 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddObjectDistanceForm.resx">
+      <DependentUpon>AddObjectDistanceForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddObjectWizardForm.resx">
       <DependentUpon>AddObjectWizardForm.h</DependentUpon>
     </EmbeddedResource>
