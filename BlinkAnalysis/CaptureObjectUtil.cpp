@@ -118,3 +118,15 @@ osg::Matrixd* CaptureObjectUtil::getWorldCoords( osg::Node* node)
    }
 } 
 ////////////////////////////////////////
+
+osg::Matrixd* CaptureObjectUtil::createInverseMatrix(osg::AutoTransform* node)
+{
+	osg::Matrixd* matrix = new osg::Matrixd();
+	matrix->makeIdentity();
+	matrix->setTrans(node->getPosition());
+	matrix->setRotate(node->getRotation());
+	matrix->set(osg::Matrixf::inverse(*matrix));
+
+	return matrix;
+}
+
