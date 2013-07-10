@@ -186,7 +186,8 @@ void PickMarkerHandler::reset()
 		ClientHandler* client = AppData::getInstance()->getClient();
 		if (client)
 		{
-			client->getLabeledMarker(pickedMarker)->deselect();
+			Marker* marker = client->getLabeledMarker(pickedMarker);
+			if (marker) marker->deselect();
 			setLabel("");
 		}
 		pickedMarker = -1;
