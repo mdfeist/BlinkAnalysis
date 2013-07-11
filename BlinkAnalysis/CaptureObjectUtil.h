@@ -4,7 +4,7 @@
 #include <osg/Vec3>
 #include <osg/Matrix>
 #include <osg/NodeVisitor>
-#include <osg/AutoTransform>
+#include <osg/Transform>
 
 #include "Marker.h"
 #include "Marcos.h"
@@ -58,8 +58,6 @@ public:
 	static osg::Vec3 quaternionToEuler(osg::Quat q);
 
 	static osg::Matrixd* getWorldCoords( osg::Node* node);
-
-	static osg::Matrixd* createInverseMatrix(osg::AutoTransform* node);
 };
 
 #endif

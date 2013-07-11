@@ -79,9 +79,6 @@ public:
 	virtual osg::Vec3 getPosition() = 0;
 	virtual osg::Quat getRotation() = 0;
 
-	// used to set position relative to rigid bodies
-	virtual void setTransformation(osg::AutoTransform* transformNode) = 0;
-	virtual void setTransformationInverse(osg::AutoTransform* transformNode) = 0;
 };
 
 
@@ -111,9 +108,6 @@ public:
 	osg::Node* getAsNode(int wid);
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
-
-	void setTransformation(osg::AutoTransform* transformNode);
-	void setTransformationInverse(osg::AutoTransform* transformNode);
 };
 
 
@@ -144,9 +138,6 @@ public:
 	osg::Node* getAsNode(int wid);
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
-	
-	void setTransformation(osg::AutoTransform* transformNode);
-	void setTransformationInverse(osg::AutoTransform* transformNode);
 };
 
 
@@ -182,9 +173,6 @@ public:
 	
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
-	
-	void setTransformation(osg::AutoTransform* transformNode);
-	void setTransformationInverse(osg::AutoTransform* transformNode);
 };
 
 
@@ -223,9 +211,6 @@ public:
 	
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
-	
-	void setTransformation(osg::AutoTransform* transformNode);
-	void setTransformationInverse(osg::AutoTransform* transformNode);
 };
 
 #endif

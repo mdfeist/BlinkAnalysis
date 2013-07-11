@@ -31,8 +31,15 @@ void CaptureObject::setRigidBody(RigidBody* rb, bool offset)
 				oldRB->setWorldID(-1);
 			}
 		}
-		setTransformation(rigidNode);
 		rigidNode = NULL;
+
+		// remove offset node if it exists
+		if (!node->asGeode())
+		{
+			osg::Group* temp = node->asGroup();
+			node = temp->getChild(0);
+			temp->removeChild(node);
+		}
 	}
 
 	// detaching rigid body only
@@ -46,12 +53,16 @@ void CaptureObject::setRigidBody(RigidBody* rb, bool offset)
 	rigidNode = rb->getTransform();
 	if (offset)
 	{
-		setTransformationInverse(rigidNode);
-	}
-	else
-	{
-		// zero transformation
-		setTransformation(NULL);
+		osg::MatrixTransform* temp = new osg::MatrixTransform();
+
+		osg::Matrixf matrix;
+		matrix.makeIdentity();
+		matrix.setTrans(rigidNode->getPosition());
+		matrix.setRotate(rigidNode->getRotation());
+		temp->setMatrix(osg::Matrixf::inverse(matrix));
+
+		temp->addChild(node);
+		node = temp;
 	}
 	rigidNode->addChild(node);
 	rigidBody = rb->getID();
@@ -86,17 +97,42 @@ osg::Node* CaptureObject::setRender(bool ren)
 
 osg::Node* CaptureObjectCustom::getAsNode(int wid)
 {
-	if (!node)
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0 || !node->asGroup() )
 	{
-		node = new osg::Geode();
-		std::stringstream sstr;
-		sstr << "OBJ ";
-		sstr << wid;
-		sstr << ",";
-		sstr << this->id;
-		node->setName(sstr.str());
+		if (!node)
+		{
+			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
+		geo = node->asGeode();
 	}
-	osg::Geode*	geo = node->asGeode();
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
 
 	geo->removeDrawables(0, geo->getNumDrawables());
 	osg::Geometry *geom = new osg::Geometry();
@@ -148,39 +184,6 @@ osg::Quat CaptureObjectCustom::getRotation()
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
 }
 
-// TODO: custom data does not have position and orientation data
-// so there's no real definition for "reset transformation"
-void CaptureObjectCustom::setTransformation(osg::AutoTransform* transformNode)
-{
-	// apply transformation to all vertices
-	if (transformNode != NULL)
-	{
-		for (osg::Vec3Array::iterator itr = vertices->begin(); itr != vertices->end(); itr++)
-		{
-			*itr += transformNode->getPosition();
-			*itr = transformNode->getRotation() * *itr;
-		}
-	}
-}
-
-void CaptureObjectCustom::setTransformationInverse(osg::AutoTransform* transformNode)
-{
-	// apply transformation to all vertices
-	if (transformNode != NULL)
-	{
-		// inverse transformation
-		osg::Matrixd* matrix = CaptureObjectUtil::createInverseMatrix(transformNode);
-
-		for (osg::Vec3Array::iterator itr = vertices->begin(); itr != vertices->end(); itr++)
-		{
-			*itr += matrix->getTrans();
-			*itr = matrix->getRotate() * *itr;
-		}
-		delete matrix;
-	}
-}
-
-
 ///////////////////////////
 // CaptureObjectPlane
 ///////////////////////////
@@ -221,17 +224,42 @@ void CaptureObjectPlane::setVertices(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 
 
 osg::Node* CaptureObjectPlane::getAsNode(int wid)
 {
-	if (!node)
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0 || !node->asGroup() )
 	{
-		node = new osg::Geode();
-		std::stringstream sstr;
-		sstr << "OBJ ";
-		sstr << wid;
-		sstr << ",";
-		sstr << this->id;
-		node->setName(sstr.str());
+		if (!node)
+		{
+			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
+		geo = node->asGeode();
 	}
-	osg::Geode*	geo = node->asGeode();
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
 
 	geo->removeDrawables(0, 1);
 	osg::Geometry *geom = new osg::Geometry();
@@ -270,38 +298,6 @@ osg::Quat CaptureObjectPlane::getRotation()
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
 }
 
-// TODO: plane does not have position and orientation data
-// so there's no real definition for "reset transformation"
-void CaptureObjectPlane::setTransformation(osg::AutoTransform* transformNode)
-{
-	// apply transformation to all vertices
-	if (transformNode != NULL)
-	{
-		for (osg::Vec3Array::iterator itr = vertices->begin(); itr != vertices->end(); itr++)
-		{
-			*itr += transformNode->getPosition();
-			*itr = transformNode->getRotation() * *itr;
-		}
-	}
-}
-
-void CaptureObjectPlane::setTransformationInverse(osg::AutoTransform* transformNode)
-{
-	// apply transformation to all vertices
-	if (transformNode != NULL)
-	{
-		// inverse transformation
-		osg::Matrixd* matrix = CaptureObjectUtil::createInverseMatrix(transformNode);
-
-		for (osg::Vec3Array::iterator itr = vertices->begin(); itr != vertices->end(); itr++)
-		{
-			*itr += matrix->getTrans();
-			*itr = matrix->getRotate() * *itr;
-		}
-		delete matrix;
-	}
-}
-
 
 ///////////////////////////
 // CaptureObjectBox
@@ -317,17 +313,42 @@ CaptureObjectBox::CaptureObjectBox(osg::Vec3 centre, osg::Vec3 halfLen, osg::Qua
 
 osg::Node* CaptureObjectBox::getAsNode(int wid)
 {
-	if (!node)
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0 || !node->asGroup() )
 	{
-		node = new osg::Geode();
-		std::stringstream sstr;
-		sstr << "OBJ ";
-		sstr << wid;
-		sstr << ",";
-		sstr << this->id;
-		node->setName(sstr.str());
+		if (!node)
+		{
+			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
+		geo = node->asGeode();
 	}
-	osg::Geode*	geo = node->asGeode();
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
 
 	geo->removeDrawables(0, 1);
 	if (box)
@@ -400,33 +421,6 @@ osg::Quat CaptureObjectBox::getRotation()
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationBox();
 }
 
-void CaptureObjectBox::setTransformation(osg::AutoTransform* transformNode)
-{
-	if (!box) return;
-
-	if (transformNode)
-	{
-		box->setCenter(transformNode->getPosition() + getCentre());
-		box->setRotation(transformNode->getRotation() * getRotationBox());
-	}
-	// reset
-	else
-	{
-		box->setCenter(osg::Vec3(0, 0, 0));
-		box->setRotation(osg::Quat(0, 0, 0, 1));
-	}
-}
-
-void CaptureObjectBox::setTransformationInverse(osg::AutoTransform* transformNode)
-{
-	if (!box || !transformNode) return;
-
-	osg::Matrixd* matrix = CaptureObjectUtil::createInverseMatrix(transformNode);
-	box->setCenter(matrix->getTrans() + getCentre());
-	box->setRotation(matrix->getRotate() * getRotationBox());
-	delete matrix;
-}
-
 
 ///////////////////////////
 // CaptureObjectCylinder
@@ -442,17 +436,42 @@ CaptureObjectCylinder::CaptureObjectCylinder(osg::Vec3 centre, float radius, flo
 
 osg::Node* CaptureObjectCylinder::getAsNode(int wid)
 {
-	if (!node)
+	osg::Geode* geo;
+	// no transformation node
+	if (rigidBody < 0 || !node->asGroup() )
 	{
-		node = new osg::Geode();
-		std::stringstream sstr;
-		sstr << "OBJ ";
-		sstr << wid;
-		sstr << ",";
-		sstr << this->id;
-		node->setName(sstr.str());
+		if (!node)
+		{
+			node = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			node->setName(sstr.str());
+		}
+		geo = node->asGeode();
 	}
-	osg::Geode*	geo = node->asGeode();
+	// has transformation node
+	else 
+	{
+		osg::Group* group = node->asGroup();
+		if (group->getNumChildren() <= 0)
+		{
+			geo = new osg::Geode();
+			std::stringstream sstr;
+			sstr << "OBJ ";
+			sstr << wid;
+			sstr << ",";
+			sstr << this->id;
+			geo->setName(sstr.str());
+			group->addChild(geo);
+		}
+		else
+		{
+			geo = group->getChild(0)->asGeode();
+		}
+	}
 
 	geo->removeDrawables(0, 1);
 	if (cylinder)
@@ -537,31 +556,4 @@ osg::Quat CaptureObjectCylinder::getRotation()
 	else 
 		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationCylinder();
-}
-
-void CaptureObjectCylinder::setTransformation(osg::AutoTransform* transformNode)
-{
-	if (!cylinder) return;
-
-	if (transformNode)
-	{
-		cylinder->setCenter(transformNode->getPosition() + getCentre());
-		cylinder->setRotation(transformNode->getRotation() * getRotationCylinder());
-	}
-	// reset
-	else
-	{
-		cylinder->setCenter(osg::Vec3(0, 0, 0));
-		cylinder->setRotation(osg::Quat(0, 0, 0, 1));
-	}
-}
-
-void CaptureObjectCylinder::setTransformationInverse(osg::AutoTransform* transformNode)
-{
-	if (!cylinder || !transformNode) return;
-
-	osg::Matrixd* matrix = CaptureObjectUtil::createInverseMatrix(transformNode);
-	cylinder->setCenter(matrix->getTrans() + getCentre());
-	cylinder->setRotation(matrix->getRotate() * getRotationCylinder());
-	delete matrix;
 }
