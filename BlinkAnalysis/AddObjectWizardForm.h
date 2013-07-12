@@ -488,7 +488,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->cylinCenZText->Name = L"cylinCenZText";
 			this->cylinCenZText->Size = System::Drawing::Size(83, 20);
 			this->cylinCenZText->TabIndex = 83;
-			this->cylinCenZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->cylinCenZText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// cylinCenYText
 			// 
@@ -496,7 +496,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->cylinCenYText->Name = L"cylinCenYText";
 			this->cylinCenYText->Size = System::Drawing::Size(83, 20);
 			this->cylinCenYText->TabIndex = 82;
-			this->cylinCenYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->cylinCenYText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// cylinCenXText
 			// 
@@ -504,7 +504,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->cylinCenXText->Name = L"cylinCenXText";
 			this->cylinCenXText->Size = System::Drawing::Size(83, 20);
 			this->cylinCenXText->TabIndex = 81;
-			this->cylinCenXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->cylinCenXText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// cylinZLabel
 			// 
@@ -546,7 +546,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->cylinHText->Size = System::Drawing::Size(83, 20);
 			this->cylinHText->TabIndex = 89;
 			this->cylinHText->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->cylinHText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->cylinHText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// cylinRText
 			// 
@@ -555,7 +555,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->cylinRText->Size = System::Drawing::Size(83, 20);
 			this->cylinRText->TabIndex = 88;
 			this->cylinRText->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->cylinRText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->cylinRText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// cylinHLabel
 			// 
@@ -671,7 +671,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->boxCenZText->Name = L"boxCenZText";
 			this->boxCenZText->Size = System::Drawing::Size(83, 20);
 			this->boxCenZText->TabIndex = 65;
-			this->boxCenZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->boxCenZText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// boxCenYText
 			// 
@@ -679,7 +679,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->boxCenYText->Name = L"boxCenYText";
 			this->boxCenYText->Size = System::Drawing::Size(83, 20);
 			this->boxCenYText->TabIndex = 64;
-			this->boxCenYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->boxCenYText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// boxCenXText
 			// 
@@ -687,7 +687,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->boxCenXText->Name = L"boxCenXText";
 			this->boxCenXText->Size = System::Drawing::Size(83, 20);
 			this->boxCenXText->TabIndex = 63;
-			this->boxCenXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->boxCenXText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// boxZLabel
 			// 
@@ -740,7 +740,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->boxHTextBox->Size = System::Drawing::Size(83, 20);
 			this->boxHTextBox->TabIndex = 72;
 			this->boxHTextBox->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->boxHTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->boxHTextBox->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// boxWTextBox
 			// 
@@ -749,7 +749,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->boxWTextBox->Size = System::Drawing::Size(83, 20);
 			this->boxWTextBox->TabIndex = 71;
 			this->boxWTextBox->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->boxWTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->boxWTextBox->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// boxLTextBox
 			// 
@@ -758,7 +758,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->boxLTextBox->Size = System::Drawing::Size(83, 20);
 			this->boxLTextBox->TabIndex = 70;
 			this->boxLTextBox->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->boxLTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->boxLTextBox->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// boxHLabel
 			// 
@@ -885,7 +885,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planePt2ZText->Name = L"planePt2ZText";
 			this->planePt2ZText->Size = System::Drawing::Size(76, 20);
 			this->planePt2ZText->TabIndex = 63;
-			this->planePt2ZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planePt2ZText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planePt2YText
 			// 
@@ -893,7 +893,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planePt2YText->Name = L"planePt2YText";
 			this->planePt2YText->Size = System::Drawing::Size(76, 20);
 			this->planePt2YText->TabIndex = 62;
-			this->planePt2YText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planePt2YText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planeCornZText
 			// 
@@ -901,7 +901,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planeCornZText->Name = L"planeCornZText";
 			this->planeCornZText->Size = System::Drawing::Size(76, 20);
 			this->planeCornZText->TabIndex = 60;
-			this->planeCornZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planeCornZText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planeCornYText
 			// 
@@ -909,7 +909,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planeCornYText->Name = L"planeCornYText";
 			this->planeCornYText->Size = System::Drawing::Size(76, 20);
 			this->planeCornYText->TabIndex = 59;
-			this->planeCornYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planeCornYText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planePt1ZText
 			// 
@@ -917,7 +917,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planePt1ZText->Name = L"planePt1ZText";
 			this->planePt1ZText->Size = System::Drawing::Size(76, 20);
 			this->planePt1ZText->TabIndex = 57;
-			this->planePt1ZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planePt1ZText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planePt1YText
 			// 
@@ -925,7 +925,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planePt1YText->Name = L"planePt1YText";
 			this->planePt1YText->Size = System::Drawing::Size(76, 20);
 			this->planePt1YText->TabIndex = 56;
-			this->planePt1YText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planePt1YText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planeZLabel
 			// 
@@ -977,7 +977,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planePt2XText->Name = L"planePt2XText";
 			this->planePt2XText->Size = System::Drawing::Size(76, 20);
 			this->planePt2XText->TabIndex = 61;
-			this->planePt2XText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planePt2XText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planeCornXText
 			// 
@@ -985,7 +985,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planeCornXText->Name = L"planeCornXText";
 			this->planeCornXText->Size = System::Drawing::Size(76, 20);
 			this->planeCornXText->TabIndex = 58;
-			this->planeCornXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planeCornXText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planePt1XText
 			// 
@@ -993,7 +993,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->planePt1XText->Name = L"planePt1XText";
 			this->planePt1XText->Size = System::Drawing::Size(76, 20);
 			this->planePt1XText->TabIndex = 55;
-			this->planePt1XText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->planePt1XText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// planeDataLabel
 			// 
@@ -1152,7 +1152,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->rigidWText->Size = System::Drawing::Size(83, 20);
 			this->rigidWText->TabIndex = 89;
 			this->rigidWText->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->rigidWText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->rigidWText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// rigidWLabel
 			// 
@@ -1183,7 +1183,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->rigidCenZText->ReadOnly = true;
 			this->rigidCenZText->Size = System::Drawing::Size(83, 20);
 			this->rigidCenZText->TabIndex = 83;
-			this->rigidCenZText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->rigidCenZText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// rigidCenYText
 			// 
@@ -1192,7 +1192,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->rigidCenYText->ReadOnly = true;
 			this->rigidCenYText->Size = System::Drawing::Size(83, 20);
 			this->rigidCenYText->TabIndex = 82;
-			this->rigidCenYText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->rigidCenYText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// rigidCenXText
 			// 
@@ -1201,7 +1201,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->rigidCenXText->ReadOnly = true;
 			this->rigidCenXText->Size = System::Drawing::Size(83, 20);
 			this->rigidCenXText->TabIndex = 81;
-			this->rigidCenXText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->rigidCenXText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// rigidZLabel
 			// 
@@ -1243,7 +1243,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->rigidHText->Size = System::Drawing::Size(83, 20);
 			this->rigidHText->TabIndex = 90;
 			this->rigidHText->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->rigidHText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->rigidHText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// rigidLText
 			// 
@@ -1252,7 +1252,7 @@ private: System::Windows::Forms::Label^  rigidCentreLabel;
 			this->rigidLText->Size = System::Drawing::Size(83, 20);
 			this->rigidLText->TabIndex = 88;
 			this->rigidLText->DoubleClick += gcnew System::EventHandler(this, &AddObjectWizardForm::textInput_Click);
-			this->rigidLText->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddObjectWizardForm::inputText_Validating);
+			this->rigidLText->TextChanged += gcnew System::EventHandler(this, &AddObjectWizardForm::inputText_Validating);
 			// 
 			// rigidHLabel
 			// 
@@ -1589,6 +1589,11 @@ private: std::string* managedToStdString(String^ str) {
 		 // checks if input string is a valid float
 private: bool isFloat(String^ str) {
 			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*$";
+			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
+			 return regex->IsMatch(str);
+		 }
+private: bool isPositiveFloat(String^ str) {
+			 String^ regs = "^\\s*\\d+(.\\d+)?\\s*$";
 			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
 			 return regex->IsMatch(str);
 		 }
@@ -2156,17 +2161,17 @@ private: bool validateBox() {
 					  isFloat(this->boxCenYText->Text) &&
 					  isFloat(this->boxCenZText->Text) &&
 
-					  isFloat(this->boxLTextBox->Text) &&
-					  isFloat(this->boxWTextBox->Text) &&
-					  isFloat(this->boxHTextBox->Text) );
+					  isPositiveFloat(this->boxLTextBox->Text) &&
+					  isPositiveFloat(this->boxWTextBox->Text) &&
+					  isPositiveFloat(this->boxHTextBox->Text) );
 		 }
 private: bool validateCylinder() {
 			 return ( isFloat(this->cylinCenXText->Text) &&
 					  isFloat(this->cylinCenYText->Text) &&
 					  isFloat(this->cylinCenZText->Text) &&
 
-					  isFloat(this->cylinRText->Text) &&
-					  isFloat(this->cylinHText->Text) );
+					  isPositiveFloat(this->cylinRText->Text) &&
+					  isPositiveFloat(this->cylinHText->Text) );
 		 }
 private: bool validateRigid() {
 			 switch (objType)
@@ -2181,22 +2186,22 @@ private: bool validateRigid() {
 						  isFloat(this->rigidCenYText->Text) &&
 						  isFloat(this->rigidCenZText->Text) &&
 
-						  isFloat(this->rigidLText->Text) &&
-						  isFloat(this->rigidWText->Text) &&
-						  isFloat(this->rigidHText->Text) );
+						  isPositiveFloat(this->rigidLText->Text) &&
+						  isPositiveFloat(this->rigidWText->Text) &&
+						  isPositiveFloat(this->rigidHText->Text) );
 				 
 			 case OBJ_CYLINDER : 
 				 return ( isFloat(this->rigidCenXText->Text) &&
 						  isFloat(this->rigidCenYText->Text) &&
 						  isFloat(this->rigidCenZText->Text) &&
 
-						  isFloat(this->rigidLText->Text) &&
-						  isFloat(this->rigidHText->Text) );
+						  isPositiveFloat(this->rigidLText->Text) &&
+						  isPositiveFloat(this->rigidHText->Text) );
 			 default :
 				 return false;
 			 }
 		 }
-private: System::Void inputText_Validating(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
+private: System::Void inputText_Validating(System::Object^  sender, System::EventArgs^  e) {
 			 validate();
 		 }
 private: System::Void validate() {
@@ -2383,14 +2388,12 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				Marker* marker;
 				bool result;
 				int id;
-				this->nextButton->Enabled = true;
 				
 				// point 1
 				result = Int32::TryParse(this->planeMPt1Text->Text, id);
 				marker = client->getLabeledMarker(id);
 				if (!result || !marker)
 				{
-					this->nextButton->Enabled = false;
 					populateTextFromPosition(-1, 1);
 				}
 				else
@@ -2405,7 +2408,6 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				marker = client->getLabeledMarker(id);
 				if (!result || !marker)
 				{
-					this->nextButton->Enabled = false;
 					populateTextFromPosition(-1, 0);
 				}
 				else
@@ -2420,7 +2422,6 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 				marker = client->getLabeledMarker(id);
 				if (!result || !marker)
 				{
-					this->nextButton->Enabled = false;
 					populateTextFromPosition(-1, 2);
 				}
 				else
@@ -2451,22 +2452,16 @@ private: System::Void planeDataSetButton_Click(System::Object^  sender, System::
 			{
 				pos1->set(pos->x(), pos->y(), pos->z());
 				populateTextFromPosition(1, 1);
-					 
-				validate();
 			}
 			else if (sender == this->planeCornSetButton)
 			{
 				pos0->set(pos->x(), pos->y(), pos->z());
 				populateTextFromPosition(0, 0);
-
-				validate();
 			}
 			else if (sender == this->planePt2SetButton)
 			{
 				pos2->set(pos->x(), pos->y(), pos->z());
 				populateTextFromPosition(2, 2);
-				
-				validate();
 			}
 		 }
 private: System::Void boxDataGetButton_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -2505,8 +2500,6 @@ private: System::Void boxDataGetButton_Click(System::Object^  sender, System::Ev
 					populateTextFromPosition(0, 0);
 				}
 			}
-
-			validate();
 	 }
 private: System::Void cylinDataGetButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			ClientHandler* client = AppData::getInstance()->getClient();
@@ -2544,8 +2537,6 @@ private: System::Void cylinDataGetButton_Click(System::Object^  sender, System::
 					populateTextFromPosition(0, 0);
 				}
 			}
-
-			validate();
 		 }
 private: System::Void rigidListView_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->rigidListView->SelectedItems->Count <= 0)
@@ -2562,13 +2553,11 @@ private: System::Void rigidListView_SelectedIndexChanged(System::Object^  sender
 					{
 						pos0->set(body->getPosition().x(), body->getPosition().y(), body->getPosition().z());
 						populateTextFromPosition(0, 0);
-						this->nextButton->Enabled = true;
 						return;
 					}
 				}
 			 }
 			 populateTextFromPosition(-1, 0);
-			 this->nextButton->Enabled = false;	
 		 }
 
 /////////////////////
@@ -2669,7 +2658,6 @@ private: System::Void textInput_Click(System::Object^  sender, System::EventArgs
 				 if (form->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 				 {
 					 ((TextBox^)sender)->Text = form->distance.ToString();
-					 validate();
 				 }
 				 delete form;
 			 }
