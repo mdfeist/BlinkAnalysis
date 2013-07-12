@@ -79,6 +79,9 @@ public:
 	virtual osg::Vec3 getPosition() = 0;
 	virtual osg::Quat getRotation() = 0;
 
+	virtual void setCurrentTransformation() = 0;
+	virtual void resetTransformation() = 0;
+
 };
 
 
@@ -108,6 +111,9 @@ public:
 	osg::Node* getAsNode(int wid);
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
+
+	void setCurrentTransformation();
+	void resetTransformation();
 };
 
 
@@ -138,6 +144,9 @@ public:
 	osg::Node* getAsNode(int wid);
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
+
+	void setCurrentTransformation();
+	void resetTransformation();
 };
 
 
@@ -173,6 +182,9 @@ public:
 	
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
+	
+	void setCurrentTransformation();
+	void resetTransformation();
 };
 
 
@@ -211,6 +223,9 @@ public:
 	
 	osg::Vec3 getPosition();
 	osg::Quat getRotation();
+	
+	void setCurrentTransformation();
+	void resetTransformation();
 };
 
 #endif

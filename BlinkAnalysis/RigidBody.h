@@ -56,7 +56,10 @@ public:
 
 	// Getter/Setters for the auto transform of the Rigid Body.
 	void setTransform(osg::AutoTransform* transform) { this->transform = transform; }
-	osg::AutoTransform* getTransform() { return this->transform; }
+	osg::AutoTransform* getTransform() { 
+		this->transform->setName("RigidBody Transform");
+		return this->transform; 
+	}
 	osg::Vec3 getPosition() { return this->position; }
 	osg::Quat getRotation() { return this->rotation; }
 	// Update the transformation of the Rigid Body

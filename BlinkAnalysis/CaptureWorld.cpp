@@ -137,7 +137,10 @@ bool CaptureWorld::toggleRender()
 osg::MatrixTransform* CaptureWorld::getAsGroup()
 {
 	if (!node)
+	{
 		node = new osg::MatrixTransform();
+		node->setName("CaptureWorld node");
+	}
 
 	if (renderMat)
 		node->setMatrix(getGlobalToLocalMatrix());

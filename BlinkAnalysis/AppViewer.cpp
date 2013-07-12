@@ -314,10 +314,16 @@ void AppViewer::initAppViewer(HWND hwnd)
 
 	// Create new root node if one doesn't exist
 	if (!rootNode)
+	{
 		rootNode = new osg::Group();
+		rootNode->setName("AppViewer rootNode");
+	}
 
 	if (!sceneNode)
+	{
 		sceneNode = new osg::AutoTransform();
+		sceneNode->setName("AppViewer sceneNode");
+	}
 
 	sceneNode->setScale(VIEWER_SCALE);
 	rootNode->addChild(sceneNode);

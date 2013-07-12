@@ -31,6 +31,7 @@ void CaptureObject::setRigidBody(RigidBody* rb, bool offset)
 				oldRB->setWorldID(-1);
 			}
 		}
+		setCurrentTransformation();
 		rigidNode = NULL;
 
 		// remove offset node if it exists
@@ -63,6 +64,10 @@ void CaptureObject::setRigidBody(RigidBody* rb, bool offset)
 
 		temp->addChild(node);
 		node = temp;
+	}
+	else
+	{
+		resetTransformation();
 	}
 	rigidNode->addChild(node);
 	rigidBody = rb->getID();
@@ -184,6 +189,42 @@ osg::Quat CaptureObjectCustom::getRotation()
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
 }
 
+
+void CaptureObjectCustom::setCurrentTransformation()
+{
+	if (!rigidNode) return;
+
+	osg::Vec3 trans = rigidNode->getPosition();
+	osg::Quat rote = rigidNode->getRotation();
+	osg::Vec3 rbOrigin = osg::Vec3(0, 0, 0);
+
+	// has offset
+	if (node->asGroup())
+	{
+		osg::MatrixTransform* mt = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mt)
+		{
+			osg::Quat matRote = mt->getMatrix().getRotate();
+			rote *= matRote;
+
+			rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
+		}
+	}
+
+	for (osg::Vec3Array::iterator itr = vertices->begin(); itr != vertices->end(); itr++)
+	{
+		*itr = rote * (*itr - rbOrigin) + trans;
+	}
+}
+
+// TODO: custom data does not have position and orientation data
+// so there's no real definition for "reset transformation"
+void CaptureObjectCustom::resetTransformation()
+{
+
+}
+
+
 ///////////////////////////
 // CaptureObjectPlane
 ///////////////////////////
@@ -296,6 +337,40 @@ osg::Quat CaptureObjectPlane::getRotation()
 	else 
 		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
+}
+
+void CaptureObjectPlane::setCurrentTransformation()
+{
+	if (!rigidNode) return;
+
+	osg::Vec3 trans = rigidNode->getPosition();
+	osg::Quat rote = rigidNode->getRotation();
+	osg::Vec3 rbOrigin = osg::Vec3(0, 0, 0);
+
+	// has offset
+	if (node->asGroup())
+	{
+		osg::MatrixTransform* mt = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mt)
+		{
+			osg::Quat matRote = mt->getMatrix().getRotate();
+			rote *= matRote;
+
+			rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
+		}
+	}
+
+	for (osg::Vec3Array::iterator itr = vertices->begin(); itr != vertices->end(); itr++)
+	{
+		*itr = rote * (*itr - rbOrigin) + trans;
+	}
+}
+
+// TODO: plane does not have position and orientation data
+// so there's no real definition for "reset transformation"
+void CaptureObjectPlane::resetTransformation()
+{
+
 }
 
 
@@ -419,6 +494,37 @@ osg::Quat CaptureObjectBox::getRotation()
 	else 
 		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationBox();
+}
+
+void CaptureObjectBox::setCurrentTransformation()
+{
+	if (!rigidNode) return;
+
+	osg::Vec3 trans = rigidNode->getPosition();
+	osg::Quat rote = rigidNode->getRotation();
+
+	// has offset
+	if (node->asGroup())
+	{
+		osg::MatrixTransform* mt = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mt)
+		{
+			osg::Quat matRote = mt->getMatrix().getRotate();
+			rote *= matRote;
+
+			osg::Vec3 rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
+			trans = rote * (getCentre() - rbOrigin) + trans;
+		}
+	}
+
+	box->setCenter(trans);
+	box->setRotation(getRotationBox() * rote);
+}
+
+void CaptureObjectBox::resetTransformation()
+{
+	box->setCenter(osg::Vec3(0, 0, 0));
+	box->setRotation(osg::Quat(0, 0, 0, 1));
 }
 
 
@@ -556,4 +662,35 @@ osg::Quat CaptureObjectCylinder::getRotation()
 	else 
 		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
 				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationCylinder();
+}
+
+void CaptureObjectCylinder::setCurrentTransformation()
+{
+	if (!rigidNode) return;
+
+	osg::Vec3 trans = rigidNode->getPosition();
+	osg::Quat rote = rigidNode->getRotation();
+
+	// has offset
+	if (node->asGroup())
+	{
+		osg::MatrixTransform* mt = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mt)
+		{
+			osg::Quat matRote = mt->getMatrix().getRotate();
+			rote *= matRote;
+
+			osg::Vec3 rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
+			trans = rote * (getCentre() - rbOrigin) + trans;
+		}
+	}
+
+	cylinder->setCenter(trans);
+	cylinder->setRotation(getRotationCylinder() * rote);
+}
+
+void CaptureObjectCylinder::resetTransformation()
+{
+	cylinder->setCenter(osg::Vec3(0, 0, 0));
+	cylinder->setRotation(osg::Quat(0, 0, 0, 1));
 }
