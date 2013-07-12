@@ -56,11 +56,11 @@ void CaptureObject::setRigidBody(RigidBody* rb, bool offset)
 	{
 		osg::MatrixTransform* temp = new osg::MatrixTransform();
 
-		osg::Matrixf matrix;
+		osg::Matrixd matrix;
 		matrix.makeIdentity();
 		matrix.setTrans(rigidNode->getPosition());
 		matrix.setRotate(rigidNode->getRotation());
-		temp->setMatrix(osg::Matrixf::inverse(matrix));
+		temp->setMatrix(osg::Matrixd::inverse(matrix));
 
 		temp->addChild(node);
 		node = temp;
@@ -205,7 +205,7 @@ void CaptureObjectCustom::setCurrentTransformation()
 		if (mt)
 		{
 			osg::Quat matRote = mt->getMatrix().getRotate();
-			rote *= matRote;
+			rote = matRote * rote;
 
 			rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
 		}
@@ -354,7 +354,7 @@ void CaptureObjectPlane::setCurrentTransformation()
 		if (mt)
 		{
 			osg::Quat matRote = mt->getMatrix().getRotate();
-			rote *= matRote;
+			rote = matRote * rote;
 
 			rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
 		}
@@ -510,7 +510,7 @@ void CaptureObjectBox::setCurrentTransformation()
 		if (mt)
 		{
 			osg::Quat matRote = mt->getMatrix().getRotate();
-			rote *= matRote;
+			rote = matRote * rote;
 
 			osg::Vec3 rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
 			trans = rote * (getCentre() - rbOrigin) + trans;
@@ -678,7 +678,7 @@ void CaptureObjectCylinder::setCurrentTransformation()
 		if (mt)
 		{
 			osg::Quat matRote = mt->getMatrix().getRotate();
-			rote *= matRote;
+			rote = matRote * rote;
 
 			osg::Vec3 rbOrigin = -(matRote.inverse() * mt->getMatrix().getTrans()); 
 			trans = rote * (getCentre() - rbOrigin) + trans;
