@@ -1582,9 +1582,8 @@ private: System::Void setPoint(osg::Vec3* pos, Label^ text) {
 			text->Text = str;
 		 }
 	// converts a managed String^ to unmanaged std::string*
-private: std::string* managedToStdString(String^ str) {
-			 return new std::string( 
-				 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer());
+private: const char* managedStringToChar(String^ str) {
+			 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
 		 }
 		 // checks if input string is a valid float
 private: bool isFloat(String^ str) {
@@ -2570,8 +2569,8 @@ private: System::Void createPlane() {
 			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
-				 std::string* str = managedToStdString(this->nameTextBox->Text);
-				 world->addPlane(*pos0, *pos1, *pos2, *str);
+				 const char* name = managedStringToChar(this->nameTextBox->Text);
+				 world->addPlane(*pos0, *pos1, *pos2, std::string(name));
 			 }
 			 this->Close();
 		 }
@@ -2582,7 +2581,7 @@ private: System::Void createBox() {
 			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
-				 std::string* str = managedToStdString(this->nameTextBox->Text);
+				 const char* name = managedStringToChar(this->nameTextBox->Text);
 				 float l, w, h;
 				 
 				 if (!Single::TryParse(this->boxLTextBox->Text, l) ||
@@ -2590,7 +2589,7 @@ private: System::Void createBox() {
 					 !Single::TryParse(this->boxHTextBox->Text, h))
 					 return;
 
-				 world->addBox(*pos0, osg::Vec3(l, w, h), *str);
+				 world->addBox(*pos0, osg::Vec3(l, w, h), std::string(name));
 			 }
 			 this->Close();
 		 }
@@ -2601,14 +2600,14 @@ private: System::Void createCylinder() {
 			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
-				 std::string* str = managedToStdString(this->nameTextBox->Text);
+				 const char* name = managedStringToChar(this->nameTextBox->Text);
 				 float r, h;
 				 
 				 if (!Single::TryParse(this->cylinRText->Text, r) ||
 					 !Single::TryParse(this->cylinHText->Text, h))
 					 return;
 
-				 world->addCylinder(*pos0, r, h, *str);
+				 world->addCylinder(*pos0, r, h, std::string(name));
 			 }
 			 this->Close();
 		 }
@@ -2616,14 +2615,14 @@ private: System::Void createAtRigid() {
 			 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 			 if (world)
 			 {
-				 std::string* str = managedToStdString(this->nameTextBox->Text);
+				 const char* name = managedStringToChar(this->nameTextBox->Text);
 				 float l, w, h;
 				 CentreType cenType = (CentreType) this->rigidCentreCombo->SelectedIndex;
 				 
 				 switch (objType)
 				 {
 				 case OBJ_PLANE :
-					 world->addPlaneRigid(rigidID, this->rigidAttachCheck->Checked, *str);
+					 world->addPlaneRigid(rigidID, this->rigidAttachCheck->Checked, std::string(name));
 					 break;
 
 				 case OBJ_BOX : 
@@ -2632,7 +2631,7 @@ private: System::Void createAtRigid() {
 						 !Single::TryParse(this->rigidHText->Text, h))
 					 return;
 
-					 world->addBoxRigid(rigidID, osg::Vec3(l, w, h), this->rigidAttachCheck->Checked, cenType, *str);
+					 world->addBoxRigid(rigidID, osg::Vec3(l, w, h), this->rigidAttachCheck->Checked, cenType, std::string(name));
 					 break;
 
 				 case OBJ_CYLINDER :
@@ -2640,7 +2639,7 @@ private: System::Void createAtRigid() {
 						 !Single::TryParse(this->rigidHText->Text, h))
 					 return;
 
-					 world->addCylinderRigid(rigidID, l, h, this->rigidAttachCheck->Checked, cenType, *str);
+					 world->addCylinderRigid(rigidID, l, h, this->rigidAttachCheck->Checked, cenType, std::string(name));
 					 break;
 				 }
 			 }

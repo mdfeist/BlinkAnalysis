@@ -2793,9 +2793,8 @@ private: int worldExtractID(String^ str) {
 				 return -1;
 		 }
 		 // converts a managed String^ to unmanaged std::string*
-private: std::string* managedToStdString(String^ str) {
-			 return new std::string( 
-				 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer());
+private: const char* managedStringToChar(String^ str) {
+			 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
 		 }
 
 /////////////////////
@@ -2941,9 +2940,9 @@ private: System::Void worldGridView_CellValueChanged(System::Object^  sender, Sy
 				CaptureWorld* world = WorldManager::getInstance()->getWorld(displayWorld);
 				if (world)
 				{
-					std::string* str = managedToStdString(
+					const char* name = managedStringToChar(
 						(String^)this->worldGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value);
-					world->setName(*str);
+					world->setName(std::string(name));
 					int idx = this->worldComboBox->SelectedIndex;
 					worldUpdateList();
 					this->worldComboBox->SelectedIndex = idx;
@@ -3178,9 +3177,9 @@ private: System::Void objectGridView_CellValueChanged(System::Object^  sender, S
 					CaptureObject* object = world->getObject(displayObject);
 					if (object)
 					{
-						std::string* str = managedToStdString(
+						const char* name = managedStringToChar(
 							(String^)this->objectGridView->Rows[e->RowIndex]->Cells[e->ColumnIndex]->Value);
-						object->setName(*str);
+						object->setName(std::string(name));
 						int idx = this->objectComboBox->SelectedIndex;
 						objectUpdateList();
 						this->objectComboBox->SelectedIndex = idx;

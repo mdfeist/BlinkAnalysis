@@ -48,16 +48,15 @@ private:
 };
 
 
-class CaptureObjectUtil
+namespace CaptureObjectUtil
 {
-public:
-	static bool orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon);
+	bool orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon);
 
-	static osg::Matrix* makeLocalToGlobalMatrix(osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y);
+	osg::Matrix* makeLocalToGlobalMatrix(osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y);
 
-	static osg::Vec3 quaternionToEuler(osg::Quat q);
+	osg::Vec3 quaternionToEuler(osg::Quat q);
 
-	static osg::Matrixd* getWorldCoords( osg::Node* node);
+	osg::Matrixd* getWorldCoords( osg::Node* node);
 };
 
 #endif

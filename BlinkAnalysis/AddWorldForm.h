@@ -103,21 +103,18 @@ namespace BlinkAnalysis {
 
 		}
 #pragma endregion
+private: const char* managedStringToChar(String^ str) {
+			 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
+		 }
 	private: System::Void nameButton_Click(System::Object^  sender, System::EventArgs^  e) {
-				 std::string *name = new std::string( 
-					 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->nameTextBox->Text)).ToPointer()
-					 );
-				 CaptureWorld* world = new CaptureWorld(*name);
+				 CaptureWorld* world = new CaptureWorld(std::string(managedStringToChar(this->nameTextBox->Text)));
 				 WorldManager::getInstance()->addWorld(world);
 				 Close();
 			 }
 	private: System::Void nameTextBox_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
 				 if (e->KeyChar == '\r')
 				 {
-					 std::string *name = new std::string( 
-						 (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(this->nameTextBox->Text)).ToPointer()
-						 );
-					 CaptureWorld* world = new CaptureWorld(*name);
+					 CaptureWorld* world = new CaptureWorld(std::string(managedStringToChar(this->nameTextBox->Text)));
 					 WorldManager::getInstance()->addWorld(world);
 					 Close();
 				 }
