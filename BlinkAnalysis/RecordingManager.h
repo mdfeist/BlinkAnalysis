@@ -14,7 +14,7 @@ public:
 	bool isRecording() { return this->recording; }
 	void startRecording();
 	void stopRecording();
-	void addFrame();
+	void addFrame(std::string frame);
 
 	std::vector<Recording*> getRecordings() { return this->recordings; }
 

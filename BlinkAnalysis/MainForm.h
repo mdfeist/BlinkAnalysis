@@ -28,7 +28,7 @@
 #include "AppData.h"
 #include "AppViewer.h"
 #include "WorldManager.h"
-#include "RecordingManager.h"
+#include "OutputManager.h"
 
 #include "NatNetClientSetup.h"
 
@@ -3269,10 +3269,14 @@ private: System::Void visualViewerScaleTextBox_TextChanged(System::Object^  send
 			 AppViewer::setScale(scale);
 		 }
 private: System::Void startRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
-			 RecordingManager::getInstance()->startRecording();
+			 //RecordingManager::getInstance()->startRecording();
+			 OutputManager::getInstance()->record(true);
+			 //OutputManager::getInstance()->stream(true);
 		}
 private: System::Void stopRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
-			 RecordingManager::getInstance()->stopRecording();
+			 //RecordingManager::getInstance()->stopRecording();
+			 OutputManager::getInstance()->record(false);
+			 //OutputManager::getInstance()->stream(false);
 		 }
 
 /////////////////////

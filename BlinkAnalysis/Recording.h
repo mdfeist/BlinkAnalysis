@@ -132,7 +132,7 @@ public:
 	std::string getName() { return this->name; }
 
 	void closeRecording();
-	void addFrame();
+	void addFrame(std::string frame);
 	int numberOfFrames() { return this->frames.size(); }
 
 	bool loadRecording(pugi::xml_node recording);

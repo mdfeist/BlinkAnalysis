@@ -143,6 +143,7 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="OutputManager.cpp" />
     <ClCompile Include="PickHandler.cpp" />
     <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RecordingManager.cpp" />
@@ -156,6 +157,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StreamHandler.cpp" />
+    <ClCompile Include="StreamingManager.cpp" />
     <ClCompile Include="TCPClientListener.cpp" />
     <ClCompile Include="CaptureObject.cpp" />
     <ClCompile Include="WorldManager.cpp" />
@@ -198,6 +201,7 @@
     <ClInclude Include="Marker.h" />
     <ClInclude Include="NatNetClientSetup.h" />
     <ClInclude Include="Objects.h" />
+    <ClInclude Include="OutputManager.h" />
     <ClInclude Include="PickHandler.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
@@ -219,6 +223,8 @@
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Split.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StreamHandler.h" />
+    <ClInclude Include="StreamingManager.h" />
     <ClInclude Include="TCPClientListener.h" />
     <ClInclude Include="WizardPages.h" />
     <ClInclude Include="CaptureObject.h" />

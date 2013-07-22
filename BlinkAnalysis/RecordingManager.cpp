@@ -23,16 +23,6 @@ RecordingManager::~RecordingManager(void)
 	this->recordings.clear();
 }
 
-void recordingThread(void *) {
-	while (RecordingManager::getInstance()->isRecording()) {
-		RecordingManager::getInstance()->addFrame();
-		Sleep(1000/RECORDING_FPS);
-	}
-
-	// Terminate thread
-    _endthread();
-}
-
 void RecordingManager::addRecording() {
 	if (this->currentRecording != NULL) {
 		this->recordings.push_back(this->currentRecording);
@@ -48,9 +38,6 @@ void RecordingManager::startRecording() {
 		this->currentRecording = new Recording();
 
 		this->recording = true;
-
-		// Begin rendering on new thread
-		_beginthread( recordingThread, 0, NULL );
 	}
 }
 
@@ -62,8 +49,9 @@ void RecordingManager::stopRecording() {
 	}
 }
 
-void RecordingManager::addFrame() {
+void RecordingManager::addFrame(std::string frame)
+{
 	if (this->recording) {
-		this->currentRecording->addFrame();
+		this->currentRecording->addFrame(frame);
 	}
 }

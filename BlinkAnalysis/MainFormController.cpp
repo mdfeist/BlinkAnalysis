@@ -63,8 +63,12 @@ void MainFormController::getFilePath(std::string& pathBuffer, std::string defaul
 	dialog->FilterIndex = 2;
 	dialog->RestoreDirectory = true;
 
-	if (defaultPath != "") {
-		dialog->InitialDirectory = gcnew String(defaultPath.c_str());
+	// sanitize directory path
+	String^ dirPath = Runtime::InteropServices::Marshal::PtrToStringAnsi((IntPtr) (char *) defaultPath.c_str());
+	dirPath = dirPath->Replace("/", "\\");
+	dirPath = dirPath->Replace("\\\\", "\\");
+	if (System::IO::Directory::Exists(dirPath)) {
+		dialog->InitialDirectory = dirPath;
 	}
 	
 	if ( dialog->ShowDialog() == ::DialogResult::OK )
