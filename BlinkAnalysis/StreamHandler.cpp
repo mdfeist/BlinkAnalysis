@@ -29,7 +29,7 @@ namespace BlinkAnalysis
 		return  ( ClientThread && ClientThread->IsAlive  );
 	}
 
-	void StreamHandler::addFrame(String^ frame)
+	void StreamHandler::addFrameAsync(String^ frame)
 	{
 		try
 		{
@@ -40,6 +40,14 @@ namespace BlinkAnalysis
 		{
 			Console::WriteLine("Exception add frame: {0}", ex->Message);
 		}
+	}
+
+	delegate void AddFrameAsyncCaller(String^ frame);
+
+	void StreamHandler::addFrame(String^ frame)
+	{
+		AddFrameAsyncCaller^ call = gcnew AddFrameAsyncCaller(this, &StreamHandler::addFrameAsync);
+		call->BeginInvoke(frame, nullptr, nullptr);
 	}
 
 	bool StreamHandler::TestConnection()

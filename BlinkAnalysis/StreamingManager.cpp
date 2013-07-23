@@ -40,7 +40,7 @@ namespace BlinkAnalysis
 				Monitor::Exit(ClientSockets->SyncRoot);
 			}
 			Thread::Sleep(200) ;
-		}         
+		}
 	}
 
 	void StreamingManager::Listen()
