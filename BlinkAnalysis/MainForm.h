@@ -25,10 +25,11 @@
 #include "SetObjectRigidBodyFormController.h"
 #include "SetRigidBodyObjectForm.h"
 #include "SetRigidBodyToolForm.h"
+#include "StreamSettingsForm.h"
+
 #include "AppData.h"
 #include "AppViewer.h"
 #include "WorldManager.h"
-#include "OutputManager.h"
 
 #include "NatNetClientSetup.h"
 
@@ -296,6 +297,26 @@ private: System::Windows::Forms::ToolStripMenuItem^  showCaptureObjectsToolStrip
 private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
 private: System::Windows::Forms::ToolStripMenuItem^  selectMarkersToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  selectObjectsToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  outputToolStripMenuItem;
+
+private: System::Windows::Forms::ToolStripMenuItem^  streamDataToolStripMenuItem;
+
+
+private: System::Windows::Forms::ToolStripMenuItem^  streamRigidBodyToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  streamLabeledMarkerToolStripMenuItem;
+
+
+private: System::Windows::Forms::ToolStripMenuItem^  streamEyeVectorToolStripMenuItem;
+
+private: System::Windows::Forms::ToolStripMenuItem^  streamNetworkToolStripMenuItem;
+private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
+
+
+
+
+
+
+
 
 
 
@@ -453,6 +474,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  selectObjectsToolStripMenuI
 			this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->selectMarkersToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->selectObjectsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->outputToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->streamDataToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->streamNetworkToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->streamRigidBodyToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->streamLabeledMarkerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->streamEyeVectorToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->rigidBodyToolContextMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->setAsRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->attachToExistingObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -1761,8 +1789,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  selectObjectsToolStripMenuI
 			// 
 			// menuStrip
 			// 
-			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->projectToolStripMenuItem, 
-				this->calibrationToolStripMenuItem, this->objectToolStripMenuItem, this->viewerToolStripMenuItem});
+			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->projectToolStripMenuItem, 
+				this->calibrationToolStripMenuItem, this->objectToolStripMenuItem, this->viewerToolStripMenuItem, this->outputToolStripMenuItem});
 			this->menuStrip->Location = System::Drawing::Point(0, 0);
 			this->menuStrip->Name = L"menuStrip";
 			this->menuStrip->Size = System::Drawing::Size(784, 24);
@@ -1888,6 +1916,59 @@ private: System::Windows::Forms::ToolStripMenuItem^  selectObjectsToolStripMenuI
 			this->selectObjectsToolStripMenuItem->Text = L"Select Objects";
 			this->selectObjectsToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::selectObjectsToolStripMenuItem_CheckedChanged);
 			this->selectObjectsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::selectObjectsToolStripMenuItem_Click);
+			// 
+			// outputToolStripMenuItem
+			// 
+			this->outputToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->streamDataToolStripMenuItem, 
+				this->streamNetworkToolStripMenuItem, this->toolStripSeparator3, this->streamRigidBodyToolStripMenuItem, this->streamLabeledMarkerToolStripMenuItem, 
+				this->streamEyeVectorToolStripMenuItem});
+			this->outputToolStripMenuItem->Name = L"outputToolStripMenuItem";
+			this->outputToolStripMenuItem->Size = System::Drawing::Size(57, 20);
+			this->outputToolStripMenuItem->Text = L"Output";
+			// 
+			// streamDataToolStripMenuItem
+			// 
+			this->streamDataToolStripMenuItem->Name = L"streamDataToolStripMenuItem";
+			this->streamDataToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+			this->streamDataToolStripMenuItem->Text = L"Stream Data";
+			this->streamDataToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_CheckedChanged);
+			this->streamDataToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_Click);
+			// 
+			// streamNetworkToolStripMenuItem
+			// 
+			this->streamNetworkToolStripMenuItem->Name = L"streamNetworkToolStripMenuItem";
+			this->streamNetworkToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+			this->streamNetworkToolStripMenuItem->Text = L"Network Settings";
+			this->streamNetworkToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::streamNetworkToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this->toolStripSeparator3->Name = L"toolStripSeparator3";
+			this->toolStripSeparator3->Size = System::Drawing::Size(161, 6);
+			// 
+			// streamRigidBodyToolStripMenuItem
+			// 
+			this->streamRigidBodyToolStripMenuItem->Name = L"streamRigidBodyToolStripMenuItem";
+			this->streamRigidBodyToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+			this->streamRigidBodyToolStripMenuItem->Text = L"Rigid Body";
+			this->streamRigidBodyToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_CheckedChanged);
+			this->streamRigidBodyToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_Click);
+			// 
+			// streamLabeledMarkerToolStripMenuItem
+			// 
+			this->streamLabeledMarkerToolStripMenuItem->Name = L"streamLabeledMarkerToolStripMenuItem";
+			this->streamLabeledMarkerToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+			this->streamLabeledMarkerToolStripMenuItem->Text = L"Labeled Marker";
+			this->streamLabeledMarkerToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_CheckedChanged);
+			this->streamLabeledMarkerToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_Click);
+			// 
+			// streamEyeVectorToolStripMenuItem
+			// 
+			this->streamEyeVectorToolStripMenuItem->Name = L"streamEyeVectorToolStripMenuItem";
+			this->streamEyeVectorToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+			this->streamEyeVectorToolStripMenuItem->Text = L"Eye Vector";
+			this->streamEyeVectorToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_CheckedChanged);
+			this->streamEyeVectorToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::outputToolStripMenuItem_Click);
 			// 
 			// rigidBodyToolContextMenu
 			// 
@@ -2167,6 +2248,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  selectObjectsToolStripMenuI
 				 this->selectObjectsToolStripMenuItem->Checked = true;
 				 this->showLabeledMarkersToolStripMenuItem->Checked = false;
 				 this->showCaptureObjectsToolStripMenuItem->Checked = true;
+
+				 // output settings
+				 setOutputDefaultSettings();
 			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::Windows::Forms::FormClosingEventArgs^ e) 
 			 {
@@ -3271,12 +3355,10 @@ private: System::Void visualViewerScaleTextBox_TextChanged(System::Object^  send
 private: System::Void startRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //RecordingManager::getInstance()->startRecording();
 			 OutputManager::getInstance()->record(true);
-			 //OutputManager::getInstance()->stream(true);
 		}
 private: System::Void stopRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //RecordingManager::getInstance()->stopRecording();
 			 OutputManager::getInstance()->record(false);
-			 //OutputManager::getInstance()->stream(false);
 		 }
 
 /////////////////////
@@ -3322,6 +3404,55 @@ private: System::Void selectMarkersToolStripMenuItem_CheckedChanged(System::Obje
 private: System::Void selectObjectsToolStripMenuItem_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if (this->selectObjectsToolStripMenuItem->Checked)
 				 AppViewer::useObjectPickHandler();
+		 }
+
+/////////////////////
+// Output Settings
+
+private: System::Void outputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (sender == this->streamDataToolStripMenuItem)
+			 {
+				 this->streamDataToolStripMenuItem->Checked = !this->streamDataToolStripMenuItem->Checked;
+			 }
+			 else if (sender == this->streamRigidBodyToolStripMenuItem)
+			 {
+				 this->streamRigidBodyToolStripMenuItem->Checked = !this->streamRigidBodyToolStripMenuItem->Checked;
+			 }
+			 else if (sender == this->streamLabeledMarkerToolStripMenuItem)
+			 {
+				 this->streamLabeledMarkerToolStripMenuItem->Checked = !this->streamLabeledMarkerToolStripMenuItem->Checked;
+			 }
+			 else if (sender == this->streamEyeVectorToolStripMenuItem)
+			 {
+				 this->streamEyeVectorToolStripMenuItem->Checked = !this->streamEyeVectorToolStripMenuItem->Checked;
+			 }
+		 }
+private: System::Void outputToolStripMenuItem_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (sender == this->streamDataToolStripMenuItem)
+			 {
+				 OutputManager::getInstance()->stream(this->streamDataToolStripMenuItem->Checked);
+			 }
+			 else if (sender == this->streamRigidBodyToolStripMenuItem)
+			 {
+				 OutputManager::getInstance()->setRigid(this->streamRigidBodyToolStripMenuItem->Checked);
+			 }
+			 else if (sender == this->streamLabeledMarkerToolStripMenuItem)
+			 {
+				 OutputManager::getInstance()->setMarker(this->streamLabeledMarkerToolStripMenuItem->Checked);
+			 }
+			 else if (sender == this->streamEyeVectorToolStripMenuItem)
+			 {
+				 OutputManager::getInstance()->setEye(this->streamEyeVectorToolStripMenuItem->Checked);
+			 }
+		 }
+private: System::Void streamNetworkToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 StreamSettingsForm^ form = gcnew StreamSettingsForm();
+			 form->Show();
+		 }
+private: System::Void setOutputDefaultSettings() {
+			 this->streamRigidBodyToolStripMenuItem->Checked = OutputManager::getInstance()->getRigid();
+			 this->streamLabeledMarkerToolStripMenuItem->Checked = OutputManager::getInstance()->getMarker();
+			 this->streamEyeVectorToolStripMenuItem->Checked = OutputManager::getInstance()->getEye();
 		 }
 };
 }

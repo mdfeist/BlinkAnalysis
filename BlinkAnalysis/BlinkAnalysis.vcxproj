@@ -225,6 +225,9 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StreamHandler.h" />
     <ClInclude Include="StreamingManager.h" />
+    <ClInclude Include="StreamSettingsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="TCPClientListener.h" />
     <ClInclude Include="WizardPages.h" />
     <ClInclude Include="CaptureObject.h" />
@@ -264,6 +267,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SetRigidBodyToolForm.resx">
       <DependentUpon>SetRigidBodyToolForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StreamSettingsForm.resx">
+      <DependentUpon>StreamSettingsForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -141,10 +141,6 @@ namespace BlinkAnalysis
 							// Show the data on the console.
 							Console::WriteLine( "Text received : {0}", command);
 
-							// Echo the data back to the client.
-							array<Byte>^ sendBytes = ascii->GetBytes(command + "\n");
-							networkStream->Write(sendBytes, 0, sendBytes->Length);
-
 							switch (command[0])
 							{
 							case 'q':

@@ -15,9 +15,9 @@ namespace BlinkAnalysis
 
 	StreamingManager::StreamingManager()
 	{
-		//address = (IPAddress^) Dns::GetHostEntry( "localhost" )->AddressList[ 0 ];
+		address = (IPAddress^) Dns::GetHostEntry( "localhost" )->AddressList[ 0 ];
 		//address = (IPAddress^) Dns::GetHostEntry( "PWS-CC-3" )->AddressList[ 0 ];
-		setIPAddress("142.244.234.121");
+		//setIPAddress("142.244.234.121");
 		portNum = 10510;
 		streaming = false;
 	}
@@ -96,7 +96,7 @@ namespace BlinkAnalysis
 		Console::Read();
 	}
 
-	bool StreamingManager::setIPAddress(char* addr)
+	bool StreamingManager::setIPAddress(const char* addr)
 	{
 		try {
 			address = IPAddress::Parse(gcnew String(addr));
@@ -108,10 +108,10 @@ namespace BlinkAnalysis
 		}
 		return false;
 	}
-
-	void StreamingManager::setPortNumber(int port)
+	
+	String^ StreamingManager::getIPAddress()
 	{
-		portNum = port;
+		return address->ToString();
 	}
 
 	void StreamingManager::startStreaming()

@@ -14,6 +14,10 @@ private:
 	bool isStreaming;
 	bool isProcessing;
 
+	bool streamRigid;
+	bool streamMarker;
+	bool streamEye;
+
 	static void process(void *);
 
 protected:
@@ -27,10 +31,19 @@ public:
 	}
 
 	void setFramesPerSec(int fps) { 
-		if (fps <= 1000 && fps > 0)
+		if (fps <= 100 && fps > 0)
 			framesPerSec = fps; 
 	}
 	int getFramesPerSec() { return framesPerSec; }
+
+	void setRigid(bool stream) { streamRigid = stream; }
+	bool getRigid() { return streamRigid; }
+
+	void setMarker(bool stream) { streamMarker = stream; }
+	bool getMarker() { return streamMarker; }
+
+	void setEye(bool stream) { streamEye = stream; }
+	bool getEye() { return streamEye; }
 
 	void record(bool recording);
 

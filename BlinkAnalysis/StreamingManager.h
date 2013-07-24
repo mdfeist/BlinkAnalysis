@@ -61,8 +61,15 @@ namespace BlinkAnalysis
 			return m_pInstance;
 		}
 
-		bool setIPAddress(char* addr);
-		void setPortNumber(int port);
+		bool setIPAddress(const char* addr);
+		String^ getIPAddress();
+
+		void setPortNumber(int port) {
+			portNum = port;
+		}
+		int getPortNumber() {
+			return portNum;
+		}
 
 		bool isStreaming() { return this->streaming; }
 		void startStreaming();

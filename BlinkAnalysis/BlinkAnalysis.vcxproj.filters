@@ -246,6 +246,9 @@
     <ClInclude Include="StreamHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StreamSettingsForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
