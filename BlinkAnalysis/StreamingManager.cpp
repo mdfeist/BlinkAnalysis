@@ -13,10 +13,10 @@ namespace BlinkAnalysis
 	bool StreamingManager::streamFrames = false;
 	std::queue<std::string> StreamingManager::frameBuffer;
 
+	// default to listen through localhost on port 10510
 	StreamingManager::StreamingManager()
 	{
 		address = (IPAddress^) Dns::GetHostEntry( "localhost" )->AddressList[ 0 ];
-		//address = (IPAddress^) Dns::GetHostEntry( "PWS-CC-3" )->AddressList[ 0 ];
 		//setIPAddress("142.244.234.121");
 		portNum = 10510;
 		streaming = false;
@@ -24,7 +24,7 @@ namespace BlinkAnalysis
 
 	void StreamingManager::Reclaim()  {
 		while (ContinueReclaim) {
-			Monitor::Enter(ClientSockets->SyncRoot);
+			Monitor::Enter(ClientSockets->SyncRoot); // Monitor is more lightweight than mutex lock
 			try
 			{
 				for (int i = 0; i < ClientSockets->Count; i++)  {
@@ -43,6 +43,7 @@ namespace BlinkAnalysis
 		}
 	}
 
+	// TCP server listening for client connections
 	void StreamingManager::Listen()
 	{
 		StreamingManager* inst = StreamingManager::getInstance();
@@ -58,6 +59,7 @@ namespace BlinkAnalysis
 			_beginthread(&StreamingManager::streamFrame, 0, NULL);
 
 			while ( inst->streaming ) {
+				// this blocks until exception or a client connects
 				TcpClient^ handler = inst->listener->AcceptTcpClient();
 
 				if (  handler )  {
@@ -66,6 +68,7 @@ namespace BlinkAnalysis
 					Monitor::Enter(ClientSockets->SyncRoot);
 					try
 					{
+						// add to client list and start client thread to listen for commands
 						StreamHandler^ client = gcnew StreamHandler(handler, ClientNbr);
 						int i = ClientSockets->Add( client ) ;
 						((StreamHandler^) ClientSockets->default[i])->Start() ;
@@ -75,7 +78,7 @@ namespace BlinkAnalysis
 						Monitor::Exit(ClientSockets->SyncRoot);
 					}
 				}
-				else 
+				else // something's wrong
 					break;                
 			}
 
@@ -137,6 +140,7 @@ namespace BlinkAnalysis
 	{
 		if (streamFrames)
 		{
+			// buffer overflowing, drop oldest frame
 			if (frameBuffer.size() > MAX_BUFFER_SIZE)
 				frameBuffer.pop();
 
@@ -144,6 +148,8 @@ namespace BlinkAnalysis
 		}
 	}
 
+	// stream frames in the buffer
+	// placing in buffer means addFrame method will return quickly
 	void StreamingManager::streamFrame(void*)
 	{
 		while (streamFrames)
@@ -156,6 +162,7 @@ namespace BlinkAnalysis
 				Monitor::Enter(ClientSockets->SyncRoot);
 				for (int i = 0; i < ClientSockets->Count; i++)  {
 					StreamHandler^ client = (StreamHandler^)ClientSockets->default[i];
+					// if client still alive and wants data streamed
 					if( client->getStreamData() && client->Alive() )
 					{
 						client->addFrame(str);

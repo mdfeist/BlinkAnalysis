@@ -5,6 +5,8 @@
 #include "StreamingManager.h"
 
 
+// This class creates the frames to be output by 
+// either a recording, or a TCP stream
 public class OutputManager
 {
 private:
@@ -30,6 +32,7 @@ public:
 		return m_pInstance;
 	}
 
+	// Note: Motive streams at 60FPS, Dikablis at 24FPS
 	void setFramesPerSec(int fps) { 
 		if (fps <= 100 && fps > 0)
 			framesPerSec = fps; 
@@ -46,7 +49,6 @@ public:
 	bool getEye() { return streamEye; }
 
 	void record(bool recording);
-
 	void stream(bool streaming);
 };
 

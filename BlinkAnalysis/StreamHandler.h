@@ -15,21 +15,22 @@ namespace BlinkAnalysis
 
 	public ref class StreamHandler {
 
+		// socket opened to client
 		TcpClient^ ClientSocket ;
 		bool ContinueProcess;
 		bool streamData;
-		int dataCount;
+		// thread for listening to client commands
 		Thread^ ClientThread ;
-		Thread^ DataThread;
 		int ClientNumber;
 		ASCIIEncoding^ ascii;
 
 
 	private:
+		// if socket exception, test if client still responsive
 		bool TestConnection();
-		
+		// stream static data header
 		void streamHeader();
-
+		// main looping thread
 		void Process();
 
 	public:

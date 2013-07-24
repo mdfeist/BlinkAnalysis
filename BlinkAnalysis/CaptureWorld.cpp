@@ -353,14 +353,17 @@ CaptureObject* CaptureWorld::addPlaneRigid(int rigidID, bool attachRigid, std::s
 	return NULL;
 }
 
-CaptureObject* CaptureWorld::addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, std::string name)
+CaptureObject* CaptureWorld::addBox(osg::Vec3 baseCentre, osg::Vec3 dimensions, CentreType ct, std::string name)
 {
 	// divide dimensions to get half lengths
 	osg::Vec3 hl = dimensions * 0.5;
 	// transform base from global to local coordinates
 	osg::Vec3 centre = baseCentre * getGlobalToLocalMatrix();
 	// add z to get centre of box
-	centre += osg::Vec3(0, 0, hl.z());
+	if (ct == CENTRE_BASE)
+		centre += osg::Vec3(0, 0, hl.z());
+	else if (ct == CENTRE_TOP)
+		centre += osg::Vec3(0, 0, -hl.z());
 	// transform back to global coordinates
 	centre = centre * getLocalToGlobalMatrix();
 
@@ -422,12 +425,15 @@ CaptureObject* CaptureWorld::addBoxRigid(int rigidID, osg::Vec3 dimensions, bool
 	return NULL;
 }
 
-CaptureObject* CaptureWorld::addCylinder(osg::Vec3 baseCentre, float radius, float height, std::string name)
+CaptureObject* CaptureWorld::addCylinder(osg::Vec3 baseCentre, float radius, float height, CentreType ct, std::string name)
 {
 	// transform base from global to local coordinates
 	osg::Vec3 centre = baseCentre * getGlobalToLocalMatrix();
 	// add half of height to get centre of box
-	centre += osg::Vec3(0, 0, height/2);
+	if (ct == CENTRE_BASE)
+		centre += osg::Vec3(0, 0, height/2);
+	else if (ct == CENTRE_TOP)
+		centre += osg::Vec3(0, 0, -height/2);
 	// transform back to global coordinates
 	centre = centre * getLocalToGlobalMatrix();
 

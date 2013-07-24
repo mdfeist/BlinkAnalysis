@@ -761,6 +761,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 			// 
 			this->optiTrackConnectionTypeComboBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
+			this->optiTrackConnectionTypeComboBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->optiTrackConnectionTypeComboBox->FormattingEnabled = true;
 			this->optiTrackConnectionTypeComboBox->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Multicast", L"Unicast"});
 			this->optiTrackConnectionTypeComboBox->Location = System::Drawing::Point(124, 203);
@@ -2816,21 +2817,6 @@ private: System::Void setRigidBodyToolToolStripMenuItem_Click(System::Object^  s
 			 rbtForm->setRigidBodyVector(optiTrackRigidBodyVector);
 			 rbtForm->Show();
 		 }
-/*private: System::Void markersListView_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
-			int toggled = -1;
-
-			for (std::vector<Marker*>::iterator itr = optiTrackLabeledMarkerVector->begin();
-				itr != optiTrackLabeledMarkerVector->end(); itr++)
-			{
-				(*itr)->deselect();
-			}
-
-			IEnumerator^ num = this->visualMarkersListView->SelectedIndices->GetEnumerator();
-			while (num->MoveNext())
-			{
-				optiTrackLabeledMarkerVector->at(safe_cast<int>(num->Current))->select();
-			}
-}*/
 private: System::Void visualRigidBodyListView_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 if (e->Button == System::Windows::Forms::MouseButtons::Right)
 			 {

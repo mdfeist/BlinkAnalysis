@@ -29,8 +29,10 @@ OutputManager::~OutputManager(void)
 {
 }
 
+// main thread that creates data frames based on FPS
 void OutputManager::process(void *)
 {
+	// do not spawn multiple threads
 	if (getInstance()->isProcessing) return;
 
 	OutputManager* inst = getInstance();
@@ -41,6 +43,8 @@ void OutputManager::process(void *)
 	ClientHandler* client = AppData::getInstance()->getClient();
 	while (inst->isRecording || inst->isStreaming)
 	{
+		// track time since first frame created
+		// Note: Windows has ~10-16 ms resolution, depending on CPU
 		ULONGLONG t = GetTickCount64();
 		ULONGLONG nextFrame = t + 1000/inst->framesPerSec;
 		if (start == 0) start = t;
@@ -168,6 +172,7 @@ void OutputManager::process(void *)
 		sstream.str(std::string());
 		sstream.clear();
 
+		// sleep until next frame time
 		int sleep = nextFrame-GetTickCount64();
 		Sleep( (sleep) > 0 ? sleep : 0 );
 	}

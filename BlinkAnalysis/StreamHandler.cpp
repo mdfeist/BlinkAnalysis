@@ -13,7 +13,7 @@ namespace BlinkAnalysis
 		ascii = gcnew ASCIIEncoding();
 	}
 
-
+	// start listening for client commands
 	void StreamHandler::Start() {
 		ContinueProcess = true ;
 		ClientThread = gcnew Thread ( gcnew ThreadStart(this, &StreamHandler::Process) ) ;
@@ -45,12 +45,15 @@ namespace BlinkAnalysis
 
 	delegate void AddFrameAsyncCaller(String^ frame);
 
+	// this sends the actual data using a delegate so addFrame returns quickly
+	// otherwise, it blocks the main OutputManager thread and could slow down FPS
 	void StreamHandler::addFrame(String^ frame)
 	{
 		AddFrameAsyncCaller^ call = gcnew AddFrameAsyncCaller(this, &StreamHandler::addFrameAsync);
 		call->BeginInvoke(frame, nullptr, nullptr);
 	}
 
+	// can only check if client alive by trying to send it something
 	bool StreamHandler::TestConnection()
 	{
 		try
@@ -95,6 +98,8 @@ namespace BlinkAnalysis
 		}
 	}
 
+	// main thread
+	// listens for commands from client
 	void StreamHandler::Process() {
 
 		// Incoming data from the client.
@@ -111,6 +116,8 @@ namespace BlinkAnalysis
 			while ( ContinueProcess ) {
 				Array::Clear(bytes,0,bytes->Length);
 				try {
+					// this will throw a socketException if the client does not send
+					// any data within the ReceiveTimeout timeframe
 					int BytesRead = networkStream->Read(bytes, 0, bufferSize);
 					if ( BytesRead > 0 ) {
 						data = String::Concat(data, ascii->GetString(bytes, 0, BytesRead));
@@ -148,6 +155,7 @@ namespace BlinkAnalysis
 					}
 					else
 					{
+						// client disconnected
 						if(!TestConnection())
 							break ;
 					}
