@@ -78,6 +78,7 @@ void WorldManager::clearWorlds(bool stopRender)
 		delete itr->second;
 	}
 	worlds.clear();
+	CaptureWorld::_lastWorldID = 0;
 }
 
 bool WorldManager::addWorldNode(osg::Node* wNode)
@@ -124,7 +125,6 @@ void WorldManager::streamObject(CaptureObject* object, std::ostringstream& sstre
 	// rigid body offset matrix
 	if (object->hasRigidOffset())
 	{
-		//TODO
 		const osg::Matrix* mat = object->getOffsetMatrix();
 		if (mat)
 		{
@@ -136,7 +136,8 @@ void WorldManager::streamObject(CaptureObject* object, std::ostringstream& sstre
 				for (int j = 0; j < 4; j++)
 				{
 					sstream << "<matrixValue ";
-					sstream << "index=\"" << i << j << "\" ";
+					sstream << "row=\"" << i << "\" ";
+					sstream << "col=\"" << j << "\" ";
 					sstream << "value=\"" << (*mat)(i, j) << "\" ";
 					sstream << "/>\n";
 				}
@@ -260,7 +261,8 @@ void WorldManager::streamWorld(CaptureWorld* world, std::ostringstream& sstream)
 		for (int j = 0; j < 4; j++)
 		{
 			sstream << "<matrixValue ";
-			sstream << "index=\"" << i << j << "\" ";
+			sstream << "row=\"" << i << "\" ";
+			sstream << "col=\"" << j << "\" ";
 			sstream << "value=\"" << mat(i, j) << "\" ";
 			sstream << "/>\n";
 		}

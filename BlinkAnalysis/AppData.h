@@ -54,6 +54,12 @@ private:
 	char fileName[1024];
 	char filePath[1024];
 	char error[1024];
+
+	void saveWorld(CaptureWorld* world, pugi::xml_node& node);
+	void saveObject(CaptureObject* object, pugi::xml_node& node);
+
+	CaptureWorld* loadWorld(pugi::xml_node& worldNode);
+	CaptureObject* loadObject(pugi::xml_node& objectNode);
 };
 
 

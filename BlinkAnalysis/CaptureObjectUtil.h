@@ -68,6 +68,8 @@ namespace CaptureObjectUtil
 	osg::Matrixd* getWorldCoords( osg::Node* node);
 
 	char* objectTypeToString(ObjectType t);
+
+	std::string* floatToString(double d);
 };
 
 #endif

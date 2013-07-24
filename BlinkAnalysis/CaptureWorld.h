@@ -15,7 +15,6 @@ class CaptureWorld
 {
 private:
 	void initCaptureWorld();
-	static int _lastWorldID;
 
 	std::string name;
 	int id;
@@ -29,9 +28,10 @@ private:
 	int _lastObjectID;
 	// map of IDs to objects in this world
 	std::map<int, CaptureObject*> _objects;
-	int addObject(CaptureObject* obj);
 	
 public:
+	static int _lastWorldID;
+
 	CaptureWorld();
 	CaptureWorld(std::string name);
 	CaptureWorld(std::string name, osg::Matrix* locToGlob);
@@ -62,6 +62,7 @@ public:
 	void updateObjectsNode();
 
 	// Object Management
+	int addObject(CaptureObject* obj);
 	bool removeObject(int oid);
 	void clearObjects();
 	int getNumberObjects();

@@ -2,6 +2,8 @@
 #include "StdAfx.h"
 #include "CaptureObjectUtil.h"
 
+#include <sstream>
+
 bool CaptureObjectUtil::orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon) 
 {
 	return (abs(v1*v2) <= abs(epsilon));
@@ -135,5 +137,12 @@ char* CaptureObjectUtil::objectTypeToString(ObjectType t)
 		return "invalid";
 	}
 	return NULL;
+}
+
+std::string* CaptureObjectUtil::floatToString(double d)
+{
+	std::ostringstream sstream;
+	sstream << d;
+	return new std::string(sstream.str().c_str());
 }
 
