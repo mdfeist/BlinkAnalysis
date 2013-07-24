@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <sstream>
 #include "MainFormController.h"
 
 AppData* AppData::m_pInstance = NULL; 
@@ -172,6 +173,29 @@ bool AppData::saveFile() {
 	MainFormController::getInstance()->updateFormTitle();
 
 	return true;
+}
+
+std::string AppData::getRigidBodyStaticData()
+{
+	std::stringstream sstream;
+	// Lock the ClientHandler so data isn't changed
+	// by another thread.
+	if (!client->lock())
+		return sstream.str();
+
+	std::map<int, RigidBody*>* rigidBodies = client->getRigidBodyMap();
+
+	for (RigidBody_iterator it = rigidBodies->begin(); it != rigidBodies->end(); ++it) {
+		sstream << "<RigidBody ";
+		sstream << "id=\"" << it->second->getID() << "\" ";
+		sstream << "name=\"" << it->second->getName() << "\" ";
+		sstream << "/>\n";
+	}
+
+	// Unlock the ClientHandler
+	client->unlock();
+
+	return sstream.str();
 }
 
 

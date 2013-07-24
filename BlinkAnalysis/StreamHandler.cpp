@@ -2,6 +2,7 @@
 
 #include "StreamHandler.h"
 #include "AppData.h"
+#include "WorldManager.h"
 
 namespace BlinkAnalysis
 {
@@ -80,22 +81,8 @@ namespace BlinkAnalysis
 
 			String^ header = "<StaticData>\n";
 
-			// Lock the ClientHandler so data isn't changed
-			// by another thread.
-			if (!client->lock())
-				return;
-
-			std::map<int, RigidBody*>* rigidBodies = client->getRigidBodyMap();
-
-			for (RigidBody_iterator it = rigidBodies->begin(); it != rigidBodies->end(); ++it) {
-				header += "<RigidBody ";
-				header += "id=\"" + it->second->getID() + "\" ";
-				header += "name=\"" + gcnew String(it->second->getName()) + "\" ";
-				header += "/>\n";
-			}
-
-			// Unlock the ClientHandler
-			client->unlock();
+			header += gcnew String(AppData::getInstance()->getRigidBodyStaticData().c_str());
+			header += gcnew String(WorldManager::getInstance()->getWorldStaticData().c_str());
 
 			header += "</StaticData>\n";
 

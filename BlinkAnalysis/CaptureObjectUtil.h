@@ -9,6 +9,15 @@
 #include "Marker.h"
 #include "Marcos.h"
 
+
+enum ObjectType {
+	OBJ_PLANE,
+	OBJ_BOX,
+	OBJ_CYLINDER,
+	OBJ_CUSTOM,
+	OBJ_INVALID
+};
+
 ////////////////////////////////////////
 // The following class is from https://www.movesinstitute.org/Sullivan/OSGTutorials/osgGetWorldCoords.htm
 ////////////////////////////////////////
@@ -57,6 +66,8 @@ namespace CaptureObjectUtil
 	osg::Vec3 quaternionToEuler(osg::Quat q);
 
 	osg::Matrixd* getWorldCoords( osg::Node* node);
+
+	char* objectTypeToString(ObjectType t);
 };
 
 #endif

@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "Recording.h"
 
-#include "AppData.h"
 #include "MainFormController.h"
 #include "RecordingManager.h"
 #include "Settings.h"
@@ -107,22 +106,8 @@ void Recording::initializeRecording() {
 			fileStream << "<Recording>\n";
 			fileStream << "<StaticData>\n";
 
-			// Lock the ClientHandler so data isn't changed
-			// by another thread.
-			if (!client->lock())
-				return;
-
-			std::map<int, RigidBody*>* rigidBodies = client->getRigidBodyMap();
-
-			for (RigidBody_iterator it = rigidBodies->begin(); it != rigidBodies->end(); ++it) {
-				fileStream << "<RigidBody ";
-				fileStream << "id=\"" << it->second->getID() << "\" ";
-				fileStream << "name=\"" << it->second->getName() << "\" ";
-				fileStream << "/>\n";
-			}
-
-			// Unlock the ClientHandler
-			client->unlock();
+			fileStream << AppData::getInstance()->getRigidBodyStaticData();
+			fileStream << WorldManager::getInstance()->getWorldStaticData();
 
 			fileStream << "</StaticData>\n";
 			fileStream << "<Frames>\n";

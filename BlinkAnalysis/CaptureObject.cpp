@@ -73,6 +73,15 @@ void CaptureObject::setRigidBody(RigidBody* rb, bool offset)
 	rigidBody = rb->getID();
 }
 
+const osg::Matrix* CaptureObject::getOffsetMatrix()
+{
+	if (!hasRigidOffset()) return NULL;
+	
+	osg::MatrixTransform* mt = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+	if (!mt) return NULL;
+	return &(mt->getMatrix());
+}
+
 // returns node to be added/removed from world
 osg::Node* CaptureObject::setRender(bool ren)
 {

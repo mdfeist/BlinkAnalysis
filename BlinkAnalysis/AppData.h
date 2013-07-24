@@ -37,6 +37,8 @@ public:
 	bool isSaveNeeded() { return this->needSaveFlag; }
 	void needSave() { this->needSaveFlag = true; }
 
+	std::string getRigidBodyStaticData();
+
 protected:
 	AppData(void);
 	~AppData(void);

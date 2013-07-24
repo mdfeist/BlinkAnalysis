@@ -11,14 +11,6 @@
 #include "RigidBody.h"
 
 
-enum ObjectType {
-	OBJ_PLANE,
-	OBJ_BOX,
-	OBJ_CYLINDER,
-	OBJ_CUSTOM,
-	OBJ_INVALID
-};
-
 enum CentreType {
 	CENTRE_BASE,
 	CENTRE_TOP
@@ -64,6 +56,8 @@ public:
 	
 	void setRigidBody(RigidBody* rb, bool offset);
 	int getRigidBody() { return rigidBody; }
+	bool hasRigidOffset() { return rigidNode != NULL; }
+	const osg::Matrix* getOffsetMatrix();
 
 	void setName(std::string name) { this->name = name; }
 	std::string getName() { return name; }
@@ -98,6 +92,9 @@ public:
 	int getNumVertices() { return vertices->size(); }
 	void setVertices(osg::Vec3Array* vertices) {
 		this->vertices = vertices; 
+	}
+	const osg::Vec3Array* getVertices() {
+		return vertices;
 	}
 	
 	int getNumFaces() { return faces.size(); }
@@ -138,6 +135,9 @@ public:
 
 	int getNumVertices() { return 4; }
 	void setVertices(osg::Vec3 corner, osg::Vec3 pt1, osg::Vec3 pt2);
+		const osg::Vec3Array* getVertices() {
+		return vertices;
+	}
 
 	int getNumFaces() { return 1; }
 

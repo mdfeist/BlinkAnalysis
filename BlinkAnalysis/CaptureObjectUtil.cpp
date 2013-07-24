@@ -118,3 +118,22 @@ osg::Matrixd* CaptureObjectUtil::getWorldCoords( osg::Node* node)
    }
 } 
 ////////////////////////////////////////
+
+char* CaptureObjectUtil::objectTypeToString(ObjectType t)
+{
+	switch (t)
+	{
+	case OBJ_PLANE:
+		return "plane";
+	case OBJ_BOX:
+		return "box";
+	case OBJ_CYLINDER:
+		return "cylinder";
+	case OBJ_CUSTOM:
+		return "custom";
+	case OBJ_INVALID:
+		return "invalid";
+	}
+	return NULL;
+}
+

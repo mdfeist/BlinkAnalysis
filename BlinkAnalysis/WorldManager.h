@@ -27,6 +27,8 @@ public:
 	bool removeWorldNode(osg::Node* wNode);
 	osg::Node* getWorldNode();
 
+	std::string getWorldStaticData();
+
 protected:
 	WorldManager(void);
 	~WorldManager(void);
@@ -39,6 +41,9 @@ private:
 	std::map<int, CaptureWorld*> worlds;
 
 	osg::ref_ptr<osg::Group> worldNode;
+
+	void streamWorld(CaptureWorld* world, std::ostringstream& sstream);
+	void streamObject(CaptureObject* object, std::ostringstream& sstream);
 };
 
 

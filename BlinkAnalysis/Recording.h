@@ -10,6 +10,7 @@
 #include <map>
 #include <vector>
 
+#include "AppData.h"
 #include "RigidBody.h"
 #include "Marker.h"
 
