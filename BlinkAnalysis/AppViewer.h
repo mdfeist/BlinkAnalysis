@@ -29,4 +29,9 @@ namespace AppViewer {
 	void setDisplayLabeledMarkers(bool display);
 	// Display setting for capture objects
 	void setDisplayCaptureObjects(bool display);
+
+	// Lock the viewer 
+	bool lock();
+	// Unlocks the viewer
+	void unlock();
 };

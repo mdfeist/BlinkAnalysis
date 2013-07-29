@@ -32,6 +32,7 @@
 osgViewer::Viewer* viewer;
 osg::Group* rootNode;
 osg::AutoTransform* sceneNode;
+HANDLE g_hMutex;
 
 osg::Vec3 lastRay;
 
@@ -285,13 +286,18 @@ void render(void *) {
 			renderEyeVector(markerNode);
 
 			// Add Node containing all the points to the scene
-			sceneNode->addChild( markerNode );
+			if (AppViewer::lock())
+			{
+				sceneNode->addChild( markerNode );
 			
-			// Render frame
-			viewer->frame();
+				// Render frame
+				viewer->frame();
 
-			// Remove points from the scene
-			sceneNode->removeChild( markerNode );
+				// Remove points from the scene
+				sceneNode->removeChild( markerNode );
+
+				AppViewer::unlock();
+			}
 		} else {
 			// View not visible so Sleep for 1000 milliseconds
 			Sleep(1000);
@@ -307,6 +313,13 @@ void AppViewer::initAppViewer(HWND hwnd)
 	// If already running don't create new view
 	if (running)
 		return;
+
+	if (!g_hMutex)
+	g_hMutex = CreateMutex(
+		NULL,
+		//(LPSECURITY_ATTRIBUTES)SYNCHRONIZE, 
+		FALSE, 
+		NULL);
 
 	// Create new viewer if one doesn't exist
 	if (!viewer)
@@ -406,13 +419,17 @@ void AppViewer::initAppViewer(HWND hwnd)
 }
 
 bool AppViewer::addNodeToViewer(osg::Node* node) {
-	if (!sceneNode) return false;
-	return sceneNode->addChild(node);
+	if (!sceneNode || !lock()) return false;
+	bool result = sceneNode->addChild(node);
+	unlock();
+	return result;
 }
 
 bool AppViewer::removeNodeFromViewer(osg::Node* node) {
-	if (!sceneNode) return false;
-	return sceneNode->removeChild(node);
+	if (!sceneNode || !lock()) return false;
+	bool result = sceneNode->removeChild(node);
+	unlock();
+	return result;
 }
 
 void AppViewer::useMarkerPickHandler() {
@@ -445,12 +462,45 @@ void AppViewer::setDisplayCaptureObjects(bool display)
 	osg::Node* worldNode = WorldManager::getInstance()->getWorldNode();
 	if (display && !sceneNode->containsNode(worldNode))
 	{
+		if (!lock()) return;
 		sceneNode->addChild(worldNode);
+		unlock();
 	}
 	else if (!display)
 	{
 		if (pickObjectHandler.valid())
 			((PickObjectHandler*)pickObjectHandler.get())->reset();
+
+		if (!lock()) return;
 		sceneNode->removeChild(worldNode);
+		unlock();
 	}
 }
+
+bool AppViewer::lock() {
+	// Request ownership of mutex
+	DWORD  dwWaitResult;
+	while(true)
+	{
+		// Wait for Mutex to be free
+		dwWaitResult = WaitForSingleObject(g_hMutex, INFINITE);
+		switch (dwWaitResult) 
+		{
+			// The thread got ownership of the mutex
+		case WAIT_OBJECT_0: 
+			return true;
+			break; 
+
+			// The thread got ownership of an abandoned mutex
+			// The database is in an indeterminate state
+		case WAIT_ABANDONED: 
+			return false; 
+			break;
+		}
+	}
+
+	return false;
+}
+
+void AppViewer::unlock() { ReleaseMutex(g_hMutex); }
+
