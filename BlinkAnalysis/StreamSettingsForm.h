@@ -53,6 +53,10 @@ namespace BlinkAnalysis {
 
 	private: System::Windows::Forms::Button^  setButton;
 	private: System::Windows::Forms::Label^  infoLabel;
+	private: System::Windows::Forms::TextBox^  marginTextBox;
+	private: System::Windows::Forms::Label^  marginLabel;
+	private: System::Windows::Forms::TextBox^  depthTextBox;
+	private: System::Windows::Forms::Label^  depthLabel;
 
 	private:
 		/// <summary>
@@ -67,7 +71,6 @@ namespace BlinkAnalysis {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(StreamSettingsForm::typeid));
 			this->addressLabel = (gcnew System::Windows::Forms::Label());
 			this->portLabel = (gcnew System::Windows::Forms::Label());
 			this->FPSLabel = (gcnew System::Windows::Forms::Label());
@@ -76,6 +79,10 @@ namespace BlinkAnalysis {
 			this->FPSComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->setButton = (gcnew System::Windows::Forms::Button());
 			this->infoLabel = (gcnew System::Windows::Forms::Label());
+			this->marginTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->marginLabel = (gcnew System::Windows::Forms::Label());
+			this->depthTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->depthLabel = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// addressLabel
@@ -94,7 +101,7 @@ namespace BlinkAnalysis {
 			this->portLabel->AutoSize = true;
 			this->portLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->portLabel->Location = System::Drawing::Point(82, 147);
+			this->portLabel->Location = System::Drawing::Point(82, 131);
 			this->portLabel->Name = L"portLabel";
 			this->portLabel->Size = System::Drawing::Size(77, 15);
 			this->portLabel->TabIndex = 1;
@@ -105,7 +112,7 @@ namespace BlinkAnalysis {
 			this->FPSLabel->AutoSize = true;
 			this->FPSLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->FPSLabel->Location = System::Drawing::Point(44, 186);
+			this->FPSLabel->Location = System::Drawing::Point(44, 157);
 			this->FPSLabel->Name = L"FPSLabel";
 			this->FPSLabel->Size = System::Drawing::Size(115, 15);
 			this->FPSLabel->TabIndex = 2;
@@ -117,21 +124,21 @@ namespace BlinkAnalysis {
 			this->addressTextBox->Name = L"addressTextBox";
 			this->addressTextBox->Size = System::Drawing::Size(181, 20);
 			this->addressTextBox->TabIndex = 3;
-			this->addressTextBox->TextChanged += gcnew System::EventHandler(this, &StreamSettingsForm::checkEmptyText);
+			this->addressTextBox->TextChanged += gcnew System::EventHandler(this, &StreamSettingsForm::checkValidText);
 			// 
 			// portTextBox
 			// 
-			this->portTextBox->Location = System::Drawing::Point(190, 146);
+			this->portTextBox->Location = System::Drawing::Point(190, 130);
 			this->portTextBox->Name = L"portTextBox";
 			this->portTextBox->Size = System::Drawing::Size(121, 20);
 			this->portTextBox->TabIndex = 4;
-			this->portTextBox->TextChanged += gcnew System::EventHandler(this, &StreamSettingsForm::checkEmptyText);
+			this->portTextBox->TextChanged += gcnew System::EventHandler(this, &StreamSettingsForm::checkValidText);
 			// 
 			// FPSComboBox
 			// 
 			this->FPSComboBox->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->FPSComboBox->FormattingEnabled = true;
-			this->FPSComboBox->Location = System::Drawing::Point(190, 185);
+			this->FPSComboBox->Location = System::Drawing::Point(190, 156);
 			this->FPSComboBox->Name = L"FPSComboBox";
 			this->FPSComboBox->Size = System::Drawing::Size(121, 21);
 			this->FPSComboBox->TabIndex = 5;
@@ -139,7 +146,7 @@ namespace BlinkAnalysis {
 			// setButton
 			// 
 			this->setButton->Enabled = false;
-			this->setButton->Location = System::Drawing::Point(324, 227);
+			this->setButton->Location = System::Drawing::Point(324, 305);
 			this->setButton->Name = L"setButton";
 			this->setButton->Size = System::Drawing::Size(86, 23);
 			this->setButton->TabIndex = 6;
@@ -152,15 +159,59 @@ namespace BlinkAnalysis {
 			this->infoLabel->AutoSize = true;
 			this->infoLabel->Location = System::Drawing::Point(12, 9);
 			this->infoLabel->Name = L"infoLabel";
-			this->infoLabel->Size = System::Drawing::Size(320, 78);
+			this->infoLabel->Size = System::Drawing::Size(320, 65);
 			this->infoLabel->TabIndex = 7;
-			this->infoLabel->Text = resources->GetString(L"infoLabel.Text");
+			this->infoLabel->Text = L"Change the output settings for streaming and recording.\r\nData is streamed over TC" 
+				L"P using XML format.\r\n\r\nNote: \r\nClicking \"Use Settings\" will restart the server i" 
+				L"f it is already running.";
+			// 
+			// marginTextBox
+			// 
+			this->marginTextBox->Location = System::Drawing::Point(190, 226);
+			this->marginTextBox->Name = L"marginTextBox";
+			this->marginTextBox->Size = System::Drawing::Size(121, 20);
+			this->marginTextBox->TabIndex = 9;
+			this->marginTextBox->TextChanged += gcnew System::EventHandler(this, &StreamSettingsForm::checkValidText);
+			// 
+			// marginLabel
+			// 
+			this->marginLabel->AutoSize = true;
+			this->marginLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->marginLabel->Location = System::Drawing::Point(47, 227);
+			this->marginLabel->Name = L"marginLabel";
+			this->marginLabel->Size = System::Drawing::Size(112, 15);
+			this->marginLabel->TabIndex = 8;
+			this->marginLabel->Text = L"Intersection Margin";
+			// 
+			// depthTextBox
+			// 
+			this->depthTextBox->Location = System::Drawing::Point(190, 252);
+			this->depthTextBox->Name = L"depthTextBox";
+			this->depthTextBox->Size = System::Drawing::Size(121, 20);
+			this->depthTextBox->TabIndex = 11;
+			this->depthTextBox->TextChanged += gcnew System::EventHandler(this, &StreamSettingsForm::checkValidText);
+			// 
+			// depthLabel
+			// 
+			this->depthLabel->AutoSize = true;
+			this->depthLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->depthLabel->Location = System::Drawing::Point(53, 253);
+			this->depthLabel->Name = L"depthLabel";
+			this->depthLabel->Size = System::Drawing::Size(106, 15);
+			this->depthLabel->TabIndex = 10;
+			this->depthLabel->Text = L"Intersection Depth";
 			// 
 			// StreamSettingsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(422, 262);
+			this->ClientSize = System::Drawing::Size(422, 340);
+			this->Controls->Add(this->depthTextBox);
+			this->Controls->Add(this->depthLabel);
+			this->Controls->Add(this->marginTextBox);
+			this->Controls->Add(this->marginLabel);
 			this->Controls->Add(this->infoLabel);
 			this->Controls->Add(this->setButton);
 			this->Controls->Add(this->FPSComboBox);
@@ -170,7 +221,7 @@ namespace BlinkAnalysis {
 			this->Controls->Add(this->portLabel);
 			this->Controls->Add(this->addressLabel);
 			this->Name = L"StreamSettingsForm";
-			this->Text = L"Network Streaming Settings";
+			this->Text = L"Output Settings";
 			this->Load += gcnew System::EventHandler(this, &StreamSettingsForm::StreamSettingsForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -186,27 +237,37 @@ namespace BlinkAnalysis {
 
 				 this->addressTextBox->Text = StreamingManager::getInstance()->getIPAddress();
 				 this->portTextBox->Text = StreamingManager::getInstance()->getPortNumber().ToString();
+				 this->marginTextBox->Text = OutputManager::getInstance()->getIntersectionBuffer().ToString();
+				 this->depthTextBox->Text = OutputManager::getInstance()->getIntersectionLength().ToString();
 			 }
 			 // converts a managed String^ to unmanaged std::string*
 	private: const char* managedStringToChar(String^ str) {
 				 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
 			 }
-	private: bool isNumber(String^ str) {
-				 String^ regs = "^\\s*-?\\d+\\s*$";
+	private: bool isPositiveNumber(String^ str) {
+				 String^ regs = "^\\s*\\d+\\s*$";
 				 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
 				 return regex->IsMatch(str);
 			 }
+	private: bool isPositiveFloat(String^ str) {
+			 String^ regs = "^\\s*\\d+(.\\d+)?\\s*$";
+			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
+			 return regex->IsMatch(str);
+		 }
 
-	private: System::Void checkEmptyText(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void checkValidText(System::Object^  sender, System::EventArgs^  e) {
 				 if (!String::IsNullOrWhiteSpace(this->addressTextBox->Text) &&
-					 isNumber(this->portTextBox->Text) &&
-					 this->FPSComboBox->SelectedItem)
+					 isPositiveNumber(this->portTextBox->Text) &&
+					 this->FPSComboBox->SelectedItem &&
+					 isPositiveFloat(this->marginTextBox->Text) &&
+					 isPositiveFloat(this->depthTextBox->Text) )
 					 this->setButton->Enabled = true;
 				 else
 					 this->setButton->Enabled = false;
 			 }
 	private: System::Void setButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 int port;
+				 float margin, depth;
 				 bool wasStreaming = StreamingManager::getInstance()->isStreaming();
 
 				 if (wasStreaming) 
@@ -223,15 +284,28 @@ namespace BlinkAnalysis {
 					 String^ message = "Invalid port number: " + this->portTextBox->Text;
 					 MessageBox::Show(message, "", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 				 }
+				 else if (!Single::TryParse(this->marginTextBox->Text, margin))
+				 {
+					 String^ message = "Invalid intersection margin: " + this->marginTextBox->Text;
+					 MessageBox::Show(message, "", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				 }
+				 else if (!Single::TryParse(this->depthTextBox->Text, depth))
+				 {
+					 String^ message = "Invalid intersection depth: " + this->depthTextBox->Text;
+					 MessageBox::Show(message, "", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				 }
 				 else
 				 {
 					 StreamingManager::getInstance()->setPortNumber(port);
 					 OutputManager::getInstance()->setFramesPerSec(this->FPSComboBox->SelectedIndex + 1);
+					 OutputManager::getInstance()->setIntersectionBuffer(margin);
+					 OutputManager::getInstance()->setIntersectionLength(depth);
+
 					 if (wasStreaming)
 						 StreamingManager::getInstance()->startStreaming();
 					 this->Close();
 				 }
 
 			 }
-	};
+};
 }

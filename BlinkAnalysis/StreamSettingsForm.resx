@@ -117,13 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="infoLabel.Text" xml:space="preserve">
-    <value>Change the streaming network settings.
-Data is streamed over TCP using XML format.
-
-Note: 
-Clicking "Use Settings" will restart the server if it is already running.
-Changing "Frames per Second" will also affect recording speed.
-</value>
-  </data>
 </root>

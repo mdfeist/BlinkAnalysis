@@ -9,8 +9,11 @@
 #include "OutputManager.h"
 #include "AppData.h"
 #include "Dikablis.h"
+#include "AppViewer.h"
 
 OutputManager* OutputManager::m_pInstance = NULL; 
+float OutputManager::intersectBuffer = 1;
+float OutputManager::intersectLength = 1;
 
 OutputManager::OutputManager(void)
 {
@@ -73,7 +76,7 @@ void OutputManager::process(void *)
 					sstream << "x=\"" << pos.x() << "\" ";
 					sstream << "y=\"" << pos.y() << "\" ";
 					sstream << "z=\"" << pos.z() << "\" ";
-					sstream << "/>";
+					sstream << "/>\n";
 
 					osg::Matrixf headMatrix;
 					headMatrix.makeIdentity();
@@ -97,11 +100,15 @@ void OutputManager::process(void *)
 					sstream << "x=\"" << ray.x() << "\" ";
 					sstream << "y=\"" << ray.y() << "\" ";
 					sstream << "z=\"" << ray.z() << "\" ";
-					sstream << "/>";
+					sstream << "/>\n";
+
+					sstream << AppViewer::getIntersectionData(pos, ray, intersectBuffer, intersectLength);
 
 					sstream << "</EyeVector>\n";
 				}
 			}
+			// TEST
+			//sstream << AppViewer::getIntersectionData(osg::Vec3(0, 0, 0), osg::Vec3(1, 1, 1), intersectBuffer, intersectLength);
 
 			if (inst->streamRigid)
 			{

@@ -20,6 +20,9 @@ private:
 	bool streamMarker;
 	bool streamEye;
 
+	static float intersectBuffer;
+	static float intersectLength;
+
 	static void process(void *);
 
 protected:
@@ -47,6 +50,18 @@ public:
 
 	void setEye(bool stream) { streamEye = stream; }
 	bool getEye() { return streamEye; }
+
+	void setIntersectionBuffer(float buff) { 
+		if (buff > 0)
+			intersectBuffer = buff; 
+	}
+	float getIntersectionBuffer() { return intersectBuffer; }
+	
+	void setIntersectionLength(float len) { 
+		if (len > 0)
+			intersectLength = len; 
+	}
+	float getIntersectionLength() { return intersectLength; }
 
 	void record(bool recording);
 	void stream(bool streaming);

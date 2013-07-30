@@ -504,6 +504,84 @@ bool AppViewer::lock() {
 
 void AppViewer::unlock() { ReleaseMutex(g_hMutex); }
 
+std::string AppViewer::getIntersectionData(osg::Vec3 start, osg::Vec3 end, float buffer, float length)
+{
+	if (!viewer) return "";
+
+	osg::Vec3 normal = end - start;
+
+	osg::Matrix transformMat;
+	osg::Quat rot;
+	rot.makeRotate(osg::Vec3(0, 0, 1), normal);
+	transformMat.setRotate(rot);
+	transformMat.setTrans(start);
+
+	// form box with bottom at origin
+	// length and width buffer*2
+	osg::Polytope::PlaneList pl;
+	pl.push_back(osg::Plane(-1, 0, 0, buffer));
+	pl.push_back(osg::Plane(0, -1, 0, buffer));
+	pl.push_back(osg::Plane(1, 0, 0, buffer));
+	pl.push_back(osg::Plane(0, 1, 0, buffer));
+	pl.push_back(osg::Plane(0, 0, 1, 0));
+	pl.push_back(osg::Plane(0, 0, -1, length));
+
+	osg::Polytope poly;
+	poly.set(pl);
+	poly.transform(transformMat);
+
+	osg::ref_ptr<osgUtil::PolytopeIntersector> intersect = new osgUtil::PolytopeIntersector(
+								osgUtil::PolytopeIntersector::MODEL, poly);
+	intersect->setDimensionMask(osgUtil::PolytopeIntersector::DimTwo);    // only pick objects
+
+	osgUtil::PolytopeIntersector::Intersections intersections;
+	std::set<std::string> hits;	// may have multiple intersections per object
+	std::stringstream sstream;
+	
+	osgUtil::IntersectionVisitor iv( intersect );
+	if (lock())
+		viewer->getCamera()->accept( iv );  
+	else
+		return "";
+	unlock();
+	if (intersect->containsIntersections())
+	{
+		intersections = intersect->getIntersections();
+		for (osgUtil::PolytopeIntersector::Intersections::iterator hitr = intersections.begin();
+				hitr != intersections.end(); hitr++)
+		{
+
+			if (!hitr->nodePath.empty())
+			{
+				std::string name = hitr->nodePath.back()->getName();
+				// geode containing captured object has the following name format
+				// OBJ wid,oid
+				if (!name.substr(0, 3).compare("OBJ"))
+				{
+					hits.insert(name.substr(4, name.length()-4));
+				}
+			}
+		}
+	}
+
+	for (std::set<std::string>::iterator itr = hits.begin(); itr != hits.end(); itr++)
+	{
+		std::istringstream oss(*itr);
+		std::string num;
+		getline(oss, num, ',');
+		int wid = atoi(num.c_str());
+		getline(oss, num, ',');
+		int oid = atoi(num.c_str());
+
+		sstream << "<Intersection ";
+		sstream << "world=\"" << wid << "\" ";
+		sstream << "object=\"" << oid << "\" ";
+		sstream << "/>\n";
+	}
+	return sstream.str();
+}
+
+
 int teapotIdx = -1;
 void AppViewer::addTeapot()
 {

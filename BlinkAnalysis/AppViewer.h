@@ -30,6 +30,8 @@ namespace AppViewer {
 	// Display setting for capture objects
 	void setDisplayCaptureObjects(bool display);
 
+	std::string getIntersectionData(osg::Vec3 start, osg::Vec3 end, float buffer, float length);
+
 	// Lock the viewer 
 	bool lock();
 	// Unlocks the viewer
