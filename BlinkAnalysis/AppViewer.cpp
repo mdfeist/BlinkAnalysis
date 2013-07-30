@@ -504,3 +504,39 @@ bool AppViewer::lock() {
 
 void AppViewer::unlock() { ReleaseMutex(g_hMutex); }
 
+int teapotIdx = -1;
+void AppViewer::addTeapot()
+{
+		osg::AutoTransform* modelTransform = NULL;
+	if (teapotIdx >= 0)
+	{
+		modelTransform = dynamic_cast<osg::AutoTransform*>(sceneNode->getChild(teapotIdx));
+	}
+	else if (!modelTransform)
+	{
+		modelTransform = new osg::AutoTransform();
+		modelTransform->addChild(osgDB::readNodeFile("teapot.osg"));
+		addNodeToViewer(modelTransform);
+		teapotIdx = sceneNode->getChildIndex(modelTransform);
+	}
+
+	ClientHandler* client = AppData::getInstance()->getClient();
+	if (client)
+	{
+		RigidBody* rb = client->getRigidBody(client->getRigidBodyTool());
+		if (rb)
+		{
+			modelTransform->setPosition(rb->getPosition());
+			modelTransform->setRotation(rb->getRotation());
+			return;
+		}
+	}
+	modelTransform->setPosition(osg::Vec3(0, 0, 0));
+	modelTransform->setRotation(osg::Quat(0, 0, 0, 1));
+}
+
+void AppViewer::removeTeapot()
+{
+	removeNodeFromViewer(sceneNode->getChild(teapotIdx));
+	teapotIdx = -1;
+}

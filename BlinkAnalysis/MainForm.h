@@ -310,6 +310,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  streamEyeVectorToolStripMen
 
 private: System::Windows::Forms::ToolStripMenuItem^  streamNetworkToolStripMenuItem;
 private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
+private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 
 
 
@@ -467,6 +468,7 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 			this->eyeCalibrationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->objectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->teapotToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->setRigidBodyToolToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->viewerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->showLabeledMarkersToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -1861,10 +1863,19 @@ private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 			// 
 			// addObjectToolStripMenuItem
 			// 
+			this->addObjectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->teapotToolStripMenuItem});
 			this->addObjectToolStripMenuItem->Name = L"addObjectToolStripMenuItem";
 			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(177, 22);
 			this->addObjectToolStripMenuItem->Text = L"Add Object";
 			this->addObjectToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::addObjectToolStripMenuItem_Click);
+			// 
+			// teapotToolStripMenuItem
+			// 
+			this->teapotToolStripMenuItem->Name = L"teapotToolStripMenuItem";
+			this->teapotToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->teapotToolStripMenuItem->Text = L"Teapot";
+			this->teapotToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::teapotToolStripMenuItem_CheckedChanged);
+			this->teapotToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::teapotToolStripMenuItem_Click);
 			// 
 			// setRigidBodyToolToolStripMenuItem
 			// 
@@ -3439,6 +3450,16 @@ private: System::Void setOutputDefaultSettings() {
 			 this->streamRigidBodyToolStripMenuItem->Checked = OutputManager::getInstance()->getRigid();
 			 this->streamLabeledMarkerToolStripMenuItem->Checked = OutputManager::getInstance()->getMarker();
 			 this->streamEyeVectorToolStripMenuItem->Checked = OutputManager::getInstance()->getEye();
+		 }
+private: System::Void teapotToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->teapotToolStripMenuItem->Checked = !this->teapotToolStripMenuItem->Checked;
+		 }
+
+private: System::Void teapotToolStripMenuItem_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->teapotToolStripMenuItem->Checked)
+				 AppViewer::addTeapot();
+			 else
+				 AppViewer::removeTeapot();
 		 }
 };
 }

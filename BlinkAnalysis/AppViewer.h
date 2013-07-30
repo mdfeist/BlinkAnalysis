@@ -34,4 +34,7 @@ namespace AppViewer {
 	bool lock();
 	// Unlocks the viewer
 	void unlock();
+
+	void addTeapot();
+	void removeTeapot();
 };
