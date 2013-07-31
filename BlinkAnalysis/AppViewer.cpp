@@ -515,6 +515,7 @@ std::string AppViewer::getIntersectionData(osg::Vec3 start, osg::Vec3 end, float
 	rot.makeRotate(osg::Vec3(0, 0, 1), normal);
 	transformMat.setRotate(rot);
 	transformMat.setTrans(start);
+	transformMat *= osg::Matrix::scale(VIEWER_SCALE, VIEWER_SCALE, VIEWER_SCALE);
 
 	// form box with bottom at origin
 	// length and width buffer*2
