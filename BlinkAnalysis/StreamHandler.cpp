@@ -30,12 +30,26 @@ namespace BlinkAnalysis
 		return  ( ClientThread && ClientThread->IsAlive  );
 	}
 
-	void StreamHandler::addFrameAsync(String^ frame)
+	ref class FrameObject
+	{
+	public:
+		FrameObject(StreamHandler^ h, String^ str)
+		{ handler = h; frame = str; }
+		StreamHandler^ handler;
+		String^ frame;
+	};
+
+	void StreamHandler::addFrameAsync(Object^ frame)
 	{
 		try
 		{
-			array<Byte>^ response = ascii->GetBytes(frame);
-			ClientSocket->GetStream()->Write(response, 0, response->Length);
+			StreamHandler^ h = ((FrameObject^) frame)->handler;
+			if (!h) return;
+			String^ str = ((FrameObject^) frame)->frame;
+			array<Byte>^ response = h->ascii->GetBytes(str);
+			h->ClientSocket->GetStream()->Write(response, 0, response->Length);
+			h = nullptr;
+			str = nullptr;
 		}
 		catch(Exception^ ex)
 		{
@@ -43,14 +57,11 @@ namespace BlinkAnalysis
 		}
 	}
 
-	delegate void AddFrameAsyncCaller(String^ frame);
-
 	// this sends the actual data using a delegate so addFrame returns quickly
 	// otherwise, it blocks the main OutputManager thread and could slow down FPS
 	void StreamHandler::addFrame(String^ frame)
 	{
-		AddFrameAsyncCaller^ call = gcnew AddFrameAsyncCaller(this, &StreamHandler::addFrameAsync);
-		call->BeginInvoke(frame, nullptr, nullptr);
+		ThreadPool::QueueUserWorkItem(gcnew WaitCallback(StreamHandler::addFrameAsync), gcnew FrameObject(this, frame));
 	}
 
 	// can only check if client alive by trying to send it something

@@ -44,7 +44,7 @@ namespace BlinkAnalysis
 
 		bool getStreamData() { return streamData; }
 		void addFrame(String^ frame);
-		void addFrameAsync(String^ frame);
+		static void addFrameAsync(Object^ frame);
 
 	};
 }

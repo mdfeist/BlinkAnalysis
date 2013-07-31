@@ -94,9 +94,6 @@ namespace BlinkAnalysis
 				( (StreamHandler^)ClientSockets->default[i] )->Stop();
 			}
 		}
-
-		Console::WriteLine("\nHit enter to continue...");
-		Console::Read();
 	}
 
 	bool StreamingManager::setIPAddress(const char* addr)

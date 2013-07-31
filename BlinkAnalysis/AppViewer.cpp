@@ -271,7 +271,7 @@ void render(void *) {
 	{
 		// If not running stop render loop
 		if (!running)
-			viewer->setDone(running);
+			viewer->setDone(!running);
 
 		// Check if view is visible
 		if (visible) {

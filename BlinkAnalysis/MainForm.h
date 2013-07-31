@@ -2282,6 +2282,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 	private: System::Void MainForm_Closed( Object^ /*sender*/, System::EventArgs ^ e )
 			{
 				AppViewer::stopAppViewer();
+				OutputManager::getInstance()->stream(false);
 
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
