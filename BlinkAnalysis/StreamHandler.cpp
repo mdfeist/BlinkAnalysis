@@ -131,6 +131,8 @@ namespace BlinkAnalysis
 						for (i = 0; i < split->Length-1; i++)
 						{
 							String^ command = split[i];
+							command->Trim();
+							if (String::IsNullOrWhiteSpace(command)) continue;
 
 							// Show the data on the console.
 							Console::WriteLine( "Text received : {0}", command);
