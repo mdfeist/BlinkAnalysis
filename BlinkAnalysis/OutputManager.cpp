@@ -152,7 +152,7 @@ void OutputManager::process(void *)
 					// Get Pointer to marker
 					Marker* marker = it_marker->second;
 
-					sstream << "<Labeled Marker ";
+					sstream << "<LabeledMarker ";
 					sstream << "id=\"" << (*marker).getID() << "\" ";
 					sstream << "x=\"" << (*marker).x() << "\" ";
 					sstream << "y=\"" << (*marker).y() << "\" ";
