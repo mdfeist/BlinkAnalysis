@@ -30,15 +30,6 @@ namespace BlinkAnalysis
 		return  ( ClientThread && ClientThread->IsAlive  );
 	}
 
-	ref class FrameObject
-	{
-	public:
-		FrameObject(StreamHandler^ h, String^ str)
-		{ handler = h; frame = str; }
-		StreamHandler^ handler;
-		String^ frame;
-	};
-
 	void StreamHandler::addFrameAsync(Object^ frame)
 	{
 		try
@@ -55,13 +46,6 @@ namespace BlinkAnalysis
 		{
 			Console::WriteLine("Exception add frame: {0}", ex->Message);
 		}
-	}
-
-	// this sends the actual data using a delegate so addFrame returns quickly
-	// otherwise, it blocks the main OutputManager thread and could slow down FPS
-	void StreamHandler::addFrame(String^ frame)
-	{
-		ThreadPool::QueueUserWorkItem(gcnew WaitCallback(StreamHandler::addFrameAsync), gcnew FrameObject(this, frame));
 	}
 
 	// can only check if client alive by trying to send it something

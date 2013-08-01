@@ -12,7 +12,6 @@ namespace BlinkAnalysis
 	using namespace System::Text;
 	using namespace System::Collections;
 	using namespace System::Threading;
-
 	/**
 	 * Handles a single client socket for streaming
 	 */
@@ -46,9 +45,18 @@ namespace BlinkAnalysis
 		bool Alive();
 
 		bool getStreamData() { return streamData; }
-		void addFrame(String^ frame);
 		static void addFrameAsync(Object^ frame);
 
+	};
+
+		
+	public ref class FrameObject
+	{
+	public:
+		FrameObject(StreamHandler^ h, String^ str)
+		{ handler = h; frame = str; }
+		StreamHandler^ handler;
+		String^ frame;
 	};
 }
 

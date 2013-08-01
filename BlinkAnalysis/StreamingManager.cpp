@@ -5,13 +5,92 @@
 
 namespace BlinkAnalysis
 {
+	
+	ref class StreamTaskQueue
+	{
+	private:
+		ref class QTask
+		{
+		public:
+			property Action<FrameObject^>^ Task;
+			property FrameObject^ frame;
+		};
+
+		StreamTaskQueue() {}
+		StreamTaskQueue(const StreamTaskQueue%) { throw gcnew System::InvalidOperationException("singleton cannot be copy-constructed"); }
+		static StreamTaskQueue m_instance;
+
+		static Object^ _syncObj = gcnew Object();
+		static Generic::Queue<FrameObject^>^ _tasks = 
+				gcnew Generic::Queue<FrameObject^>();
+		static int _runningTaskCount = 0;
+
+		static void ProcessTaskQueue()
+		{
+			if (_runningTaskCount != 0) return;
+
+			if (_tasks->Count > 0 && _runningTaskCount == 0)
+			{
+				Monitor::Enter(_syncObj);
+				QueueUserWorkItem(_tasks->Dequeue());
+				Monitor::Exit(_syncObj);
+			}
+		}
+
+		static void QueueUserWorkItem(FrameObject^ frame)
+		{
+			_runningTaskCount++;
+
+			ThreadPool::QueueUserWorkItem(gcnew WaitCallback(StreamTaskQueue::completionTask), frame);
+		}
+
+		static void OnTaskCompleted()
+		{
+			Monitor::Enter(_syncObj);
+			if (--_runningTaskCount == 0)
+			{
+				ProcessTaskQueue();
+			}
+			Monitor::Exit(_syncObj);
+		}
+
+		static void completionTask(Object^ frame)
+		{
+			StreamHandler::addFrameAsync(frame);
+			OnTaskCompleted();
+		}
+	
+
+	public:
+		
+		static property StreamTaskQueue^ Instance { StreamTaskQueue^ get() { return %m_instance; } }
+
+		static void Queue(FrameObject^ frame)
+		{
+			Monitor::Enter(_syncObj);
+			_tasks->Enqueue(frame);
+			Monitor::Exit(_syncObj);
+
+			ProcessTaskQueue();
+		}
+
+		static int Count()
+		{
+			Monitor::Enter(_syncObj);
+			int ret = _tasks->Count;
+			Monitor::Exit(_syncObj);
+			return ret;
+		}
+
+	};
+
 	StreamingManager* StreamingManager::m_pInstance = NULL;
 	bool StreamingManager::ContinueReclaim = true;
 	gcroot<Thread^> StreamingManager::ThreadReclaim = nullptr;
 	gcroot<Thread^> StreamingManager::ThreadListen = nullptr;
 	gcroot<ArrayList^> StreamingManager::ClientSockets = nullptr;
-	bool StreamingManager::streamFrames = false;
 	std::queue<std::string> StreamingManager::frameBuffer;
+	bool StreamingManager::streaming = false;
 
 	// default to listen through localhost on port 10510
 	StreamingManager::StreamingManager()
@@ -55,7 +134,6 @@ namespace BlinkAnalysis
 
 			// Start listening for connections.
 			Console::WriteLine("Waiting for a connection...");
-			streamFrames = true;
 			_beginthread(&StreamingManager::streamFrame, 0, NULL);
 
 			while ( inst->streaming ) {
@@ -89,10 +167,11 @@ namespace BlinkAnalysis
 			ContinueReclaim = false ;
 			ThreadReclaim->Join() ;
 
-			streamFrames = false;
 			for (int i = 0; i < ClientSockets->Count; i++)  {
 				( (StreamHandler^)ClientSockets->default[i] )->Stop();
 			}
+			std::queue<std::string> empty;
+			std::swap(frameBuffer, empty);
 		}
 	}
 
@@ -116,6 +195,7 @@ namespace BlinkAnalysis
 
 	void StreamingManager::startStreaming()
 	{
+		if (streaming) return;
 		streaming = true;
 
 		ClientSockets = gcnew ArrayList() ;
@@ -135,7 +215,7 @@ namespace BlinkAnalysis
 
 	void StreamingManager::addFrame(std::string frame)
 	{
-		if (streamFrames)
+		if (streaming)
 		{
 			// buffer overflowing, drop oldest frame
 			if (frameBuffer.size() > MAX_BUFFER_SIZE)
@@ -149,7 +229,7 @@ namespace BlinkAnalysis
 	// placing in buffer means addFrame method will return quickly
 	void StreamingManager::streamFrame(void*)
 	{
-		while (streamFrames)
+		while (streaming)
 		{
 			if (!frameBuffer.empty())
 			{
@@ -162,7 +242,7 @@ namespace BlinkAnalysis
 					// if client still alive and wants data streamed
 					if( client->getStreamData() && client->Alive() )
 					{
-						client->addFrame(str);
+						StreamTaskQueue::Instance->Queue(gcnew FrameObject(client, str));
 					}
 				}
 				Monitor::Exit(ClientSockets->SyncRoot);

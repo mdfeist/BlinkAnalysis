@@ -40,7 +40,7 @@ namespace BlinkAnalysis
 		StreamingManager& operator=(StreamingManager const&);
 		static StreamingManager* m_pInstance;
 
-		bool streaming;
+		static bool streaming;
 		gcroot<IPAddress^> address;
 		int portNum;
 		gcroot<TcpListener^> listener;
@@ -83,7 +83,7 @@ namespace BlinkAnalysis
 		bool isStreaming() { return this->streaming; }
 		void startStreaming();
 		void stopStreaming();
-		void addFrame(std::string frame);
+		static void addFrame(std::string frame);
 
 	};
 }
