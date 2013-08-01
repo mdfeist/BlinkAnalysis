@@ -19,7 +19,7 @@
 typedef std::map<int, RigidBody*>::iterator RigidBody_iterator;
 typedef std::map<int, Marker*>::iterator labeledmarker_iterator;
 
-/*
+/**
  * The ClientHandler Class handles multiple
  * RigidBody's. You are able to add, get,
  * and update RigidBody's according to 

@@ -13,6 +13,9 @@ namespace BlinkAnalysis
 	using namespace System::Collections;
 	using namespace System::Threading;
 
+	/**
+	 * Handles a single client socket for streaming
+	 */
 	public ref class StreamHandler {
 
 		// socket opened to client

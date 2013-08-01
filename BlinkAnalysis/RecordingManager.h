@@ -3,6 +3,9 @@
 
 #include "Recording.h"
 
+/**
+ * Class for managing recording saving
+ */
 class RecordingManager
 {
 public:

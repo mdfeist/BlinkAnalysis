@@ -13,6 +13,9 @@
 #include "NatNetTypes.h"
 #include "pugixml.hpp"
 
+/**
+ *  Manages ClientHandler and file save/load
+ */
 public class AppData
 {
 public:

@@ -10,7 +10,9 @@
 #include <osg/Vec3>
 #include <osg/Vec4>
 
-// Holds the data for an OptiTrack Marker
+/**
+ * Holds the data for an OptiTrack Marker
+ */
 class Marker {
 private:
 	int id;

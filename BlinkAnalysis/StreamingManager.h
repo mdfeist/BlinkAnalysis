@@ -23,8 +23,13 @@ namespace BlinkAnalysis
 	using namespace System::Collections;
 	using namespace System::Threading;
 
-	// Note: this class is unmanaged to try and avoid overhead
-	// moving from unmanaged to managed code during addframe
+	/**
+	 * Class that manages the TCP listener and creates new  
+	 * StreamHandlers as clients connect \n
+	 * \n
+	 * Note: this class is unmanaged to try and avoid overhead
+	 * moving from unmanaged to managed code during addframe
+	 */
 	public class StreamingManager
 	{
 

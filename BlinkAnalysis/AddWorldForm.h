@@ -13,7 +13,8 @@ namespace BlinkAnalysis {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for AddWorldForm
+	/// Simple form for adding a new CaptureWorld \n
+	/// Controller not needed since WorldManager will call update on MainForm
 	/// </summary>
 	public ref class AddWorldForm : public System::Windows::Forms::Form
 	{

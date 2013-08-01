@@ -22,7 +22,7 @@ namespace BlinkAnalysis {
 	};
 
 	/// <summary>
-	/// Summary for AddObjectWizardForm
+	/// Wizard for adding objects to a world
 	/// </summary>
 	public ref class AddObjectWizardForm : public System::Windows::Forms::Form
 	{

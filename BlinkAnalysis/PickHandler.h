@@ -6,9 +6,11 @@
 #include <osgViewer/Viewer>
 #include <osgText/Text>
 
-// class to handle events with a pick
-// largely based on the osgpick example here
-// http://trac.openscenegraph.org/projects/osg/browser/OpenSceneGraph/trunk/examples/osgpick/osgpick.cpp
+/**
+ * abstract class to handle events with a pick \n
+ * largely based on the osgpick example here \n
+ * http://trac.openscenegraph.org/projects/osg/browser/OpenSceneGraph/trunk/examples/osgpick/osgpick.cpp
+ */
 class PickHandler : public osgGA::GUIEventHandler {
 public: 
 
@@ -46,7 +48,9 @@ protected:
 	osg::ref_ptr<osg::Camera> hudCamera;
 };
 
-
+/**
+ * For picking CaptureObjects in a scene
+ */
 class PickObjectHandler : public PickHandler {
 public:
 	PickObjectHandler(int width, int height) :
@@ -62,7 +66,9 @@ private:
 	osg::ref_ptr<osg::Geode> pickedGeode;
 };
 
-
+/**
+ * For picking LabeledMarkers in a scene
+ */
 class PickMarkerHandler : public PickHandler {
 public:
 

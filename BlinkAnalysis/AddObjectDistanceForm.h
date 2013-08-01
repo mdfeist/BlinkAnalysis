@@ -12,7 +12,9 @@ namespace BlinkAnalysis {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for AddObjectDistanceForm
+	/// Calculates distance between two points \n
+	/// Called by AddObjectWizardForm\n
+	/// Controller not needed since instantiated as a modal dialog
 	/// </summary>
 	public ref class AddObjectDistanceForm : public System::Windows::Forms::Form
 	{

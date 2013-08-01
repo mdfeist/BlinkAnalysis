@@ -5,6 +5,9 @@
 	
 typedef std::map<int, CaptureWorld*>::iterator worlds_iterator;
 
+/**
+ * Singleton that manages all CaptureWorlds
+ */
 public class WorldManager
 {
 public:

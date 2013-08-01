@@ -18,9 +18,10 @@ enum CentreType {
 
 typedef std::vector<osg::ref_ptr<osg::DrawElementsUInt>>::iterator faces_iterator;
 
-///////////////////////////
 
-// TODO: eventually support texture?
+/**
+ *  Base abstract class for capture objects
+ */
 class CaptureObject
 {
 protected:
@@ -79,8 +80,10 @@ public:
 };
 
 
-///////////////////////////
 
+/**
+ *  Custom objects (defined by points and triangle faces)
+ */
 class CaptureObjectCustom : public CaptureObject
 {
 private:
@@ -114,8 +117,9 @@ public:
 };
 
 
-///////////////////////////
-
+/**
+ *  Plane object (defined by 3 points)
+ */
 class CaptureObjectPlane : public CaptureObject
 {
 private: 
@@ -151,7 +155,9 @@ public:
 
 
 ///////////////////////////
-
+/**
+ *  Box object (defined by centre and dimensions)
+ */
 class CaptureObjectBox : public CaptureObject
 {
 private:
@@ -189,7 +195,9 @@ public:
 
 
 ///////////////////////////
-
+/**
+ *  Cylinder object (defined by centre, radius, and height)
+ */
 class CaptureObjectCylinder : public CaptureObject
 {
 private:

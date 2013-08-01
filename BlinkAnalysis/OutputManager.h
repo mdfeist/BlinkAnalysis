@@ -5,8 +5,10 @@
 #include "StreamingManager.h"
 
 
-// This class creates the frames to be output by 
-// either a recording, or a TCP stream
+/**
+ * This class creates the frames to be output by 
+ * either a recording, or a TCP stream
+ */
 public class OutputManager
 {
 private:

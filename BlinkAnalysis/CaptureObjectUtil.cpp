@@ -4,10 +4,6 @@
 
 #include <sstream>
 
-bool CaptureObjectUtil::orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon) 
-{
-	return (abs(v1*v2) <= abs(epsilon));
-}
 
 // based on MATLAB function MakeCoordSystem by J. Lanovaz
 osg::Matrix* CaptureObjectUtil::makeLocalToGlobalMatrix(

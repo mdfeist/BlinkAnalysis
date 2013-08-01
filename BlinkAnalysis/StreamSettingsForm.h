@@ -12,7 +12,7 @@ namespace BlinkAnalysis {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for StreamSettingsForm
+	/// Form to change output settings for both recording and streaming
 	/// </summary>
 	public ref class StreamSettingsForm : public System::Windows::Forms::Form
 	{

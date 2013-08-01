@@ -11,6 +11,12 @@
 
 typedef std::map<int, CaptureObject*>::iterator objects_iterator;
 
+/**
+ * Class that contains objects \n
+ * May define a coordinate frame (as projection matrix) that 
+ * is not applied to the CaptureObject data, but saved/streamed 
+ * to help with data manipulation
+ */
 class CaptureWorld 
 {
 private:

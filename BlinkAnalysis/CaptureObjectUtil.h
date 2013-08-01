@@ -18,15 +18,16 @@ enum ObjectType {
 	OBJ_INVALID
 };
 
-////////////////////////////////////////
-// The following class is from https://www.movesinstitute.org/Sullivan/OSGTutorials/osgGetWorldCoords.htm
-////////////////////////////////////////
-// Visitor to return the world coordinates of a node.
-// It traverses from the starting node to the parent.
-// The first time it reaches a root node, it stores the world coordinates of 
-// the node it started from.  The world coordinates are found by concatenating all 
-// the matrix transforms found on the path from the start node to the root node.
 
+/**
+ * The following class is from https://www.movesinstitute.org/Sullivan/OSGTutorials/osgGetWorldCoords.htm \n
+ *  \n
+ * Visitor to return the world coordinates of a node. \n
+ * It traverses from the starting node to the parent. \n
+ * The first time it reaches a root node, it stores the world coordinates of  \n
+ * the node it started from.  The world coordinates are found by concatenating all  \n
+ * the matrix transforms found on the path from the start node to the root node. \n
+ */
 class getWorldCoordOfNodeVisitor : public osg::NodeVisitor 
 {
 public:
@@ -57,10 +58,11 @@ private:
 };
 
 
+/**
+ * Helper methods for capture object creation/manipulation
+ */
 namespace CaptureObjectUtil
 {
-	bool orthogonalCheckFuzzy(osg::Vec3 v1, osg::Vec3 v2, double epsilon);
-
 	osg::Matrix* makeLocalToGlobalMatrix(osg::Vec3 origin, osg::Vec3 x, osg::Vec3 y);
 
 	osg::Vec3 quaternionToEuler(osg::Quat q);

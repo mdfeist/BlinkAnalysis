@@ -10,6 +10,9 @@ using namespace System::ComponentModel::Design;
 using namespace System::Drawing;
 using namespace System::Windows::Forms;
 
+/**
+ * Abstract class that create a wizard-style form
+ */
 public ref class WizardPages : TabControl
 {
 protected: 

@@ -11,7 +11,7 @@ namespace BlinkAnalysis {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for SetRigidBodyToolForm
+	/// Form to set a rigid body as pointing tool
 	/// </summary>
 	public ref class SetRigidBodyToolForm : public System::Windows::Forms::Form
 	{

@@ -10,6 +10,9 @@
 #include <Windows.h>
 #include <osg/Node>
 
+/**
+ *  Methods to render the OSG viewer
+ */
 namespace AppViewer {
 	// Creates a new OSG view in the given windows view
 	void initAppViewer(HWND hwnd);

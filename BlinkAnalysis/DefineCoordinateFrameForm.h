@@ -13,7 +13,7 @@ namespace BlinkAnalysis {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for DefineCoordinateFrameForm
+	/// Form to create a coordinate frame (projection matrix) for a CaptureWorld
 	/// </summary>
 	public ref class DefineCoordinateFrameForm : public System::Windows::Forms::Form
 	{

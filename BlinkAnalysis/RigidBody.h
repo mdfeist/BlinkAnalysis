@@ -11,7 +11,7 @@
 #include "NatNetTypes.h"
 #include "Marker.h"
 
-/*
+/**
  * The RigidBody class handles transformation data
  * of a single rigid body.
  */

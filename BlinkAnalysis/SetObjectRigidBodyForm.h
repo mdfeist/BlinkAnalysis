@@ -13,7 +13,7 @@ namespace BlinkAnalysis {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for SetObjectRigidBodyForm
+	/// Form for attaching an object to a rigid body
 	/// </summary>
 	public ref class SetObjectRigidBodyForm : public System::Windows::Forms::Form
 	{

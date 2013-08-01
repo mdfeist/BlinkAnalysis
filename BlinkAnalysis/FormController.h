@@ -9,6 +9,10 @@
 
 using namespace System;
 
+/**
+ * Abstract class for creating form controllers so 
+ * data can be passed between different forms
+ */
 generic<class ControllerType, class FormType> 
 where ControllerType : gcnew()
 where FormType : System::Windows::Forms::Form, gcnew()

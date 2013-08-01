@@ -8,7 +8,7 @@
 
 #include "ClientHandler.h"
 
-/*
+/**
  * The NatNetClient handles the start up process
  * of the NatNetSDK.
  */

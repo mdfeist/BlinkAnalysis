@@ -11,7 +11,7 @@ namespace BlinkAnalysis {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for SetRigidBodyObjectForm
+	/// Form to attach an existing object to the rigid body
 	/// </summary>
 	public ref class SetRigidBodyObjectForm : public System::Windows::Forms::Form
 	{
@@ -207,7 +207,7 @@ namespace BlinkAnalysis {
 			this->Controls->Add(this->objectComboBox);
 			this->Controls->Add(this->objectGridView);
 			this->Name = L"SetRigidBodyObjectForm";
-			this->Text = L"SetRigidBodyObjectForm";
+			this->Text = L"Attach Object to Rigid Body";
 			this->Load += gcnew System::EventHandler(this, &SetRigidBodyObjectForm::SetRigidBodyObjectForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->objectGridView))->EndInit();
 			this->ResumeLayout(false);
