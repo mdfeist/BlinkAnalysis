@@ -2,6 +2,8 @@
 
 #include "StreamHandler.h"
 #include "StreamTaskQueue.h"
+#include "StreamingManager.h"
+
 namespace BlinkAnalysis
 {
 	StreamTaskQueue::StreamTaskQueue() {
@@ -26,7 +28,7 @@ namespace BlinkAnalysis
 	{
 		task->queue->_runningTaskCount++;
 
-		ThreadPool::QueueUserWorkItem(gcnew WaitCallback(StreamTaskQueue::completionTask), task);
+		ThreadPool::QueueUserWorkItem(gcnew WaitCallback(StreamTaskQueue::completionTaskAsync), task);
 	}
 
 	void StreamTaskQueue::OnTaskCompleted(StreamTaskQueue^ queue)
@@ -40,8 +42,9 @@ namespace BlinkAnalysis
 		Monitor::Exit(queue->_syncObj);
 	}
 
-	void StreamTaskQueue::completionTask(Object^ task)
+	void StreamTaskQueue::completionTaskAsync(Object^ task)
 	{
+		if (!StreamingManager::getInstance()->isStreaming()) return;
 		StreamHandler::addFrameAsync(((QTask^)task)->frame);
 		OnTaskCompleted(((QTask^)task)->queue);
 	}

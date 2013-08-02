@@ -2089,6 +2089,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 	private: int displayWorld;			// ID of world displayed in World tab
 	private: int displayObjectWorld;	// ID of world of object displayed in Object tab
 	private: int displayObject;			// ID of object displayed in Object tab
+	private: bool isClosing;
 
 	// User Defined Functions
 	private: void getOptiTrackInfo() {
@@ -2264,6 +2265,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 
 				 // output settings
 				 setOutputDefaultSettings();
+
+				 this->isClosing = false;
 			 }
 	private: System::Void MainForm_Closing( Object^ /*sender*/, System::Windows::Forms::FormClosingEventArgs^ e) 
 			 {
@@ -2281,6 +2284,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			 }
 	private: System::Void MainForm_Closed( Object^ /*sender*/, System::EventArgs ^ e )
 			{
+				this->isClosing = true;
 				AppViewer::stopAppViewer();
 				OutputManager::getInstance()->stream(false);
 
@@ -2526,7 +2530,7 @@ _WATCH_MEMORY
 	public: System::Void optiTrackUpdateData() {
 				static bool isUpdating = false;
 				
-				if (isUpdating)
+				if (isUpdating || this->isClosing)
 					return;
 
 				isUpdating = true;

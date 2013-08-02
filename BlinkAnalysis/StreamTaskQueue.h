@@ -32,7 +32,7 @@ namespace BlinkAnalysis
 
 		static void OnTaskCompleted(StreamTaskQueue^ queue);
 
-		static void completionTask(Object^ task);
+		static void completionTaskAsync(Object^ task);
 	
 
 	public:

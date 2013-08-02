@@ -3,6 +3,7 @@
 #include "StreamHandler.h"
 #include "AppData.h"
 #include "WorldManager.h"
+#include "StreamingManager.h"
 
 namespace BlinkAnalysis
 {
@@ -34,23 +35,26 @@ namespace BlinkAnalysis
 	void StreamHandler::addFrame(String^ frame)
 	{
 		queue->Queue(gcnew FrameObject(this, frame));
+		frame = nullptr;
 	}
 
 	void StreamHandler::addFrameAsync(Object^ frame)
 	{
+		if (!StreamingManager::getInstance()->isStreaming()) return;
 		try
 		{
 			StreamHandler^ h = ((FrameObject^) frame)->handler;
-			if (!h) return;
 			String^ str = ((FrameObject^) frame)->frame;
 			array<Byte>^ response = h->ascii->GetBytes(str);
 			h->ClientSocket->GetStream()->Write(response, 0, response->Length);
-			h = nullptr;
-			str = nullptr;
 		}
 		catch(Exception^ ex)
 		{
 			Console::WriteLine("Exception add frame: {0}", ex->Message);
+		}
+		finally
+		{
+			frame = nullptr;
 		}
 	}
 

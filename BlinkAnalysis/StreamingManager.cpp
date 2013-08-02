@@ -170,6 +170,7 @@ namespace BlinkAnalysis
 					}
 				}
 				Monitor::Exit(ClientSockets->SyncRoot);
+				str = nullptr;
 			}
 		}
 		_endthread();
