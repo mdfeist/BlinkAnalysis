@@ -11,6 +11,7 @@ namespace BlinkAnalysis
 		this->ClientSocket = ClientSocket;
 		this->ClientNumber = ClientNumber;
 		ascii = gcnew ASCIIEncoding();
+		queue = gcnew StreamTaskQueue();
 	}
 
 	// start listening for client commands
@@ -28,6 +29,11 @@ namespace BlinkAnalysis
 
 	bool StreamHandler::Alive() {
 		return  ( ClientThread && ClientThread->IsAlive  );
+	}
+
+	void StreamHandler::addFrame(String^ frame)
+	{
+		queue->Queue(gcnew FrameObject(this, frame));
 	}
 
 	void StreamHandler::addFrameAsync(Object^ frame)
