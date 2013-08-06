@@ -93,6 +93,7 @@ namespace BlinkAnalysis
 
 			for (int i = 0; i < ClientSockets->Count; i++)  {
 				( (StreamHandler^)ClientSockets->default[i] )->Stop();
+				ClientSockets->RemoveAt(i);
 			}
 			std::queue<std::string> empty;
 			std::swap(frameBuffer, empty);
@@ -170,7 +171,6 @@ namespace BlinkAnalysis
 					}
 				}
 				Monitor::Exit(ClientSockets->SyncRoot);
-				str = nullptr;
 			}
 		}
 		_endthread();

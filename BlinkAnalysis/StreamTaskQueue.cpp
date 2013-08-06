@@ -10,6 +10,7 @@ namespace BlinkAnalysis
 		_syncObj = gcnew Object();
 		_tasks = gcnew Generic::Queue<QTask^>();
 		_runningTaskCount = 0;
+		_process = false;
 	}
 
 	void StreamTaskQueue::ProcessTaskQueue(StreamTaskQueue^ queue)
@@ -26,6 +27,7 @@ namespace BlinkAnalysis
 
 	void StreamTaskQueue::QueueUserWorkItem(QTask^ task)
 	{
+		if (!task->queue->_process) return;
 		task->queue->_runningTaskCount++;
 
 		ThreadPool::QueueUserWorkItem(gcnew WaitCallback(StreamTaskQueue::completionTaskAsync), task);

@@ -184,7 +184,7 @@ void OutputManager::process(void *)
 		Sleep( (sleep) > 0 ? sleep : 0 );
 	}
 
-	inst->isProcessing = false;
+	getInstance()->isProcessing = false;
 
 	// Terminate thread
     _endthread();

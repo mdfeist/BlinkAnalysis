@@ -25,6 +25,7 @@ namespace BlinkAnalysis
 		Object^ _syncObj;
 		Generic::Queue<QTask^>^ _tasks;
 		int _runningTaskCount;
+		bool _process;
 
 		static void ProcessTaskQueue(StreamTaskQueue^ queue);
 
@@ -43,5 +44,9 @@ namespace BlinkAnalysis
 
 		int Count();
 
+		void setProcess(bool process)
+		{
+			_process = process;
+		}
 	};
 }

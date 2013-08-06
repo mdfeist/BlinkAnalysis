@@ -35,7 +35,6 @@ namespace BlinkAnalysis
 	void StreamHandler::addFrame(String^ frame)
 	{
 		queue->Queue(gcnew FrameObject(this, frame));
-		frame = nullptr;
 	}
 
 	void StreamHandler::addFrameAsync(Object^ frame)
@@ -125,40 +124,29 @@ namespace BlinkAnalysis
 					// any data within the ReceiveTimeout timeframe
 					int BytesRead = networkStream->Read(bytes, 0, bufferSize);
 					if ( BytesRead > 0 ) {
-						data = String::Concat(data, ascii->GetString(bytes, 0, BytesRead));
-						int idx = data->IndexOf('\n');
-						if (idx < 0)
-							continue;
+						data = ascii->GetString(bytes, 0, BytesRead);
 
-						data->Replace("\r","");
-						array<String^>^ split = data->Split(gcnew array<wchar_t> {'\n'});
-						int i;
-						for (i = 0; i < split->Length-1; i++)
+						for (int i = 0; i < data->Length; i++)
 						{
-							String^ command = split[i];
-							command->Trim();
-							if (String::IsNullOrWhiteSpace(command)) continue;
-
-							// Show the data on the console.
-							Console::WriteLine( "Text received : {0}", command);
-
-							switch (command[0])
+							switch (data[i])
 							{
 							case 'q':
 								ContinueProcess = false;
+								queue->setProcess(false);
 								break;
 							case 's':
 								streamData = true;
+								queue->setProcess(true);
 								break;
 							case 'd':
 								streamData = false;
+								queue->setProcess(false);
 								break;
 							case 'h':
 								streamHeader();
 								break;
 							}
 						}
-						data = split[i];
 					}
 					else
 					{
@@ -175,10 +163,12 @@ namespace BlinkAnalysis
 					Console::WriteLine( "Conection is broken!");
 					break ;
 				}
-				Thread::Sleep(200) ;
+				Thread::Sleep(200);
 			} // while ( ContinueProcess )
-			networkStream->Close() ;
-			ClientSocket->Close();			
+			networkStream->Close();
+			ClientSocket->Close();
+			queue->setProcess(false);
+			streamData = false;
 		}
 	}  // Process()
 }
