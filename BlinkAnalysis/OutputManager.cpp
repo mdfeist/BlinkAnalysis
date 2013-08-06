@@ -157,6 +157,7 @@ void OutputManager::process(void *)
 					sstream << "x=\"" << (*marker).x() << "\" ";
 					sstream << "y=\"" << (*marker).y() << "\" ";
 					sstream << "z=\"" << (*marker).z() << "\" ";
+					sstream << "size=\"" << (*marker).getSize() << "\" ";
 					sstream << "/>\n";
 				}
 			}
