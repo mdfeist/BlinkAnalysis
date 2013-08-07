@@ -12,8 +12,10 @@ namespace BlinkAnalysis
 		this->ClientSocket = ClientSocket;
 		this->ClientNumber = ClientNumber;
 		ascii = gcnew ASCIIEncoding();
-		queue = gcnew StreamTaskQueue();
+		frames = new std::queue<std::string>();
+		sync = gcnew Object();
 	}
+
 
 	// start listening for client commands
 	void StreamHandler::Start() {
@@ -26,34 +28,48 @@ namespace BlinkAnalysis
 		ContinueProcess = false ;
 		if ( ClientThread && ClientThread->IsAlive )
 			ClientThread->Join() ;
+		if (StreamThread && StreamThread->IsAlive)
+			StreamThread->Join();
 	}
 
 	bool StreamHandler::Alive() {
 		return  ( ClientThread && ClientThread->IsAlive  );
 	}
 
-	void StreamHandler::addFrame(String^ frame)
+	void StreamHandler::addFrame(std::string frame)
 	{
-		queue->Queue(gcnew FrameObject(this, frame));
+		Monitor::Enter(sync);
+		frames->push(frame);
+		Monitor::Exit(sync);
+		if (!StreamThread)
+		{
+			StreamThread = gcnew Thread(gcnew ThreadStart(this, &StreamHandler::Stream));
+			StreamThread->Start();
+		}
 	}
 
-	void StreamHandler::addFrameAsync(Object^ frame)
+	void StreamHandler::Stream()
 	{
-		if (!StreamingManager::getInstance()->isStreaming()) return;
-		try
+		while (streamData)
 		{
-			StreamHandler^ h = ((FrameObject^) frame)->handler;
-			String^ str = ((FrameObject^) frame)->frame;
-			array<Byte>^ response = h->ascii->GetBytes(str);
-			h->ClientSocket->GetStream()->Write(response, 0, response->Length);
-		}
-		catch(Exception^ ex)
-		{
-			Console::WriteLine("Exception add frame: {0}", ex->Message);
-		}
-		finally
-		{
-			frame = nullptr;
+			int count = frames->size();
+			if (count > 0)
+			{
+				try
+				{
+					std::string str = frames->front();
+					array<Byte>^ response = gcnew array<Byte>(str.size());
+					System::Runtime::InteropServices::Marshal::Copy(IntPtr(&str[0]), response, 0, str.size());
+					ClientSocket->GetStream()->Write(response, 0, response->Length);
+					Monitor::Enter(sync);
+					frames->pop();
+					Monitor::Exit(sync);
+				}
+				catch(Exception^ ex)
+				{
+					Console::WriteLine("Exception add frame: {0}", ex->Message);
+				}
+			}
 		}
 	}
 
@@ -132,15 +148,12 @@ namespace BlinkAnalysis
 							{
 							case 'q':
 								ContinueProcess = false;
-								queue->setProcess(false);
 								break;
 							case 's':
 								streamData = true;
-								queue->setProcess(true);
 								break;
 							case 'd':
 								streamData = false;
-								queue->setProcess(false);
 								break;
 							case 'h':
 								streamHeader();
@@ -155,19 +168,18 @@ namespace BlinkAnalysis
 							break ;
 					}
 				}
-				catch  ( IOException^ ) {
-					if(!TestConnection())
-						break ;
-				} // Timeout
 				catch  ( SocketException^ ) {
 					Console::WriteLine( "Conection is broken!");
 					break ;
 				}
+				catch  ( IOException^ ) {
+					if(!TestConnection())
+						break ;
+				} // Timeout
 				Thread::Sleep(200);
 			} // while ( ContinueProcess )
 			networkStream->Close();
 			ClientSocket->Close();
-			queue->setProcess(false);
 			streamData = false;
 		}
 	}  // Process()

@@ -2,7 +2,7 @@
 #define STREAMHANDLER_H
 
 #include <string>
-#include "StreamTaskQueue.h"
+#include <queue>
 
 namespace BlinkAnalysis
 {
@@ -26,7 +26,9 @@ namespace BlinkAnalysis
 		Thread^ ClientThread ;
 		int ClientNumber;
 		ASCIIEncoding^ ascii;
-		StreamTaskQueue^ queue;
+		std::queue<std::string>* frames;
+		Thread^ StreamThread;
+		Object^ sync;
 
 	private:
 		// if socket exception, test if client still responsive
@@ -35,9 +37,11 @@ namespace BlinkAnalysis
 		void streamHeader();
 		// main looping thread
 		void Process();
+		void Stream();
 
 	public:
 		StreamHandler (TcpClient^ ClientSocket, int ClientNumber);
+		~StreamHandler() { delete frames; }
 
 		void Start();
 
@@ -46,9 +50,7 @@ namespace BlinkAnalysis
 		bool Alive();
 
 		bool getStreamData() { return streamData; }
-		void addFrame(String^ frame);
-		static void addFrameAsync(Object^ frame);
-
+		void addFrame(std::string frame);
 	};
 
 		

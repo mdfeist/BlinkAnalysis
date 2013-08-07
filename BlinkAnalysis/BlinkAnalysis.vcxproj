@@ -73,6 +73,7 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <ShowProgress>NotSet</ShowProgress>
+      <Profile>true</Profile>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
@@ -159,7 +160,6 @@
     </ClCompile>
     <ClCompile Include="StreamHandler.cpp" />
     <ClCompile Include="StreamingManager.cpp" />
-    <ClCompile Include="StreamTaskQueue.cpp" />
     <ClCompile Include="TCPClientListener.cpp" />
     <ClCompile Include="CaptureObject.cpp" />
     <ClCompile Include="WorldManager.cpp" />
@@ -229,7 +229,6 @@
     <ClInclude Include="StreamSettingsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="StreamTaskQueue.h" />
     <ClInclude Include="TCPClientListener.h" />
     <ClInclude Include="WizardPages.h" />
     <ClInclude Include="CaptureObject.h" />

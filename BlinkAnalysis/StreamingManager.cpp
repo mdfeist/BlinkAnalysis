@@ -136,6 +136,7 @@ namespace BlinkAnalysis
 	{
 		streaming = false;
 		listener->Stop();
+		ThreadListen->Join();
 	}
 
 	void StreamingManager::addFrame(std::string frame)
@@ -158,9 +159,7 @@ namespace BlinkAnalysis
 		{
 			if (!frameBuffer.empty())
 			{
-				String^ str = gcnew String(frameBuffer.front().c_str());
-				frameBuffer.pop();
-
+				std::string str = frameBuffer.front();
 				Monitor::Enter(ClientSockets->SyncRoot);
 				for (int i = 0; i < ClientSockets->Count; i++)  {
 					StreamHandler^ client = (StreamHandler^)ClientSockets->default[i];
@@ -171,6 +170,7 @@ namespace BlinkAnalysis
 					}
 				}
 				Monitor::Exit(ClientSockets->SyncRoot);
+				frameBuffer.pop();
 			}
 		}
 		_endthread();
