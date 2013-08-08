@@ -5,6 +5,8 @@
 #include "StreamingManager.h"
 
 
+#define DEFAULT_FPS 60
+
 /**
  * This class creates the frames to be output by 
  * either a recording, or a TCP stream

@@ -57,6 +57,13 @@ namespace BlinkAnalysis {
 	private: System::Windows::Forms::Label^  marginLabel;
 	private: System::Windows::Forms::TextBox^  depthTextBox;
 	private: System::Windows::Forms::Label^  depthLabel;
+	private: System::Windows::Forms::CheckBox^  saveDataCheckBox;
+
+	private: System::Windows::Forms::FolderBrowserDialog^  folderBrowserDialog;
+	private: System::Windows::Forms::TextBox^  filePathText;
+
+	private: System::Windows::Forms::Button^  browseButton;
+
 
 	private:
 		/// <summary>
@@ -83,6 +90,10 @@ namespace BlinkAnalysis {
 			this->marginLabel = (gcnew System::Windows::Forms::Label());
 			this->depthTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->depthLabel = (gcnew System::Windows::Forms::Label());
+			this->saveDataCheckBox = (gcnew System::Windows::Forms::CheckBox());
+			this->folderBrowserDialog = (gcnew System::Windows::Forms::FolderBrowserDialog());
+			this->filePathText = (gcnew System::Windows::Forms::TextBox());
+			this->browseButton = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// addressLabel
@@ -146,7 +157,7 @@ namespace BlinkAnalysis {
 			// setButton
 			// 
 			this->setButton->Enabled = false;
-			this->setButton->Location = System::Drawing::Point(324, 305);
+			this->setButton->Location = System::Drawing::Point(324, 364);
 			this->setButton->Name = L"setButton";
 			this->setButton->Size = System::Drawing::Size(86, 23);
 			this->setButton->TabIndex = 6;
@@ -167,7 +178,7 @@ namespace BlinkAnalysis {
 			// 
 			// marginTextBox
 			// 
-			this->marginTextBox->Location = System::Drawing::Point(190, 226);
+			this->marginTextBox->Location = System::Drawing::Point(190, 307);
 			this->marginTextBox->Name = L"marginTextBox";
 			this->marginTextBox->Size = System::Drawing::Size(121, 20);
 			this->marginTextBox->TabIndex = 9;
@@ -178,7 +189,7 @@ namespace BlinkAnalysis {
 			this->marginLabel->AutoSize = true;
 			this->marginLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->marginLabel->Location = System::Drawing::Point(47, 227);
+			this->marginLabel->Location = System::Drawing::Point(47, 308);
 			this->marginLabel->Name = L"marginLabel";
 			this->marginLabel->Size = System::Drawing::Size(112, 15);
 			this->marginLabel->TabIndex = 8;
@@ -186,7 +197,7 @@ namespace BlinkAnalysis {
 			// 
 			// depthTextBox
 			// 
-			this->depthTextBox->Location = System::Drawing::Point(190, 252);
+			this->depthTextBox->Location = System::Drawing::Point(190, 333);
 			this->depthTextBox->Name = L"depthTextBox";
 			this->depthTextBox->Size = System::Drawing::Size(121, 20);
 			this->depthTextBox->TabIndex = 11;
@@ -197,17 +208,54 @@ namespace BlinkAnalysis {
 			this->depthLabel->AutoSize = true;
 			this->depthLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->depthLabel->Location = System::Drawing::Point(53, 253);
+			this->depthLabel->Location = System::Drawing::Point(53, 334);
 			this->depthLabel->Name = L"depthLabel";
 			this->depthLabel->Size = System::Drawing::Size(106, 15);
 			this->depthLabel->TabIndex = 10;
 			this->depthLabel->Text = L"Intersection Depth";
 			// 
+			// saveDataCheckBox
+			// 
+			this->saveDataCheckBox->AutoSize = true;
+			this->saveDataCheckBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->saveDataCheckBox->Location = System::Drawing::Point(47, 201);
+			this->saveDataCheckBox->Name = L"saveDataCheckBox";
+			this->saveDataCheckBox->Size = System::Drawing::Size(153, 19);
+			this->saveDataCheckBox->TabIndex = 13;
+			this->saveDataCheckBox->Text = L"Save stream data to file";
+			this->saveDataCheckBox->UseVisualStyleBackColor = true;
+			this->saveDataCheckBox->CheckedChanged += gcnew System::EventHandler(this, &StreamSettingsForm::saveDataCheckBox_CheckedChanged);
+			// 
+			// filePathText
+			// 
+			this->filePathText->Enabled = false;
+			this->filePathText->Location = System::Drawing::Point(63, 226);
+			this->filePathText->Name = L"filePathText";
+			this->filePathText->ReadOnly = true;
+			this->filePathText->Size = System::Drawing::Size(248, 20);
+			this->filePathText->TabIndex = 14;
+			this->filePathText->TextChanged += gcnew System::EventHandler(this, &StreamSettingsForm::checkValidText);
+			// 
+			// browseButton
+			// 
+			this->browseButton->Enabled = false;
+			this->browseButton->Location = System::Drawing::Point(317, 224);
+			this->browseButton->Name = L"browseButton";
+			this->browseButton->Size = System::Drawing::Size(75, 23);
+			this->browseButton->TabIndex = 15;
+			this->browseButton->Text = L"Browse";
+			this->browseButton->UseVisualStyleBackColor = true;
+			this->browseButton->Click += gcnew System::EventHandler(this, &StreamSettingsForm::browseButton_Click);
+			// 
 			// StreamSettingsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(422, 340);
+			this->ClientSize = System::Drawing::Size(422, 416);
+			this->Controls->Add(this->browseButton);
+			this->Controls->Add(this->filePathText);
+			this->Controls->Add(this->saveDataCheckBox);
 			this->Controls->Add(this->depthTextBox);
 			this->Controls->Add(this->depthLabel);
 			this->Controls->Add(this->marginTextBox);
@@ -239,6 +287,9 @@ namespace BlinkAnalysis {
 				 this->portTextBox->Text = StreamingManager::getInstance()->getPortNumber().ToString();
 				 this->marginTextBox->Text = OutputManager::getInstance()->getIntersectionBuffer().ToString();
 				 this->depthTextBox->Text = OutputManager::getInstance()->getIntersectionLength().ToString();
+
+				 this->saveDataCheckBox->Checked = StreamingManager::getInstance()->getSaveData();
+				 this->filePathText->Text = gcnew String(StreamingManager::getInstance()->getFolderPath().c_str());
 			 }
 			 // converts a managed String^ to unmanaged std::string*
 	private: const char* managedStringToChar(String^ str) {
@@ -260,7 +311,8 @@ namespace BlinkAnalysis {
 					 isPositiveNumber(this->portTextBox->Text) &&
 					 this->FPSComboBox->SelectedItem &&
 					 isPositiveFloat(this->marginTextBox->Text) &&
-					 isPositiveFloat(this->depthTextBox->Text) )
+					 isPositiveFloat(this->depthTextBox->Text) &&
+					 (!this->saveDataCheckBox->Checked || System::IO::Directory::Exists(this->filePathText->Text)) )
 					 this->setButton->Enabled = true;
 				 else
 					 this->setButton->Enabled = false;
@@ -294,6 +346,12 @@ namespace BlinkAnalysis {
 					 String^ message = "Invalid intersection depth: " + this->depthTextBox->Text;
 					 MessageBox::Show(message, "", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 				 }
+				 else if (this->saveDataCheckBox->Checked && 
+					 !System::IO::Directory::Exists(this->filePathText->Text))
+				 {
+					 String^ message = "Invalid folder path: " + this->filePathText->Text;
+					 MessageBox::Show(message, "", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				 }
 				 else
 				 {
 					 StreamingManager::getInstance()->setPortNumber(port);
@@ -301,11 +359,29 @@ namespace BlinkAnalysis {
 					 OutputManager::getInstance()->setIntersectionBuffer(margin);
 					 OutputManager::getInstance()->setIntersectionLength(depth);
 
+					 StreamingManager::getInstance()->setSaveData(this->saveDataCheckBox->Checked);
+					 if (this->saveDataCheckBox->Checked)
+					 {
+						 StreamingManager::getInstance()->setFolderPath(
+							 std::string(managedStringToChar(this->filePathText->Text)));
+					 }
+
 					 if (wasStreaming)
 						 StreamingManager::getInstance()->startStreaming();
 					 this->Close();
 				 }
 
 			 }
+
+private: System::Void saveDataCheckBox_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 this->browseButton->Enabled = this->saveDataCheckBox->Checked;
+			 checkValidText(nullptr, nullptr);
+		 }
+private: System::Void browseButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->folderBrowserDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+			 {
+				 this->filePathText->Text = this->folderBrowserDialog->SelectedPath;
+			 }
+		 }
 };
 }

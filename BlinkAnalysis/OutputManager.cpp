@@ -17,7 +17,7 @@ float OutputManager::intersectLength = 1;
 
 OutputManager::OutputManager(void)
 {
-	framesPerSec = 60;
+	framesPerSec = DEFAULT_FPS;
 	isRecording = false;
 	isStreaming = false;
 	isProcessing = false;
@@ -43,6 +43,8 @@ void OutputManager::process(void *)
 
 	ULONGLONG start = 0;
 	std::stringstream sstream;
+	sstream << std::fixed;
+	sstream.precision(3);
 	ClientHandler* client = AppData::getInstance()->getClient();
 	while (inst->isRecording || inst->isStreaming)
 	{
@@ -57,9 +59,9 @@ void OutputManager::process(void *)
 		// Lock the ClientHandler so data isn't changed
 		// by another thread.
 		if (client && client->lock()) {
-			sstream << "<Frame time=\"";
+			sstream << "<Frame t=\"";
 			sstream << (float)(t-start) / CLOCKS_PER_SEC;
-			sstream << "\" >\n";
+			sstream << "\">\n";
 
 			if (inst->streamEye)
 			{
@@ -157,7 +159,7 @@ void OutputManager::process(void *)
 					sstream << "x=\"" << (*marker).x() << "\" ";
 					sstream << "y=\"" << (*marker).y() << "\" ";
 					sstream << "z=\"" << (*marker).z() << "\" ";
-					sstream << "size=\"" << (*marker).getSize() << "\" ";
+					sstream << "s=\"" << (*marker).getSize() << "\" ";
 					sstream << "/>\n";
 				}
 			}

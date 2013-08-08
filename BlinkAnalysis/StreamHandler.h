@@ -26,22 +26,33 @@ namespace BlinkAnalysis
 		Thread^ ClientThread ;
 		int ClientNumber;
 		ASCIIEncoding^ ascii;
-		std::queue<std::string>* frames;
+		Generic::Queue<array<Byte>^> frames;
 		Thread^ StreamThread;
 		Object^ sync;
+		StreamWriter^ currentStream;
+		int nextFileID;
+		bool writeReady;
+		array<Byte>^ lastFrame;
+		bool saveData;
 
 	private:
 		// if socket exception, test if client still responsive
 		bool TestConnection();
 		// stream static data header
 		void streamHeader();
+		// stream most recent frame of data
+		// only if data is being saved, not streamed
+		void streamLast();
 		// main looping thread
 		void Process();
 		void Stream();
 
+		void openWriter();
+		void closeWriter();
+
 	public:
 		StreamHandler (TcpClient^ ClientSocket, int ClientNumber);
-		~StreamHandler() { delete frames; }
+		~StreamHandler() {  }
 
 		void Start();
 
@@ -50,7 +61,7 @@ namespace BlinkAnalysis
 		bool Alive();
 
 		bool getStreamData() { return streamData; }
-		void addFrame(std::string frame);
+		void addFrame(std::string frame, bool save);
 	};
 
 		

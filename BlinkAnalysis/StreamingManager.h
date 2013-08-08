@@ -44,6 +44,8 @@ namespace BlinkAnalysis
 		gcroot<IPAddress^> address;
 		int portNum;
 		gcroot<TcpListener^> listener;
+		static bool saveData;
+		static std::string folderPath;
 
 		// list of clients connected to server
 		static gcroot<ArrayList^> ClientSockets;
@@ -78,6 +80,20 @@ namespace BlinkAnalysis
 		}
 		int getPortNumber() {
 			return portNum;
+		}
+
+		void setSaveData(bool save) {
+			saveData = save;
+		}
+		bool getSaveData() {
+			return saveData;
+		}
+
+		void setFolderPath(std::string path) {
+			folderPath = path;
+		}
+		std::string getFolderPath() {
+			return folderPath;
 		}
 
 		bool isStreaming() { return this->streaming; }

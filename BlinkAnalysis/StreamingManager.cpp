@@ -15,6 +15,8 @@ namespace BlinkAnalysis
 	gcroot<ArrayList^> StreamingManager::ClientSockets = nullptr;
 	std::queue<std::string> StreamingManager::frameBuffer;
 	bool StreamingManager::streaming = false;
+	bool StreamingManager::saveData = false;
+	std::string StreamingManager::folderPath;
 
 	// default to listen through localhost on port 10510
 	StreamingManager::StreamingManager()
@@ -89,7 +91,8 @@ namespace BlinkAnalysis
 		}
 		finally {
 			ContinueReclaim = false ;
-			ThreadReclaim->Join() ;
+			if (ThreadReclaim->IsAlive)
+				ThreadReclaim->Join() ;	
 
 			for (int i = 0; i < ClientSockets->Count; i++)  {
 				( (StreamHandler^)ClientSockets->default[i] )->Stop();
@@ -135,6 +138,10 @@ namespace BlinkAnalysis
 	void StreamingManager::stopStreaming()
 	{
 		streaming = false;
+		// stream remaining queued frames before stopping listener
+		for (int i = 0; i < ClientSockets->Count; i++)  {
+				( (StreamHandler^)ClientSockets->default[i] )->Stop();
+			}
 		listener->Stop();
 		ThreadListen->Join();
 	}
@@ -164,9 +171,9 @@ namespace BlinkAnalysis
 				for (int i = 0; i < ClientSockets->Count; i++)  {
 					StreamHandler^ client = (StreamHandler^)ClientSockets->default[i];
 					// if client still alive and wants data streamed
-					if( client->getStreamData() && client->Alive() )
+					if( client->Alive() )
 					{
-						client->addFrame(str);
+						client->addFrame(str, saveData);
 					}
 				}
 				Monitor::Exit(ClientSockets->SyncRoot);

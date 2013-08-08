@@ -7,8 +7,6 @@
 
 RecordingManager* RecordingManager::m_pInstance = NULL; 
 
-#define RECORDING_FPS 24
-
 RecordingManager::RecordingManager(void)
 {
 	this->recording = false;
