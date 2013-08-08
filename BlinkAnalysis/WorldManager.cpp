@@ -180,9 +180,9 @@ void WorldManager::streamObject(CaptureObject* object, std::ostringstream& sstre
 
 			vec = box->getHalfLengths();
 			sstream << "<dimension ";
-			sstream << "width=\"" << vec.x()*2 << "\" ";
-			sstream << "length=\"" << vec.y()*2 << "\" ";
-			sstream << "height=\"" << vec.z()*2 << "\" ";
+			sstream << "w=\"" << vec.x()*2 << "\" ";
+			sstream << "l=\"" << vec.y()*2 << "\" ";
+			sstream << "h=\"" << vec.z()*2 << "\" ";
 			sstream << "/>\n";
 
 			osg::Quat quat = box->getRotationBox();
@@ -207,8 +207,8 @@ void WorldManager::streamObject(CaptureObject* object, std::ostringstream& sstre
 			sstream << "/>\n";
 
 			sstream << "<dimension ";
-			sstream << "radius=\"" << cylinder->getRadius() << "\" ";
-			sstream << "height=\"" << cylinder->getHeight() << "\" ";
+			sstream << "r=\"" << cylinder->getRadius() << "\" ";
+			sstream << "h=\"" << cylinder->getHeight() << "\" ";
 			sstream << "/>\n";
 
 			osg::Quat quat = cylinder->getRotationCylinder();
