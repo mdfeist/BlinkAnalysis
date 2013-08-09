@@ -10,6 +10,7 @@
 
 #include "CaptureObject.h"
 #include "AppData.h"
+#include "AppViewer.h"
 
 ///////////////////////////
 // CaptureObject
@@ -177,11 +178,14 @@ osg::Node* CaptureObjectCustom::getAsNode(int wid)
 osg::Vec3 CaptureObjectCustom::getPosition()
 {
 	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node))
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
 	else
-		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
+	}
 
 	if (vertices->size() <=0 )
 		return osg::Vec3(0,0,0) + trans;
@@ -327,11 +331,14 @@ osg::Node* CaptureObjectPlane::getAsNode(int wid)
 osg::Vec3 CaptureObjectPlane::getPosition()
 {
 	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node))
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
 	else
-		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
+	}
 
 	if (vertices->size() <=0 )
 		return osg::Vec3(0,0,0) + trans;
@@ -487,11 +494,14 @@ osg::Quat CaptureObjectBox::getRotationBox()
 osg::Vec3 CaptureObjectBox::getPosition()
 {
 	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node))
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
 	else
-		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
+	}
 
 	return getCentre() + trans;
 }
@@ -655,11 +665,14 @@ float CaptureObjectCylinder::getHeight()
 osg::Vec3 CaptureObjectCylinder::getPosition()
 {
 	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node))
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans();
+	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
+		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
 	else
-		trans = ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				  *CaptureObjectUtil::getWorldCoords(node) ).getTrans();
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
+	}
 
 	return getCentre() + trans;
 }

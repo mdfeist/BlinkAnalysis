@@ -56,6 +56,10 @@ void AppViewer::setScale(int scale) {
 		sceneNode->setScale(VIEWER_SCALE);
 }
 
+float AppViewer::getScale() {
+	return VIEWER_SCALE;
+}
+
 void renderEyeVector(osg::Geode* node) {
 	// Get the current client
 	ClientHandler* client = AppData::getInstance()->getClient();

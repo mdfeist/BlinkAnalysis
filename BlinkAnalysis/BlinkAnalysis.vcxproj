@@ -143,6 +143,7 @@
       <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
     </ClCompile>
+    <ClCompile Include="NATUtils.cpp" />
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="OutputManager.cpp" />
     <ClCompile Include="PickHandler.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Marcos.h" />
     <ClInclude Include="Marker.h" />
     <ClInclude Include="NatNetClientSetup.h" />
+    <ClInclude Include="NATUtils.h" />
     <ClInclude Include="Objects.h" />
     <ClInclude Include="OutputManager.h" />
     <ClInclude Include="PickHandler.h" />

@@ -1,6 +1,7 @@
 
 #include "StdAfx.h"
 #include "CaptureObjectUtil.h"
+#include "NATUtils.h"
 
 #include <sstream>
 
@@ -54,7 +55,7 @@ osg::Vec3 CaptureObjectUtil::quaternionToEuler(osg::Quat q)
 	return osg::Vec3(x, y, z);*/
 
 	// based on http://forum.naturalpoint.com/forum/ubbthreads.php?ubb=showflat&Number=42799
-	double qx = q.x();	
+	/*double qx = q.x();	
 	double qy = q.z();	// y, z swapped based on user comments
 	double qz = q.y();
 	double qw = q.w();
@@ -89,7 +90,18 @@ osg::Vec3 CaptureObjectUtil::quaternionToEuler(osg::Quat q)
 	double x = atan2(-m[6],m[0]);
 	double y = asin(m[3]);
 	double z = atan2(-m[5],m[4]);
-	return osg::Vec3(x, y, z);
+	return osg::Vec3(x, y, z);*/
+
+	// uses NATUtils.h functions pulled from sample code for NatNetSDK (SampleClient3D)
+	// Euler angle support copyright Ken Shoemake, 1993
+
+	Quat quat;
+	quat.x = q.x();
+	quat.y = q.y();
+	quat.z = q.z();
+	quat.w = q.w();
+	EulerAngles ea = Eul_FromQuat(quat, EulOrdXYZr);
+	return osg::Vec3(ea.x, ea.y, ea.z);
 }
 
 ////////////////////////////////////////
