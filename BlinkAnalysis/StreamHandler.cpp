@@ -52,6 +52,7 @@ namespace BlinkAnalysis
 		file += "\\cl" + ClientNumber.ToString() + "_" + time.ToString("ddMMMyyyy") + "_" 
 			+ nextFileID++ + "_" + time.ToString("HHmmss") + ".xml";
 		currentStream = gcnew StreamWriter(file);
+		currentStream->Write("<Recording>\n");
 		currentStream->Write("<StaticData>\n");
 
 		currentStream->Write(gcnew String(AppData::getInstance()->getRigidBodyStaticData().c_str()));
@@ -70,6 +71,7 @@ namespace BlinkAnalysis
 		Monitor::Enter(sync);
 		writeReady = false;
 		currentStream->Write("</Frames>\n");
+		currentStream->Write("</Recording>\n");
 		currentStream->Close();
 		Monitor::Exit(sync);
 	}

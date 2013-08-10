@@ -484,10 +484,6 @@ void AppData::saveObject(CaptureObject* object, pugi::xml_node& node)
 std::string AppData::getRigidBodyStaticData()
 {
 	std::stringstream sstream;
-	// Lock the ClientHandler so data isn't changed
-	// by another thread.
-	if (!client->lock())
-		return sstream.str();
 
 	std::map<int, RigidBody*>* rigidBodies = client->getRigidBodyMap();
 
@@ -497,9 +493,6 @@ std::string AppData::getRigidBodyStaticData()
 		sstream << "name=\"" << it->second->getName() << "\" ";
 		sstream << "/>\n";
 	}
-
-	// Unlock the ClientHandler
-	client->unlock();
 
 	return sstream.str();
 }
