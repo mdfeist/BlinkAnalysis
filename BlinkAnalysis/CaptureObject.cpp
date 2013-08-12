@@ -177,29 +177,44 @@ osg::Node* CaptureObjectCustom::getAsNode(int wid)
 
 osg::Vec3 CaptureObjectCustom::getPosition()
 {
-	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
-	else
+	if (rigidNode)
 	{
 		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
 		if (mtNode) 
-			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
+		{
+			osg::Vec3 trans = rigidNode->getPosition();
+			osg::Quat rote = rigidNode->getRotation();
+			osg::Vec3 rbOrigin = osg::Vec3(0, 0, 0);
+
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			rote = matRote * rote;
+
+			rbOrigin = -(matRote.inverse() * mtNode->getMatrix().getTrans()); 
+
+			if (vertices->size() <=0 )
+				return rote * (osg::Vec3(0,0,0) - rbOrigin) + trans;
+
+			return rote * (vertices->at(0) - rbOrigin) + trans;
+		}
+
 	}
-
-	if (vertices->size() <=0 )
-		return osg::Vec3(0,0,0) + trans;
-
-	return vertices->at(0) + trans;
+	return vertices->at(0);
 }
 
 osg::Quat CaptureObjectCustom::getRotation()
 {
-	if (!rigidNode || rigidNode->containsNode(node))
-		return CaptureObjectUtil::getWorldCoords(node)->getRotate();
-	else 
-		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
+	if (rigidNode)
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+		{
+			osg::Quat rote = rigidNode->getRotation();
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			return matRote * rote;
+		}
+	}
+
+	return osg::Quat(0, 0, 0, 1);
 }
 
 
@@ -330,29 +345,44 @@ osg::Node* CaptureObjectPlane::getAsNode(int wid)
 
 osg::Vec3 CaptureObjectPlane::getPosition()
 {
-	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
-	else
+	if (rigidNode)
 	{
 		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
 		if (mtNode) 
-			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
+		{
+			osg::Vec3 trans = rigidNode->getPosition();
+			osg::Quat rote = rigidNode->getRotation();
+			osg::Vec3 rbOrigin = osg::Vec3(0, 0, 0);
+
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			rote = matRote * rote;
+
+			rbOrigin = -(matRote.inverse() * mtNode->getMatrix().getTrans()); 
+
+			if (vertices->size() <=0 )
+				return rote * (osg::Vec3(0,0,0) - rbOrigin) + trans;
+
+			return rote * (vertices->at(0) - rbOrigin) + trans;
+		}
+
 	}
-
-	if (vertices->size() <=0 )
-		return osg::Vec3(0,0,0) + trans;
-
-	return vertices->at(0) + trans;
+	return vertices->at(0);
 }
 
 osg::Quat CaptureObjectPlane::getRotation()
 {
-	if (!rigidNode || rigidNode->containsNode(node))
-		return CaptureObjectUtil::getWorldCoords(node)->getRotate();
-	else 
-		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate();
+	if (rigidNode)
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+		{
+			osg::Quat rote = rigidNode->getRotation();
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			return matRote * rote;
+		}
+	}
+
+	return osg::Quat(0, 0, 0, 1);
 }
 
 void CaptureObjectPlane::setCurrentTransformation()
@@ -493,26 +523,41 @@ osg::Quat CaptureObjectBox::getRotationBox()
 
 osg::Vec3 CaptureObjectBox::getPosition()
 {
-	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
-	else
+	if (rigidNode)
 	{
 		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
 		if (mtNode) 
-			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
-	}
+		{
+			osg::Vec3 trans = rigidNode->getPosition();
+			osg::Quat rote = rigidNode->getRotation();
 
-	return getCentre() + trans;
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			rote = matRote * rote;
+
+			osg::Vec3 rbOrigin = -(matRote.inverse() * mtNode->getMatrix().getTrans()); 
+			trans = rote * (getCentre() - rbOrigin) + trans;
+
+			return trans;
+		}
+	}
+	return getCentre();
 }
 
 osg::Quat CaptureObjectBox::getRotation()
 {
-	if (!rigidNode || rigidNode->containsNode(node))
-		return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationBox();
-	else 
-		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationBox();
+	if (rigidNode)
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+		{
+			osg::Quat rote = rigidNode->getRotation();
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			rote = matRote * rote;
+			return getRotationBox() * rote;
+		}
+	}
+
+	return getRotationBox();
 }
 
 void CaptureObjectBox::setCurrentTransformation()
@@ -664,26 +709,41 @@ float CaptureObjectCylinder::getHeight()
 
 osg::Vec3 CaptureObjectCylinder::getPosition()
 {
-	osg::Vec3 trans;
-	if (!rigidNode || rigidNode->containsNode(node) || !node->asGroup())
-		trans = CaptureObjectUtil::getWorldCoords(node)->getTrans() / AppViewer::getScale();
-	else
+	if (rigidNode)
 	{
 		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
 		if (mtNode) 
-			osg::Vec3 trans = (*CaptureObjectUtil::getWorldCoords(rigidNode) * osg::Matrix::inverse(mtNode->getMatrix())).getTrans();
-	}
+		{
+			osg::Vec3 trans = rigidNode->getPosition();
+			osg::Quat rote = rigidNode->getRotation();
 
-	return getCentre() + trans;
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			rote = matRote * rote;
+
+			osg::Vec3 rbOrigin = -(matRote.inverse() * mtNode->getMatrix().getTrans()); 
+			trans = rote * (getCentre() - rbOrigin) + trans;
+
+			return trans;
+		}
+	}
+	return getCentre();
 }
 
 osg::Quat CaptureObjectCylinder::getRotation()
 {
-	if (!rigidNode || rigidNode->containsNode(node))
-		return CaptureObjectUtil::getWorldCoords(node)->getRotate() * getRotationCylinder();
-	else 
-		return ( *CaptureObjectUtil::getWorldCoords(rigidNode) *
-				 *CaptureObjectUtil::getWorldCoords(node) ).getRotate() * getRotationCylinder();
+	if (rigidNode)
+	{
+		osg::MatrixTransform* mtNode = dynamic_cast<osg::MatrixTransform*>(node->asGroup());
+		if (mtNode) 
+		{
+			osg::Quat rote = rigidNode->getRotation();
+			osg::Quat matRote = mtNode->getMatrix().getRotate();
+			rote = matRote * rote;
+			return getRotationCylinder() * rote;
+		}
+	}
+
+	return getRotationCylinder();
 }
 
 void CaptureObjectCylinder::setCurrentTransformation()
