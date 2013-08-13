@@ -138,7 +138,7 @@ void WorldManager::streamObject(CaptureObject* object, std::ostringstream& sstre
 					sstream << "<matrixValue ";
 					sstream << "row=\"" << i << "\" ";
 					sstream << "col=\"" << j << "\" ";
-					sstream << "value=\"" << (*mat)(i, j) << "\" ";
+					sstream << "value=\"" << (*mat)(j, i) << "\" ";
 					sstream << "/>\n";
 				}
 			}
@@ -263,7 +263,7 @@ void WorldManager::streamWorld(CaptureWorld* world, std::ostringstream& sstream)
 			sstream << "<matrixValue ";
 			sstream << "row=\"" << i << "\" ";
 			sstream << "col=\"" << j << "\" ";
-			sstream << "value=\"" << mat(i, j) << "\" ";
+			sstream << "value=\"" << mat(j, i) << "\" ";
 			sstream << "/>\n";
 		}
 	}

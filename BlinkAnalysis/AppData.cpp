@@ -127,7 +127,7 @@ CaptureWorld* AppData::loadWorld(pugi::xml_node& worldNode)
 		i = atoi(matVal.attribute("row").value());
 		j = atoi(matVal.attribute("col").value());
 		val = atof(matVal.attribute("value").value());
-		(*mat)(i, j) = val;
+		(*mat)(j, i) = val;
 	}
 	if (strcmp(matrix.attribute("type").value(), "localToGlobal"))
 		*mat = osg::Matrix::inverse(*mat);
@@ -368,7 +368,7 @@ void AppData::saveWorld(CaptureWorld* world, pugi::xml_node& node)
 			matVal.append_attribute("row").set_value(buf);
 			_itoa_s(j, buf, 10);
 			matVal.append_attribute("col").set_value(buf);
-			matVal.append_attribute("value").set_value(CaptureObjectUtil::floatToString(mat(i, j))->c_str());
+			matVal.append_attribute("value").set_value(CaptureObjectUtil::floatToString(mat(j, i))->c_str());
 		}
 	}
 
