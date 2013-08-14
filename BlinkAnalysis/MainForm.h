@@ -736,7 +736,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			this->optiTrackLocalIpAddressTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackLocalIpAddressTextBox->TabIndex = 28;
 			this->optiTrackLocalIpAddressTextBox->Text = L"127.0.0.1";
-			this->optiTrackLocalIpAddressTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackLocalIpAddressTextBox_TextChanged);
+			this->optiTrackLocalIpAddressTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::changedSave);
 			// 
 			// optiTrackLocalIpAddressLabel
 			// 
@@ -771,7 +771,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			this->optiTrackConnectionTypeComboBox->Name = L"optiTrackConnectionTypeComboBox";
 			this->optiTrackConnectionTypeComboBox->Size = System::Drawing::Size(144, 21);
 			this->optiTrackConnectionTypeComboBox->TabIndex = 25;
-			this->optiTrackConnectionTypeComboBox->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::optiTrackConnectionTypeComboBox_SelectedIndexChanged);
 			// 
 			// optiTrackConnectionTypeLabel
 			// 
@@ -793,7 +792,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			this->optiTrackDataPortTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackDataPortTextBox->TabIndex = 23;
 			this->optiTrackDataPortTextBox->Text = L"1511";
-			this->optiTrackDataPortTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackDataPortTextBox_TextChanged);
+			this->optiTrackDataPortTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::changedSave);
 			// 
 			// optiTrackDataPortLabel
 			// 
@@ -847,7 +846,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			this->optiTrackCmdPortTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackCmdPortTextBox->TabIndex = 5;
 			this->optiTrackCmdPortTextBox->Text = L"1510";
-			this->optiTrackCmdPortTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackCmdPortTextBox_TextChanged);
+			this->optiTrackCmdPortTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::changedSave);
 			// 
 			// optiTrackCmdPortLabel
 			// 
@@ -869,7 +868,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			this->optiTrackSeverIpAddressTextBox->Size = System::Drawing::Size(144, 22);
 			this->optiTrackSeverIpAddressTextBox->TabIndex = 3;
 			this->optiTrackSeverIpAddressTextBox->Text = L"127.0.0.1";
-			this->optiTrackSeverIpAddressTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::optiTrackSeverIpAddressTextBox_TextChanged);
+			this->optiTrackSeverIpAddressTextBox->TextChanged += gcnew System::EventHandler(this, &MainForm::changedSave);
 			// 
 			// optiTrackSeverIpAddressLabel
 			// 
@@ -2220,6 +2219,16 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			 }
 	// Form Events
 	private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) {
+				 ClientHandler* client = AppData::getInstance()->getClient();
+				 if (client)
+				 {
+					 if (client->getOptiTrackServerConnectionType() == ConnectionType_Multicast)
+						 this->optiTrackConnectionTypeComboBox->SelectedItem = "Multicast";
+					 else if (client->getOptiTrackServerConnectionType() == ConnectionType_Unicast)
+						 this->optiTrackConnectionTypeComboBox->SelectedItem = "Unicast";
+				 }
+				 this->optiTrackConnectionTypeComboBox->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::changedSave);
+
 				 // Setup Main Tab
 				 this->currentMainSplitContainer = this->optiTrackMainSplitContainer;
 				 this->currentSplitContainer = this->optiTrackSplitContainer;
@@ -2699,26 +2708,13 @@ _WATCH_MEMORY
 					e->Item = listViewItem;
 				}
 			 }
-	private: System::Void optiTrackLocalIpAddressTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-				 AppData::getInstance()->needSave();
-				 this->updateTitle();
+	private: System::Void changedSave(System::Object^  sender, System::EventArgs^  e) {
+				 this->setSave();
 			 }
-	private: System::Void optiTrackSeverIpAddressTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-				 AppData::getInstance()->needSave();
-				 this->updateTitle();
-			 }
-	private: System::Void optiTrackCmdPortTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-				 AppData::getInstance()->needSave();
-				 this->updateTitle();
-			 }
-	private: System::Void optiTrackDataPortTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-				 AppData::getInstance()->needSave();
-				 this->updateTitle();
-			 }
-	private: System::Void optiTrackConnectionTypeComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-				 AppData::getInstance()->needSave();
-				 this->updateTitle();
-			 }
+	public: System::Void setSave() {
+				AppData::getInstance()->needSave();
+				this->updateTitle();
+			}
 
 	//////////////////////
 	// OptiTrack Buttons

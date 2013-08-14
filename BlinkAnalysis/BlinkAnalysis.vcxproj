@@ -161,6 +161,7 @@
     </ClCompile>
     <ClCompile Include="StreamHandler.cpp" />
     <ClCompile Include="StreamingManager.cpp" />
+    <ClCompile Include="StreamSettingsForm.cpp" />
     <ClCompile Include="TCPClientListener.cpp" />
     <ClCompile Include="CaptureObject.cpp" />
     <ClCompile Include="WorldManager.cpp" />

@@ -368,6 +368,8 @@ namespace BlinkAnalysis {
 
 					 if (wasStreaming)
 						 StreamingManager::getInstance()->startStreaming();
+
+					 this->setMainFormSave();
 					 this->Close();
 				 }
 
@@ -383,5 +385,6 @@ private: System::Void browseButton_Click(System::Object^  sender, System::EventA
 				 this->filePathText->Text = this->folderBrowserDialog->SelectedPath;
 			 }
 		 }
+private: System::Void setMainFormSave();
 };
 }

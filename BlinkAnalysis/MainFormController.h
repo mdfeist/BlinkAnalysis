@@ -49,5 +49,6 @@ public:
 	void getFilePath(std::string& pathBuffer, std::string defaultPath);
 
 	bool propt(LPCTSTR title, LPCTSTR msg);
+	void setSave() { this->form->setSave(); }
 };
 
