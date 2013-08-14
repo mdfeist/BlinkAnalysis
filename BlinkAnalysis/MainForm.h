@@ -72,7 +72,11 @@ namespace BlinkAnalysis {
 		ORIENT,
 		ORIENT_YAW,
 		ORIENT_PITCH,
-		ORIENT_ROLL
+		ORIENT_ROLL,
+		DIMENSION,
+		DIMENSION_1,
+		DIMENSION_2,
+		DIMENSION_3
 	};
 
 	/// <summary>
@@ -2081,7 +2085,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 
 	// Local Variables
 	private: std::vector<RigidBody*>* optiTrackRigidBodyVector;
-	private: std::vector<Marker*>* optiTrackLabeledMarkerVector;
 	private: SplitContainer^ currentMainSplitContainer;
 	private: SplitContainer^ currentSplitContainer;
 	private: int setRigidBodyTool;		// ID of rigid body to use as pointing tool
@@ -2304,9 +2307,6 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 					if (optiTrackRigidBodyVector)
 						delete optiTrackRigidBodyVector;
 
-					if (optiTrackLabeledMarkerVector)
-						delete optiTrackLabeledMarkerVector;
-
 					delete client;
 				}
 
@@ -2504,7 +2504,6 @@ _WATCH_MEMORY
 			 }
 	public: System::Void optiTrackInitDataView() {
 				this->optiTrackRigidBodyVector = new std::vector<RigidBody*>();
-				this->optiTrackLabeledMarkerVector = new std::vector<Marker*>();
 
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
@@ -2525,14 +2524,6 @@ _WATCH_MEMORY
 						ListViewItem^ listViewItem = gcnew ListViewItem(rigidBodyID); 
 						listViewItem->SubItems->Add(rigidBodyName);
 						this->visualRigidBodyListView->Items->Add(listViewItem);
-					}
-					
-					// labeled markers
-					std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
-
-					for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
-					{
-						this->optiTrackLabeledMarkerVector->push_back(it->second);
 					}
 				}
 			}
@@ -2614,14 +2605,6 @@ _WATCH_MEMORY
 							if (!client->lock())
 								return;
 
-							// update the vector list
-							std::map<int, Marker*>* markerMap = client->getLabeledMarkerMap();
-							this->optiTrackLabeledMarkerVector->clear();
-							for (std::map<int, Marker*>::iterator it=markerMap->begin(); it!=markerMap->end(); ++it)
-							{
-								this->optiTrackLabeledMarkerVector->push_back(it->second);
-							}
-
 							// update the objects panel (if object attached to rigid body)
 							if (this->objectGridView->Rows->Count > 0 &&
 								String::Compare((String^) 
@@ -2684,30 +2667,6 @@ _WATCH_MEMORY
 					}
 				}
 			}
-	private: System::Void markersListView_RetrieveVitualItem(System::Object^ sender, 
-								System::Windows::Forms::RetrieveVirtualItemEventArgs^ e) {
-				 if (optiTrackLabeledMarkerVector)
-				{
-					if ((int)e->ItemIndex >= (int)optiTrackLabeledMarkerVector->size())
-						return;
-
-					Marker* marker = optiTrackLabeledMarkerVector->at(e->ItemIndex);
-
-					String^ markerID = Convert::ToString(marker->getID());
-
-					osg::Vec3 pos = marker->getPosition();
-					String^ markerX = Convert::ToString(pos.x());
-					String^ markerY = Convert::ToString(pos.y());
-					String^ markerZ = Convert::ToString(pos.z());
-
-					ListViewItem^ listViewItem = gcnew ListViewItem(markerID); 
-					listViewItem->SubItems->Add(markerX);
-					listViewItem->SubItems->Add(markerY);
-					listViewItem->SubItems->Add(markerZ);
-
-					e->Item = listViewItem;
-				}
-			 }
 	private: System::Void changedSave(System::Object^  sender, System::EventArgs^  e) {
 				 this->setSave();
 			 }
@@ -3207,6 +3166,41 @@ private: System::Void objectGridView_displayObject() {
 				 row = gcnew array<String^> { "Roll", eu.z().ToString() };
 				 this->objectGridView->Rows->Add(row);
 
+				 switch (ot)
+				 {
+				 case OBJ_BOX:
+					 {
+					 row = gcnew array<String^> { "Dimension", "" };
+					 this->objectGridView->Rows->Add(row);
+
+					 osg::Vec3 dim = ((CaptureObjectBox*)object)->getHalfLengths() * 2;
+
+					 row = gcnew array<String^> { "Width", dim.x().ToString() };
+					 this->objectGridView->Rows->Add(row);
+
+					 row = gcnew array<String^> { "Length", dim.y().ToString() };
+					 this->objectGridView->Rows->Add(row);
+
+					 row = gcnew array<String^> { "Height", dim.z().ToString() };
+					 this->objectGridView->Rows->Add(row);
+					 }
+					 break;
+				 case OBJ_CYLINDER:
+					 {
+					 row = gcnew array<String^> { "Dimension", "" };
+					 this->objectGridView->Rows->Add(row);
+
+					 CaptureObjectCylinder* cylin = (CaptureObjectCylinder*)object;
+
+					 row = gcnew array<String^> { "Radius", cylin->getRadius().ToString() };
+					 this->objectGridView->Rows->Add(row);
+
+					 row = gcnew array<String^> { "Height", cylin->getHeight().ToString() };
+					 this->objectGridView->Rows->Add(row);
+					 }
+					 break;
+				 }
+
 				 // set certain rows to read only
 				 int numRows = this->objectGridView->Rows->Count;
 				 for (int i = 0; i < numRows; i++)
@@ -3223,6 +3217,8 @@ private: System::Void objectGridView_displayObject() {
 
 				 this->objectGridView->Rows[(int)objectProperty::POSITION]->DefaultCellStyle = style;
 				 this->objectGridView->Rows[(int)objectProperty::ORIENT]->DefaultCellStyle = style;
+				 if (ot == OBJ_BOX || ot == OBJ_CYLINDER)
+					this->objectGridView->Rows[(int)objectProperty::DIMENSION]->DefaultCellStyle = style;
 			 }
 		 }
 		 // updates only the position and orientation data
@@ -3352,11 +3348,9 @@ private: System::Void visualViewerScaleTextBox_TextChanged(System::Object^  send
 			 AppViewer::setScale(scale);
 		 }
 private: System::Void startRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
-			 //RecordingManager::getInstance()->startRecording();
 			 OutputManager::getInstance()->record(true);
 		}
 private: System::Void stopRecordingBtn_Click(System::Object^  sender, System::EventArgs^  e) {
-			 //RecordingManager::getInstance()->stopRecording();
 			 OutputManager::getInstance()->record(false);
 		 }
 
