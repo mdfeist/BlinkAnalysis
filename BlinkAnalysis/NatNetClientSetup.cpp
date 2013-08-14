@@ -212,7 +212,7 @@ int NatNetClientSetup::createClient(ClientHandler** theClient)
 }
 
 // Closes the connection to the NatNetServer
-int NatNetClientSetup::deleteClient(ClientHandler** theClient)
+int NatNetClientSetup::deleteClient(ClientHandler** theClient, bool log)
 {
 	// Get the NatNetClient from the ClientHandler
 	NatNetClient* natnet = (*theClient)->getClient();
@@ -221,15 +221,21 @@ int NatNetClientSetup::deleteClient(ClientHandler** theClient)
 
 	// Done - clean up.
 	if (natnet) {
-		sprintf_s(buf, "Disconnecting from Server...\n");
-		MainFormController::getInstance()->optiTrackOutputLog(buf);
+		if (log)
+		{
+			sprintf_s(buf, "Disconnecting from Server...\n");
+			MainFormController::getInstance()->optiTrackOutputLog(buf);
+		}
 
 		// Disconnects from the server
 		natnet->Uninitialize();
 
-		sprintf_s(buf, "Client is Disconnected.\n");
-		MainFormController::getInstance()->optiTrackOutputLog(buf);
-	} else {
+		if (log)
+		{
+			sprintf_s(buf, "Client is Disconnected.\n");
+			MainFormController::getInstance()->optiTrackOutputLog(buf);
+		}
+	} else if (log) {
 		sprintf_s(buf, "Client is already not connected to the server.\n");
 		MainFormController::getInstance()->optiTrackOutputLog(buf);
 	}

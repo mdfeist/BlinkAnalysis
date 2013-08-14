@@ -2290,7 +2290,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 
 				ClientHandler* client = AppData::getInstance()->getClient();
 				if (client) {
-					NatNetClientSetup::deleteClient(&client);
+					NatNetClientSetup::deleteClient(&client, false);
 
 					if (optiTrackRigidBodyVector)
 						delete optiTrackRigidBodyVector;
