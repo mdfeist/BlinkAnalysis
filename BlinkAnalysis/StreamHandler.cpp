@@ -34,7 +34,6 @@ namespace BlinkAnalysis
 		streamData = false;
 		if ( ClientThread && ClientThread->IsAlive )
 			ClientThread->Join() ;
-		int count = frames.Count;
 		frames.Clear();
 	}
 

@@ -260,7 +260,6 @@ namespace BlinkAnalysis {
 				 resetObjectGridView();
 
 				 CaptureWorld* world = WorldManager::getInstance()->getWorld(worldID);
-				 int idx = 0;
 				 if (world)
 				 {
 					 std::map<int, CaptureObject*> objects = world->getObjects();

@@ -2865,7 +2865,6 @@ public: System::Void worldUpdateList() {
 				resetObjectGridView();
 
 				std::map<int, CaptureWorld*> worlds = WorldManager::getInstance()->getWorlds();
-				int idx = 0;
 				for (worlds_iterator itr = worlds.begin(); itr != worlds.end(); itr++)
 				{
 					String^ worldName = gcnew String(itr->second->getName().c_str());
@@ -3042,7 +3041,6 @@ public: System::Void objectUpdateList() {
 				 resetObjectGridView();
 
 				 CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
-				 int idx = 0;
 				 if (world)
 				 {
 					 std::map<int, CaptureObject*> objects = world->getObjects();

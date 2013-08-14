@@ -7,8 +7,6 @@
 #include <osg/Transform>
 
 #include "Marker.h"
-#include "Marcos.h"
-
 
 enum ObjectType {
 	OBJ_PLANE,

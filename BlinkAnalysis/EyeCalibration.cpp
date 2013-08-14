@@ -3,7 +3,6 @@
 #include "Dikablis.h"
 
 #include "EyeCalibrationWizardFormController.h"
-#include "Marcos.h"
 
 #include <algorithm>    // std::sort
 #include <iostream>
@@ -11,6 +10,8 @@
 #include <math.h>
 
 #include <osg/Matrix>
+
+float EPSILON = 0.0000000001f;
 
 EyeCalibration::EyeCalibration(void) { 
 	this->rbHeadId = -1; 
