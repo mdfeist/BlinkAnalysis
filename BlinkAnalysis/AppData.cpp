@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <sstream>
 #include "MainFormController.h"
+#include "StreamingManager.h"
 
 AppData* AppData::m_pInstance = NULL; 
 
@@ -100,6 +101,40 @@ bool AppData::openFile(char* filePath) {
 				{
 					if (strcmp(witr.attribute("id").value(), "0"))
 						WorldManager::getInstance()->addWorld(loadWorld(witr));
+				}
+			}
+
+			// get output settings
+			pugi::xml_node output = project.child("OutputSetting");
+			if (output)
+			{
+				pugi::xml_attribute outputIP = output.attribute("IPAddress");
+				pugi::xml_attribute outputPort = output.attribute("PortNumber");
+				pugi::xml_attribute intersectMargin = output.attribute("IntersectionMargin");
+				pugi::xml_attribute intersectDepth = output.attribute("IntersectionDepth");
+				pugi::xml_attribute folderPath = output.attribute("SaveFolderPath");
+				pugi::xml_attribute saveFolder = output.attribute("SaveFolder");
+
+				BlinkAnalysis::StreamingManager* smanager = BlinkAnalysis::StreamingManager::getInstance();
+				OutputManager* omanager = OutputManager::getInstance();
+
+				if (outputIP)
+					smanager->setIPAddress(outputIP.value());
+
+				if (outputPort)
+					smanager->setPortNumber(outputPort.as_int());
+
+				if (intersectMargin)
+					omanager->setIntersectionBuffer(intersectMargin.as_float());
+
+				if (intersectDepth)
+					omanager->setIntersectionLength(intersectDepth.as_float());
+
+				if (folderPath)
+				{
+					smanager->setFolderPath(folderPath.value());
+					if (saveFolder && !strcmp(saveFolder.value(), "true"))
+						smanager->setSaveData(true);
 				}
 			}
 		}
@@ -245,6 +280,10 @@ CaptureObject* AppData::loadObject(pugi::xml_node& objectNode)
 	return object;
 }
 
+const char* managedStringToChar(String^ str) {
+	return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
+}
+
 bool AppData::saveFile() {
 	MainFormController::getInstance()->getInfo();
 
@@ -337,6 +376,51 @@ bool AppData::saveFile() {
 		{
 			saveWorld(witr->second, Static.append_child());
 		}
+	}
+
+	{
+		pugi::xml_node output = project.child("OutputSetting");
+
+		if (!output) {
+			output = project.append_child();
+			output.set_name("OutputSetting");
+		}
+		
+		// Get Attributes
+		pugi::xml_attribute outputIP = output.attribute("IPAddress");
+		pugi::xml_attribute outputPort = output.attribute("PortNumber");
+		pugi::xml_attribute intersectMargin = output.attribute("IntersectionMargin");
+		pugi::xml_attribute intersectDepth = output.attribute("IntersectionDepth");
+		pugi::xml_attribute folderPath = output.attribute("SaveFolderPath");
+		pugi::xml_attribute saveFolder = output.attribute("SaveFolder");
+
+		if (!outputIP)
+			outputIP = output.append_attribute("IPAddress");
+
+		if (!outputPort)
+			outputPort = output.append_attribute("PortNumber");
+
+		if (!intersectMargin)
+			intersectMargin = output.append_attribute("IntersectionMargin");
+
+		if (!intersectDepth)
+			intersectDepth = output.append_attribute("IntersectionDepth");
+
+		if (!folderPath)
+			folderPath = output.append_attribute("SaveFolderPath");
+
+		if (!saveFolder)
+			saveFolder = output.append_attribute("SaveFolder");
+
+		BlinkAnalysis::StreamingManager* smanager = BlinkAnalysis::StreamingManager::getInstance();
+		OutputManager* omanager = OutputManager::getInstance();
+
+		outputIP.set_value(managedStringToChar(smanager->getIPAddress()));
+		outputPort.set_value(smanager->getPortNumber());
+		intersectMargin.set_value(omanager->getIntersectionBuffer());
+		intersectDepth.set_value(omanager->getIntersectionLength());
+		folderPath.set_value(smanager->getFolderPath().c_str());
+		saveFolder.set_value( (smanager->getSaveData() ? "true" : "false") );
 	}
 
 	doc.save_file(this->filePath);
