@@ -46,6 +46,7 @@ namespace BlinkAnalysis
 		gcroot<TcpListener^> listener;
 		static bool saveData;
 		static std::string folderPath;
+		static gcroot<Object^> sync;
 
 		// list of clients connected to server
 		static gcroot<ArrayList^> ClientSockets;

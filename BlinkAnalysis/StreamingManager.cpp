@@ -17,6 +17,7 @@ namespace BlinkAnalysis
 	bool StreamingManager::streaming = false;
 	bool StreamingManager::saveData = false;
 	std::string StreamingManager::folderPath;
+	gcroot<Object^> StreamingManager::sync = gcnew Object();
 
 	// default to listen through localhost on port 10510
 	StreamingManager::StreamingManager()
@@ -150,11 +151,13 @@ namespace BlinkAnalysis
 	{
 		if (streaming)
 		{
+			Monitor::Enter(sync);
 			// buffer overflowing, drop oldest frame
 			if (frameBuffer.size() > MAX_BUFFER_SIZE)
 				frameBuffer.pop();
 
 			frameBuffer.push(frame);
+			Monitor::Exit(sync);
 		}
 	}
 
@@ -166,7 +169,9 @@ namespace BlinkAnalysis
 		{
 			if (!frameBuffer.empty())
 			{
+				Monitor::Enter(sync);
 				std::string str = frameBuffer.front();
+
 				Monitor::Enter(ClientSockets->SyncRoot);
 				for (int i = 0; i < ClientSockets->Count; i++)  {
 					StreamHandler^ client = (StreamHandler^)ClientSockets->default[i];
@@ -177,7 +182,9 @@ namespace BlinkAnalysis
 					}
 				}
 				Monitor::Exit(ClientSockets->SyncRoot);
+
 				frameBuffer.pop();
+				Monitor::Exit(sync);
 			}
 		}
 		_endthread();
