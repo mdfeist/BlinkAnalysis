@@ -7,6 +7,7 @@
 
 #include "CaptureObject.h"
 #include "CaptureObjectUtil.h"
+#include "pugixml.hpp"
 
 
 typedef std::map<int, CaptureObject*>::iterator objects_iterator;
@@ -88,6 +89,8 @@ public:
 	CaptureObject* addCylinder(osg::Vec3 baseCentre, float radius, float height, CentreType ct, std::string name);
 	CaptureObject* addCylinderRigid(int rigidID, float radius, float height, bool attachRigid, CentreType ct, std::string name);
 
+	CaptureObject* addTemplate(osg::Vec3 centre, osg::Quat rotation, const char* filename, std::string name);
+	CaptureObject* addTemplateRigid(int rigidID, bool attachRigid, const char* filename, std::string name);
 };
 
 

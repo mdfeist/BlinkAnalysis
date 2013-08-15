@@ -8,7 +8,6 @@
 #include <osg/MatrixTransform>
 
 #include "MainFormController.h"
-#include "CaptureWorld.h"
 
 
 int CaptureWorld::_lastWorldID = 0;
@@ -492,5 +491,123 @@ CaptureObject* CaptureWorld::addCylinderRigid(int rigidID, float radius, float h
 	return NULL;
 }
 
+CaptureObject* CaptureWorld::addTemplate(osg::Vec3 centre, osg::Quat rotation, const char* filename, std::string name)
+{
+	// get XML file node
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file(filename);
 
+	if (result.status)
+		return NULL;
+
+	pugi::xml_node tempObject = doc.child("TemplateObject");
+	CaptureObject* object = NULL;
+	if (tempObject) {
+		const char* type = tempObject.attribute("type").value();
+		// plane will completely ignore centre and rotation input
+		if (!strcmp(type, "plane"))
+		{
+			double x0, y0, z0;
+			double x1, y1, z1;
+			double x2, y2, z2;
+			for (pugi::xml_node vert = tempObject.child("vertex"); vert; vert = vert.next_sibling("vertex"))
+			{
+				if (!strcmp(vert.attribute("id").value(), "0"))
+				{
+					x0 = atof(vert.attribute("x").value());
+					y0 = atof(vert.attribute("y").value());
+					z0 = atof(vert.attribute("z").value());
+				}
+				else if (!strcmp(vert.attribute("id").value(), "1"))
+				{
+					x1 = atof(vert.attribute("x").value());
+					y1 = atof(vert.attribute("y").value());
+					z1 = atof(vert.attribute("z").value());
+				}
+				else if (!strcmp(vert.attribute("id").value(), "3"))
+				{
+					x2 = atof(vert.attribute("x").value());
+					y2 = atof(vert.attribute("y").value());
+					z2 = atof(vert.attribute("z").value());
+				}
+			}
+
+			object = new CaptureObjectPlane(osg::Vec3(x0, y0, z0), osg::Vec3(x1, y1, z1), osg::Vec3(x2, y2, z2));
+		}
+		else if (!strcmp(type, "box"))
+		{
+			osg::Vec3 dim;
+			for (pugi::xml_node attr = tempObject.first_child(); attr; attr = attr.next_sibling())
+			{
+				if (!strcmp(attr.name(), "dimension"))
+				{
+					dim = osg::Vec3( atof(attr.attribute("x").value()),
+										atof(attr.attribute("y").value()),
+										atof(attr.attribute("z").value()) );
+					dim /= 2;
+				}
+			}
+
+			object = new CaptureObjectBox(centre, dim, rotation);
+		}
+		else if (!strcmp(type, "cylinder"))
+		{
+			float radius;
+			float height;
+			for (pugi::xml_node attr = tempObject.first_child(); attr; attr = attr.next_sibling())
+			{
+				if (!strcmp(attr.name(), "dimension"))
+				{
+					radius = atof(attr.attribute("radius").value());
+					height = atof(attr.attribute("height").value());
+				}
+			}
+
+			object = new CaptureObjectCylinder(centre, radius, height, rotation);
+		}
+		else
+			return NULL;
+
+		if (object)
+		{
+			object->setName(name);
+			if (addObject(object) < 0)
+			{
+				delete object;
+				object = NULL;
+			}
+		}
+	}
+
+	return object;
+}
+
+CaptureObject* CaptureWorld::addTemplateRigid(int rigidID, bool attachRigid, const char* filename, std::string name)
+{
+	ClientHandler* client = AppData::getInstance()->getClient();
+	CaptureObject* object = NULL;
+	if (client)
+	{
+		RigidBody* rb = client->getRigidBody(rigidID);
+		// if attempting to attach to rigid body, make sure it belongs to the world
+		if (rb && (!attachRigid || (rb->getWorldID() < 0 || rb->getWorldID() == this->id) )) 
+		{
+			osg::Vec3 pos = rb->getPosition();
+			osg::Quat rot = rb->getRotation();
+
+			object = addTemplate(pos, rot, filename, name);
+			if (object && attachRigid)
+			{
+				if (rb->getWorldID() < 0)
+					rb->setWorldID(this->id);
+
+				// use relative transformation w.r.t. rigid body
+				// so when rigid body detached, will keep initial position
+				object->setRigidBody(rb, true);
+				updateObjectsNode();
+			}
+		}
+	}
+	return object;
+}
 
