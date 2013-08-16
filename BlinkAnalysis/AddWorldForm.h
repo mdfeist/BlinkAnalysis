@@ -2,6 +2,7 @@
 
 #include "AppData.h"
 #include "WorldManager.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -11,6 +12,7 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace FormUtils;
 
 	/// <summary>
 	/// Simple form for adding a new CaptureWorld \n
@@ -104,9 +106,6 @@ namespace BlinkAnalysis {
 
 		}
 #pragma endregion
-private: const char* managedStringToChar(String^ str) {
-			 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
-		 }
 	private: System::Void nameButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 CaptureWorld* world = new CaptureWorld(std::string(managedStringToChar(this->nameTextBox->Text)));
 				 WorldManager::getInstance()->addWorld(world);

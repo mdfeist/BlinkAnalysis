@@ -1,5 +1,6 @@
 #pragma once
 #include "AppData.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -9,6 +10,7 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace FormUtils;
 
 	/// <summary>
 	/// Form to set a rigid body as pointing tool
@@ -141,14 +143,6 @@ namespace BlinkAnalysis {
 private: System::Void coordinate_setDefaultText(Label^ text) {
 			text->Text = defaultDataText;
 		}
-private: System::Void coordinate_setPoint(osg::Vec3* pos, Label^ text) {
-			String^ str = Convert::ToString(pos->x());
-			str += ", ";
-			str += Convert::ToString(pos->y());
-			str += ", ";
-			str += Convert::ToString(pos->z());
-			text->Text = str;
-		}
 private: System::Void loadRigidBodyList() {
 			if (!rigidBodyVector) return;
 
@@ -200,7 +194,7 @@ private: System::Void rigidBodyListView_SelectedIndexChanged(System::Object^  se
 					RigidBody* body = client->getRigidBody(rigidID);
 					if (body)
 					{
-						coordinate_setPoint(&(body->getPosition()), this->rigidDataLabel);
+						this->rigidDataLabel->Text = setPoint(&(body->getPosition()));
 						return;
 					}
 				}

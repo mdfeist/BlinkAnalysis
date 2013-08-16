@@ -1,5 +1,6 @@
 #pragma once
 #include "WorldManager.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -9,6 +10,7 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace FormUtils;
 
 	/// <summary>
 	/// Form to attach an existing object to the rigid body
@@ -219,17 +221,6 @@ namespace BlinkAnalysis {
 	private: int rigidID;
 	private: int objectID;
 	private: int worldID;
-
-	private: int worldExtractID(String^ str) {
-				 array<String^>^ split = str->Split(gcnew array<wchar_t> {'(', ')'});
-
-				 int result;
-				 // id contained in second to last element
-				 if (Int32::TryParse(split[split->Length - 2], result))
-					 return result;
-				 else
-					 return -1;
-			}
 
 	private: System::Void SetRigidBodyObjectForm_Load(System::Object^  sender, System::EventArgs^  e) {
 				 if (rigidID < 0)

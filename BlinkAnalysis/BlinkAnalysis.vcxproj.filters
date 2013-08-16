@@ -115,6 +115,9 @@
     <ClCompile Include="StreamSettingsForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FormUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -253,6 +256,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NATUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FormUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

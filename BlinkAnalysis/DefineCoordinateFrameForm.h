@@ -2,6 +2,7 @@
 
 #include "AppData.h"
 #include "CaptureObjectUtil.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -11,6 +12,7 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace FormUtils;
 
 	/// <summary>
 	/// Form to create a coordinate frame (projection matrix) for a CaptureWorld
@@ -759,13 +761,6 @@ namespace BlinkAnalysis {
 	private: osg::Vec3* posX;
 	private: osg::Vec3* posY;
 	private: osg::Vec3* pos;
-
-		 // checks if input string is a valid float
-private: bool isFloat(String^ str) {
-			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*$";
-			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
-			 return regex->IsMatch(str);
-		 }
 		 // populate vectors based on coordinate input
 private: bool extractCoordinates()
 		 {
@@ -828,7 +823,7 @@ private: bool extractCoordinates()
 						 osg::Vec3 pt = marker->getPosition();
 						 posO->set(pt.x(), pt.y(), pt.z());
 
-						 coordinate_setPoint(posO, coordinateOLabel);
+						 this->coordinateOLabel->Text = setPoint(posO);
 					 }
 
 					 // x
@@ -844,7 +839,7 @@ private: bool extractCoordinates()
 						 osg::Vec3 pt = marker->getPosition();
 						 posX->set(pt.x(), pt.y(), pt.z());
 
-						 coordinate_setPoint(posX, coordinateXLabel);
+						 this->coordinateXLabel->Text = setPoint(posX);
 					 }
 
 					 // y
@@ -860,7 +855,7 @@ private: bool extractCoordinates()
 						 osg::Vec3 pt = marker->getPosition();
 						 posY->set(pt.x(), pt.y(), pt.z());
 
-						 coordinate_setPoint(posY, coordinateYLabel);
+						 this->coordinateYLabel->Text = setPoint(posY);
 					 }
 
 					 client->unlock();
@@ -868,14 +863,6 @@ private: bool extractCoordinates()
 			 }
 	private: System::Void coordinate_setDefaultText(Label^ text) {
 				 text->Text = defaultDataText;
-			 }
-	private: System::Void coordinate_setPoint(osg::Vec3* pos, Label^ text) {
-				String^ str = Convert::ToString(pos->x());
-				str += ", ";
-				str += Convert::ToString(pos->y());
-				str += ", ";
-				str += Convert::ToString(pos->z());
-				text->Text = str;
 			 }
 
 	private: System::Void coordinateSetButton_Click(System::Object^  sender, System::EventArgs^  e);
@@ -897,7 +884,7 @@ private: bool extractCoordinates()
 						 pos->set(body->getPosition().x(), 
 									body->getPosition().y(), 
 									body->getPosition().z());
-						 coordinate_setPoint(pos, rigidToolPositionLabel);
+						 this->rigidToolPositionLabel->Text = setPoint(pos);
 						 rigidSetButtons(true);
 						 return;
 					 }
@@ -910,7 +897,7 @@ private: bool extractCoordinates()
 				 if (sender == this->rigidOButton)
 				 {
 					 posO->set(pos->x(), pos->y(), pos->z());
-					 coordinate_setPoint(pos, rigidOLabel);
+					 this->rigidOLabel->Text = setPoint(pos);
 					 
 					 if ( String::Compare(rigidXLabel->Text, defaultDataText) &&
 						  String::Compare(rigidYLabel->Text, defaultDataText) )
@@ -921,7 +908,7 @@ private: bool extractCoordinates()
 				 else if (sender == this->rigidXButton)
 				 {
 					 posX->set(pos->x(), pos->y(), pos->z());
-					 coordinate_setPoint(pos, rigidXLabel);
+					 this->rigidXLabel->Text = setPoint(pos);
 
 					 if ( String::Compare(rigidOLabel->Text, defaultDataText) &&
 						  String::Compare(rigidYLabel->Text, defaultDataText) )
@@ -932,7 +919,7 @@ private: bool extractCoordinates()
 				 else if (sender == this->rigidYButton)
 				 {
 					 posY->set(pos->x(), pos->y(), pos->z());
-					 coordinate_setPoint(pos, rigidYLabel);
+					 this->rigidYLabel->Text = setPoint(pos);
 
 					 if ( String::Compare(rigidOLabel->Text, defaultDataText) &&
 						  String::Compare(rigidXLabel->Text, defaultDataText) )

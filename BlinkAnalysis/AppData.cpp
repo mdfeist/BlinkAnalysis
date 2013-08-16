@@ -11,6 +11,7 @@
 #include <sstream>
 #include "MainFormController.h"
 #include "StreamingManager.h"
+#include "FormUtils.h"
 
 AppData* AppData::m_pInstance = NULL; 
 
@@ -280,10 +281,6 @@ CaptureObject* AppData::loadObject(pugi::xml_node& objectNode)
 	return object;
 }
 
-const char* managedStringToChar(String^ str) {
-	return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
-}
-
 bool AppData::saveFile() {
 	MainFormController::getInstance()->getInfo();
 
@@ -415,7 +412,7 @@ bool AppData::saveFile() {
 		BlinkAnalysis::StreamingManager* smanager = BlinkAnalysis::StreamingManager::getInstance();
 		OutputManager* omanager = OutputManager::getInstance();
 
-		outputIP.set_value(managedStringToChar(smanager->getIPAddress()));
+		outputIP.set_value(FormUtils::managedStringToChar(smanager->getIPAddress()));
 		outputPort.set_value(smanager->getPortNumber());
 		intersectMargin.set_value(omanager->getIntersectionBuffer());
 		intersectDepth.set_value(omanager->getIntersectionLength());

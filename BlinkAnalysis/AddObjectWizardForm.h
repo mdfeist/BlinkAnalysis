@@ -3,6 +3,7 @@
 #include "AppData.h"
 #include "WorldManager.h"
 #include "AddObjectDistanceForm.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -12,6 +13,7 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace FormUtils;
 
 	enum class ControlType {
 		MARKER,
@@ -1940,46 +1942,10 @@ private: System::Void AddObjectWizardForm_FormClosing(System::Object^  sender, S
 
 /////////////////////
 // Util Functions
-
-// extracts ID from text format "Name (##)"
-private: int worldExtractID(String^ str) {
-			 array<String^>^ split = str->Split(gcnew array<wchar_t> {'(', ')'});
-
-			 int result;
-			 // id contained in second to last element
-			 if (Int32::TryParse(split[split->Length - 2], result))
-				 return result;
-			 else
-				 return -1;
-		}
 		 // set text to display when there is no position data
 private: System::Void setDefaultText(Label^ text) {
 				text->Text = this->defaultDataText;
 			}
-		 // set text to display when there is position data
-private: System::Void setPoint(osg::Vec3* pos, Label^ text) {
-			String^ str = Convert::ToString(pos->x());
-			str += ", ";
-			str += Convert::ToString(pos->y());
-			str += ", ";
-			str += Convert::ToString(pos->z());
-			text->Text = str;
-		 }
-	// converts a managed String^ to unmanaged std::string*
-private: const char* managedStringToChar(String^ str) {
-			 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
-		 }
-		 // checks if input string is a valid float
-private: bool isFloat(String^ str) {
-			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*$";
-			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
-			 return regex->IsMatch(str);
-		 }
-private: bool isPositiveFloat(String^ str) {
-			 String^ regs = "^\\s*\\d+(.\\d+)?\\s*$";
-			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
-			 return regex->IsMatch(str);
-		 }
 /////////////////////
 // Parameter Panel
 private: System::Void worldPopulateList() {
@@ -3028,7 +2994,7 @@ private: System::Void planeDataGetButton_Click(System::Object^  sender, System::
 					pos->set(body->getPosition().x(), 
 							body->getPosition().y(), 
 							body->getPosition().z());
-					setPoint(pos, this->planeDataLabel);
+					this->planeDataLabel->Text = setPoint(pos);
 					rigidSetButton(true, true, OBJ_PLANE);
 					return;
 				}

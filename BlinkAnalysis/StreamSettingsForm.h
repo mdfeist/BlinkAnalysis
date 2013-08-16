@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OutputManager.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -10,6 +11,7 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace FormUtils;
 
 	/// <summary>
 	/// Form to change output settings for both recording and streaming
@@ -291,21 +293,6 @@ namespace BlinkAnalysis {
 				 this->saveDataCheckBox->Checked = StreamingManager::getInstance()->getSaveData();
 				 this->filePathText->Text = gcnew String(StreamingManager::getInstance()->getFolderPath().c_str());
 			 }
-			 // converts a managed String^ to unmanaged std::string*
-	private: const char* managedStringToChar(String^ str) {
-				 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
-			 }
-	private: bool isPositiveNumber(String^ str) {
-				 String^ regs = "^\\s*\\d+\\s*$";
-				 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
-				 return regex->IsMatch(str);
-			 }
-	private: bool isPositiveFloat(String^ str) {
-			 String^ regs = "^\\s*\\d+(.\\d+)?\\s*$";
-			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
-			 return regex->IsMatch(str);
-		 }
-
 	private: System::Void checkValidText(System::Object^  sender, System::EventArgs^  e) {
 				 if (!String::IsNullOrWhiteSpace(this->addressTextBox->Text) &&
 					 isPositiveNumber(this->portTextBox->Text) &&

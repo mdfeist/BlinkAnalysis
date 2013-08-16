@@ -32,6 +32,7 @@
 #include "WorldManager.h"
 
 #include "NatNetClientSetup.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -2834,25 +2835,6 @@ private: System::Void attachToExistingObjectToolStripMenuItem_Click(System::Obje
 	//////////////////////
 	// Capture World and Objects
 	/////////////////////
-
-/////////////////////
-// Util Functions
-
-// extracts ID from text format "Name (##)"
-private: int worldExtractID(String^ str) {
-			 array<String^>^ split = str->Split(gcnew array<wchar_t> {'(', ')'});
-
-			 int result;
-			 // id contained in second to last element
-			 if (Int32::TryParse(split[split->Length - 2], result))
-				 return result;
-			 else
-				 return -1;
-		 }
-		 // converts a managed String^ to unmanaged std::string*
-private: const char* managedStringToChar(String^ str) {
-			 return (const char*) (Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str)).ToPointer();
-		 }
 
 /////////////////////
 // World Functions

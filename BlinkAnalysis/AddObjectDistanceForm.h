@@ -1,6 +1,7 @@
 #pragma once
 #include <osg/Vec3>
 #include "AppData.h"
+#include "FormUtils.h"
 
 namespace BlinkAnalysis {
 
@@ -10,6 +11,7 @@ namespace BlinkAnalysis {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace FormUtils;
 
 	/// <summary>
 	/// Calculates distance between two points \n
@@ -323,12 +325,6 @@ private: System::Void AddObjectDistanceForm_FormClosing(System::Object^  sender,
 
 private: System::Void setDefaultDistanceText() {
 			 this->distanceLabel->Text = defaultDistanceText;
-		 }
-		 // checks if input string is a valid float
-private: bool isFloat(String^ str) {
-			 String^ regs = "^\\s*-?\\d+(.\\d+)?\\s*$";
-			 System::Text::RegularExpressions::Regex^ regex = gcnew System::Text::RegularExpressions::Regex(regs);
-			 return regex->IsMatch(str);
 		 }
 
 private: System::Void inputComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
