@@ -611,3 +611,94 @@ CaptureObject* CaptureWorld::addTemplateRigid(int rigidID, bool attachRigid, con
 	return object;
 }
 
+void CaptureWorld::saveTemplate(int oid, const char* filename)
+{
+	CaptureObject* object = getObject(oid);
+	if (!object) return;
+
+	// get XML file node
+	pugi::xml_document doc;
+	pugi::xml_node tempObject = doc.child("TemplateObject");
+
+	if (!tempObject) {
+		tempObject = doc.append_child();
+		tempObject.set_name("TemplateObject");
+	}
+	else {
+		while (tempObject.first_child()) tempObject.remove_child(tempObject.first_child());
+	}
+
+	char buf[128];
+	ObjectType objType = object->getType();
+	pugi::xml_attribute type = tempObject.attribute("type");
+
+	if (!type)
+		type = tempObject.append_attribute("type");
+	
+	type.set_value(CaptureObjectUtil::objectTypeToString(objType));
+
+	// specific shape info
+	if (objType == OBJ_PLANE)
+	{
+		CaptureObjectPlane* plane = dynamic_cast<CaptureObjectPlane*>(object);
+		if (plane)
+		{
+			const osg::Vec3Array* vertices = plane->getVertices();
+			int i = 0;
+			for (osg::Vec3Array::const_iterator itr = vertices->begin(); itr != vertices->end(); itr++)
+			{
+				pugi::xml_node vert = tempObject.append_child("vertex");
+				_itoa_s(i, buf, 10);
+				vert.append_attribute("id").set_value(buf);
+				vert.append_attribute("x").set_value(CaptureObjectUtil::floatToString(itr->x())->c_str());
+				vert.append_attribute("y").set_value(CaptureObjectUtil::floatToString(itr->y())->c_str());
+				vert.append_attribute("z").set_value(CaptureObjectUtil::floatToString(itr->z())->c_str());
+				i++;
+			}
+		}
+	}
+	else if (objType == OBJ_BOX)
+	{
+		CaptureObjectBox* box = dynamic_cast<CaptureObjectBox*>(object);
+		if (box)
+		{
+			osg::Vec3 vec = box->getHalfLengths();
+			pugi::xml_node dim = tempObject.append_child("dimension");
+			dim.append_attribute("x").set_value(CaptureObjectUtil::floatToString(vec.x()*2)->c_str());
+			dim.append_attribute("y").set_value(CaptureObjectUtil::floatToString(vec.y()*2)->c_str());
+			dim.append_attribute("z").set_value(CaptureObjectUtil::floatToString(vec.z()*2)->c_str());
+		}
+	}
+	else if (objType == OBJ_CYLINDER)
+	{
+		CaptureObjectCylinder* cylinder = dynamic_cast<CaptureObjectCylinder*>(object);
+		if (cylinder) 
+		{
+			pugi::xml_node dim = tempObject.append_child("dimension");
+			dim.append_attribute("radius").set_value(CaptureObjectUtil::floatToString(cylinder->getRadius())->c_str());
+			dim.append_attribute("height").set_value(CaptureObjectUtil::floatToString(cylinder->getHeight())->c_str());
+		}
+	}
+	else if (objType == OBJ_CUSTOM)
+	{
+		CaptureObjectCustom* custom = dynamic_cast<CaptureObjectCustom*>(object);
+		if (custom)
+		{
+			const osg::Vec3Array* vertices = custom->getVertices();
+			int i = 0;
+			for (osg::Vec3Array::const_iterator itr = vertices->begin(); itr != vertices->end(); itr++)
+			{
+				pugi::xml_node vert = tempObject.append_child("vertex");
+				_itoa_s(i, buf, 10);
+				vert.append_attribute("id").set_value(buf);
+				vert.append_attribute("x").set_value(CaptureObjectUtil::floatToString(itr->x())->c_str());
+				vert.append_attribute("y").set_value(CaptureObjectUtil::floatToString(itr->y())->c_str());
+				vert.append_attribute("z").set_value(CaptureObjectUtil::floatToString(itr->z())->c_str());
+				i++;
+			}
+		}
+	}
+	
+	doc.save_file(filename);
+}
+

@@ -316,6 +316,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  outputSettingToolStripMenuI
 
 private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
+private: System::Windows::Forms::Button^  templateObjectButton;
 
 
 
@@ -454,6 +455,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			this->worldAddButton = (gcnew System::Windows::Forms::Button());
 			this->worldComboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->objectTabPage = (gcnew System::Windows::Forms::TabPage());
+			this->templateObjectButton = (gcnew System::Windows::Forms::Button());
 			this->removeObjectButton = (gcnew System::Windows::Forms::Button());
 			this->objectLabel = (gcnew System::Windows::Forms::Label());
 			this->objectWLabel = (gcnew System::Windows::Forms::Label());
@@ -1679,6 +1681,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			// 
 			// objectTabPage
 			// 
+			this->objectTabPage->Controls->Add(this->templateObjectButton);
 			this->objectTabPage->Controls->Add(this->removeObjectButton);
 			this->objectTabPage->Controls->Add(this->objectLabel);
 			this->objectTabPage->Controls->Add(this->objectWLabel);
@@ -1693,6 +1696,18 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			this->objectTabPage->TabIndex = 2;
 			this->objectTabPage->Text = L"Object";
 			this->objectTabPage->UseVisualStyleBackColor = true;
+			// 
+			// templateObjectButton
+			// 
+			this->templateObjectButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
+			this->templateObjectButton->Enabled = false;
+			this->templateObjectButton->Location = System::Drawing::Point(6, 448);
+			this->templateObjectButton->Name = L"templateObjectButton";
+			this->templateObjectButton->Size = System::Drawing::Size(91, 23);
+			this->templateObjectButton->TabIndex = 14;
+			this->templateObjectButton->Text = L"Save Template";
+			this->templateObjectButton->UseVisualStyleBackColor = true;
+			this->templateObjectButton->Click += gcnew System::EventHandler(this, &MainForm::templateObjectButton_Click);
 			// 
 			// removeObjectButton
 			// 
@@ -1876,7 +1891,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  teapotToolStripMenuItem;
 			// teapotToolStripMenuItem
 			// 
 			this->teapotToolStripMenuItem->Name = L"teapotToolStripMenuItem";
-			this->teapotToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->teapotToolStripMenuItem->Size = System::Drawing::Size(111, 22);
 			this->teapotToolStripMenuItem->Text = L"Teapot";
 			this->teapotToolStripMenuItem->CheckedChanged += gcnew System::EventHandler(this, &MainForm::teapotToolStripMenuItem_CheckedChanged);
 			this->teapotToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::teapotToolStripMenuItem_Click);
@@ -3082,6 +3097,7 @@ private: System::Void objectComboBox_SelectedIndexChanged(System::Object^  sende
 			 if (id >= 0)
 			 {
 				 this->removeObjectButton->Enabled = true;
+				 this->templateObjectButton->Enabled = true;
 				 displayObject = id;
 				 objectGridView_displayObject();
 			 }
@@ -3282,6 +3298,7 @@ private: System::Void resetObjectGridView() {
 				this->objectGridView->Rows->Clear();
 				displayObject = -1;
 				this->removeObjectButton->Enabled = false;
+				this->templateObjectButton->Enabled = false;
 			}
 		 }
 private: System::Void objectGridView_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
@@ -3323,6 +3340,19 @@ private: System::Void removeObjectButton_Click(System::Object^  sender, System::
 					displayObject = -1;
 					objectUpdateList();
 				}
+			}
+		 }
+private: System::Void templateObjectButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			SaveFileDialog^ dialog = gcnew SaveFileDialog();
+			dialog->Title = "Save Template Object As...";
+			dialog->Filter = "XML File (*.xml)|*.xml";
+			dialog->RestoreDirectory = true;
+
+			if (dialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+			{
+				CaptureWorld* world = WorldManager::getInstance()->getWorld(displayObjectWorld);
+				if (world)
+					world->saveTemplate(displayObject, managedStringToChar(dialog->FileName));
 			}
 		 }
 private: System::Void visualViewerScaleTextBox_KeyPress(System::Object^  sender, KeyPressEventArgs^  e) {
@@ -3455,6 +3485,7 @@ private: System::Void teapotToolStripMenuItem_CheckedChanged(System::Object^  se
 			 else
 				 AppViewer::removeTeapot();
 		 }
+
 };
 }
 

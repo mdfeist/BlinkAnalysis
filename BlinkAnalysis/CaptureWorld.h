@@ -91,6 +91,7 @@ public:
 
 	CaptureObject* addTemplate(osg::Vec3 centre, osg::Quat rotation, const char* filename, std::string name);
 	CaptureObject* addTemplateRigid(int rigidID, bool attachRigid, const char* filename, std::string name);
+	void saveTemplate(int oid, const char* filename);
 };
 
 
